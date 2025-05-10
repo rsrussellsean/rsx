@@ -1,5 +1,22 @@
+@font-face {
+  font-family: "Grifter";
+  src: url("./fonts/grifterbold.otf") format("opentype");
+  font-weight: bold;
+}
+
+@font-face {
+  font-family: "MADERegular";
+  src: url("./fonts/MADERegular.otf") format("opentype");
+  font-weight: normal;
+}
+
+@font-face {
+  font-family: "MADEThin";
+  src: url("./fonts/MADEThin.otf") format("opentype");
+  font-weight: normal;
+}
 :root {
-  --color-accent: rgb(230, 170, 40);
+  --color-accent: rgb(199, 199, 199);
 }
 
 * {
@@ -27,7 +44,7 @@ p {
   font-size: 12px;
 }
 
-nav {
+.nav2 {
   position: fixed;
   top: 0;
   width: 100%;
@@ -62,20 +79,21 @@ nav > div {
 }
 
 .logo {
+  margin-top: 80px;
   display: flex;
   justify-content: center;
 }
 
-.logo a {
-  font-family: "Franklin Gothic Medium", "Arial Narrow", Arial, sans-serif;
+.logo p {
   font-size: 16px;
-  font-weight: bolder;
+  font-weight: bold;
   letter-spacing: -0.02em;
+  font-family: "MADERegular", sans-serif;
 }
 
 .container {
   width: 100%;
-  height: 2000vh;
+  height: 700vh;
 }
 
 .active-slide {
@@ -116,96 +134,247 @@ nav > div {
 .slide-copy p {
   text-transform: uppercase;
   text-align: center;
-  font-family: Impact, Haettenschweiler, "Arial Narrow Bold", sans-serif;
-  font-size: 13px;
-  font-weight: bolder;
+  font-family: "MADERegular", sans-serif;
+  font-size: 24px;
   line-height: 150%;
-  color: var(--color-accent);
+  color: blanchedalmond;
 }
 
 .slide-copy p#index {
-  font-family: Georgia, "Times New Roman", Times, serif;
+  font-family: "MADEThin", sans-serif;
+
   font-size: 11px;
-  font-weight: 400;
   margin-bottom: 0.75em;
 }
 
+/* .slide-img img {
+  width: 100vh;
+} */
+
 #slide-1 {
   position: absolute;
-  top: 50%;
+  top: 60%;
   left: 70%;
-  transform: translateX(-50%) translateY(-50%) translateZ(-22500px);
+  transform: translateX(-50%) translateY(-50%) translateZ(-13500px);
   opacity: 0;
+  width: 30%;
 }
 
 #slide-2 {
   position: absolute;
-  top: 50%;
+  top: 60%;
   left: 30%;
-  transform: translateX(-50%) translateY(-50%) translateZ(-20000px);
+  transform: translateX(-50%) translateY(-50%) translateZ(-12000px);
   opacity: 0;
+  width: 30%;
 }
 
 #slide-3 {
   position: absolute;
-  top: 50%;
+  top: 60%;
   left: 70%;
-  transform: translateX(-50%) translateY(-50%) translateZ(-17500px);
+  transform: translateX(-50%) translateY(-50%) translateZ(-10500px);
   opacity: 0;
+  width: 30%;
 }
 
 #slide-4 {
   position: absolute;
-  top: 50%;
+  top: 60%;
   left: 30%;
-  transform: translateX(-50%) translateY(-50%) translateZ(-20000px);
+  transform: translateX(-50%) translateY(-50%) translateZ(-9000px);
   opacity: 0;
+  width: 30%;
 }
 
 #slide-5 {
   position: absolute;
-  top: 50%;
+  top: 60%;
   left: 70%;
-  transform: translateX(-50%) translateY(-50%) translateZ(-12500px);
+  transform: translateX(-50%) translateY(-50%) translateZ(-7500px);
   opacity: 0;
+  width: 30%;
 }
 
 #slide-6 {
   position: absolute;
-  top: 50%;
+  top: 60%;
   left: 30%;
-  transform: translateX(-50%) translateY(-50%) translateZ(-10000px);
+  transform: translateX(-50%) translateY(-50%) translateZ(-6000px);
   opacity: 0;
+  width: 30%;
 }
 
 #slide-7 {
   position: absolute;
-  top: 50%;
+  top: 60%;
   left: 70%;
-  transform: translateX(-50%) translateY(-50%) translateZ(-7500px);
+  transform: translateX(-50%) translateY(-50%) translateZ(-5000px);
   opacity: 0;
+  width: 30%;
 }
 
 #slide-8 {
   position: absolute;
-  top: 50%;
+  top: 60%;
   left: 30%;
-  transform: translateX(-50%) translateY(-50%) translateZ(-5000px);
+  transform: translateX(-50%) translateY(-50%) translateZ(-3000px);
   opacity: 0;
+  width: 30%;
 }
 
 #slide-9 {
   position: absolute;
-  top: 50%;
+  top: 60%;
   left: 70%;
-  transform: translateX(-50%) translateY(-50%) translateZ(-2500px);
+  transform: translateX(-50%) translateY(-50%) translateZ(-1500px);
   opacity: 0.5;
+  width: 30%;
 }
 
 #slide-10 {
   position: absolute;
-  top: 50%;
+  top: 60%;
   left: 30%;
-  transform: translateX(-50%) translateY(-50%) translateZ(0);
+  transform: translateX(-60%) translateY(-50%) translateZ(0);
   opacity: 1;
+  width: 30%;
+}
+
+.outro {
+  height: 100vh;
+  background: #000;
+  color: var(--color-accent);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-family: Arial, sans-serif;
+  font-size: 2em;
+  text-transform: uppercase;
+  z-index: 1;
+  /* opacity: 0; */
+  /* color: red; */
+}
+
+.intro {
+  height: 100vh;
+  background: #000;
+  /* color: var(--color-accent); */
+  color: white;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  font-family: Arial, sans-serif;
+  font-size: 2em;
+  text-transform: uppercase;
+  z-index: 1;
+  position: relative;
+}
+
+/* .intro-wrapper {
+  height: 100vh;
+  scroll-snap-type: y mandatory !important;
+  overflow-y: hidden;
+  scroll-behavior: smooth;
+}
+
+.intro {
+  scroll-snap-align: start;
+} */
+
+.intro-wrapper {
+  height: 100vh;
+  scroll-snap-type: y mandatory;
+  overflow-y: auto;
+  scroll-behavior: smooth;
+}
+
+.intro,
+.outro {
+  height: 100vh;
+  background: #000;
+  color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-family: Arial, sans-serif;
+  font-size: 2em;
+  text-transform: uppercase;
+  scroll-snap-align: start;
+  position: relative;
+}
+
+/* .main-container {
+  scroll-snap-type: y mandatory !important;
+  overflow-y: hidden;
+  scroll-behavior: smooth;
+} */
+
+/* Font shuffle css */
+
+.containerShuffle {
+  width: 100%;
+  height: 100%;
+  font-family: "Franklin Gothic Medium", "Arial Narrow", Arial, sans-serif;
+  text-transform: uppercase;
+  color: white !important;
+  background: black !important;
+
+  /* background: #e3e3e3; */
+}
+
+/* nav,
+footer {
+  position: absolute;
+  padding: 2em;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  color: white !important;
+} */
+
+.header {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 75%;
+  color: white !important;
+}
+
+p {
+  text-align: center;
+  font-size: 12px;
+  color: white !important;
+}
+
+.placeholder {
+  text-align: center;
+  /* font-family: Arial, Helvetica, sans-serif; */
+  font-size: 300px;
+  color: white !important;
+  line-height: 1.2;
+  font-family: "grifter", sans-serif;
+}
+
+#item-1 {
+  color: white;
+  font-family: "MADERegular", sans-serif;
+  font-size: 24px;
+}
+
+#subheader {
+  font-size: 50px;
+  color: white;
+  text-align: left;
+  font-family: "MADERegular", sans-serif;
+
+  margin-left: 80px;
+}
+
+.nav1 {
+  padding: 2em;
+  cursor: pointer;
+  width: 10%;
 }
