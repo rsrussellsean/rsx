@@ -11,6 +11,12 @@
 }
 
 @font-face {
+  font-family: "MADEBold";
+  src: url("./fonts/MADEBold.otf") format("opentype");
+  font-weight: normal;
+}
+
+@font-face {
   font-family: "MADEThin";
   src: url("./fonts/MADEThin.otf") format("opentype");
   font-weight: normal;
@@ -91,9 +97,11 @@ nav > div {
   font-family: "MADERegular", sans-serif;
 }
 
+/* start of work page */
 .container {
   width: 100%;
-  height: 700vh;
+  height: 500vh !important;
+  /* height: 200vh !important; */
 }
 
 .active-slide {
@@ -112,6 +120,9 @@ nav > div {
   position: absolute;
   filter: blur(50px);
   transform: scale(1.125);
+
+  will-change: transform, opacity;
+  /* backface-visibility: hidden; */
 }
 
 .slider {
@@ -129,19 +140,21 @@ nav > div {
   width: 400px;
   height: 500px;
   overflow: hidden;
+  will-change: transform, opacity;
 }
 
 .slide-copy p {
   text-transform: uppercase;
   text-align: center;
-  font-family: "MADERegular", sans-serif;
+  font-family: "MADEBold", sans-serif;
   font-size: 24px;
   line-height: 150%;
-  color: blanchedalmond;
+  /* color: blanchedalmond; */
+  color: white;
 }
 
 .slide-copy p#index {
-  font-family: "MADEThin", sans-serif;
+  font-family: "MADERegular", sans-serif;
 
   font-size: 11px;
   margin-bottom: 0.75em;
@@ -236,52 +249,18 @@ nav > div {
   position: absolute;
   top: 60%;
   left: 30%;
-  transform: translateX(-60%) translateY(-50%) translateZ(0);
+  transform: translateX(-50%) translateY(-50%) translateZ(0);
   opacity: 1;
   width: 30%;
 }
 
-.outro {
-  height: 100vh;
-  background: #000;
-  color: var(--color-accent);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  font-family: Arial, sans-serif;
-  font-size: 2em;
-  text-transform: uppercase;
-  z-index: 1;
-  /* opacity: 0; */
-  /* color: red; */
-}
+/* End of work page */
 
+/* start of intro outro page */
 .intro {
-  height: 100vh;
-  background: #000;
-  /* color: var(--color-accent); */
-  color: white;
-  display: flex;
   flex-direction: column;
   justify-content: center;
-  align-items: center;
-  font-family: Arial, sans-serif;
-  font-size: 2em;
-  text-transform: uppercase;
-  z-index: 1;
-  position: relative;
 }
-
-/* .intro-wrapper {
-  height: 100vh;
-  scroll-snap-type: y mandatory !important;
-  overflow-y: hidden;
-  scroll-behavior: smooth;
-}
-
-.intro {
-  scroll-snap-align: start;
-} */
 
 .intro-wrapper {
   height: 100vh;
@@ -298,28 +277,30 @@ nav > div {
   display: flex;
   justify-content: center;
   align-items: center;
-  font-family: Arial, sans-serif;
   font-size: 2em;
   text-transform: uppercase;
   scroll-snap-align: start;
   position: relative;
+  z-index: 1;
 }
 
-/* .main-container {
+/* end of intro outro page */
+/* 
+.main-container {
   scroll-snap-type: y mandatory !important;
-  overflow-y: hidden;
-  scroll-behavior: smooth;
+  overflow-y: auto !important;
+  scroll-behavior: smooth !important;
 } */
 
-/* Font shuffle css */
+/* start of Font shuffle css */
 
 .containerShuffle {
   width: 100%;
   height: 100%;
   font-family: "Franklin Gothic Medium", "Arial Narrow", Arial, sans-serif;
   text-transform: uppercase;
-  color: white !important;
-  background: black !important;
+  /* color: white; */
+  background: black;
 
   /* background: #e3e3e3; */
 }
@@ -346,16 +327,21 @@ footer {
 p {
   text-align: center;
   font-size: 12px;
-  color: white !important;
 }
 
 .placeholder {
   text-align: center;
   /* font-family: Arial, Helvetica, sans-serif; */
   font-size: 300px;
-  color: white !important;
+  color: #fff;
+  /* color: #000; */
+
   line-height: 1.2;
   font-family: "grifter", sans-serif;
+}
+
+.logoImage {
+  width: 40%;
 }
 
 #item-1 {
@@ -366,9 +352,10 @@ p {
 
 #subheader {
   font-size: 50px;
-  color: white;
+  /* color: white; */
   text-align: left;
   font-family: "MADERegular", sans-serif;
+  color: white;
 
   margin-left: 80px;
 }

@@ -1,59 +1,34 @@
-// gsap.registerPlugin(ScrollTrigger);
-// window.addEventListener("load", function () {
-//   const slides = gsap.utils.toArray(".slide");
-//   const activeSlideImages = gsap.utils.toArray(".active-slide img");
+// slides.forEach((slide, index) => {
+//   ScrollTrigger.create({
+//     trigger: container,
+//     start: "top top",
+//     end: "bottom bottom",
+//     scrub: true,
+//     onUpdate: (self) => {
+//       const progress = self.progress;
+//       const zIncrement = progress * 22500;
 
-//   function getInitialTranslateZ(slide) {
-//     const style = window.getComputedStyle(slide);
-//     const matrix = style.transform.match(/matrix3d\((.+)\)/);
-//     if (matrix) {
-//       const values = matrix[1].split(", ");
-//       return parseFloat(values[14] || 0);
-//     }
-//     return 0;
-//   }
+//       const currentZ = -13500 + index * 1500 + zIncrement;
 
-//   function mapRange(value, inMin, inMax, outMin, outMax) {
-//     return ((value - inMin) * (outMax - outMin)) / (inMax - inMin) + outMin;
-//   }
+//       let opacity;
 
-//   slides.forEach((slide, index) => {
-//     const initialZ = getInitialTranslateZ(slide);
+//       if (currentZ > -1500) {
+//         opacity = 1;
+//       } else if (currentZ > -2800) {
+//         opacity = 0.5;
+//       } else {
+//         opacity = 0;
+//       }
 
-//     ScrollTrigger.create({
-//       trigger: ".container",
-//       start: "top top",
-//       end: "bottom bottom",
-//       scrub: true,
-//       onUpdate: (self) => {
-//         const progress = self.progress;
-//         const zIncrement = progress * 22500;
-//         const currentZ = initialZ + zIncrement;
+//       slide.style.opacity = opacity;
+//       slide.style.transform = `translateX(-50%) translateY(-50%) translateZ(${currentZ}px)`;
 
-//         let opacity;
-
-//         if (currentZ > -1500) {
-//           opacity = mapRange(currentZ, -1500, 0, 0.5, 1);
-//         } else {
-//           opacity = mapRange(currentZ, -3000, -2500, 0, 0.5);
-//         }
-
-//         slide.style.opacity = opacity;
-
-//         slide.style.transform = `translateX(-50%) translateY(-50%) translateZ(${currentZ}px)`;
-//         if (currentZ < 100) {
-//           gsap.to(activeSlideImages[index], 1.5, {
-//             opacity: 1,
-//             ease: "power3.out",
-//           });
-//         } else {
-//           gsap.to(activeSlideImages[index], 1.5, {
-//             opacity: 0,
-//             ease: "power3.out",
-//           });
-//         }
-//       },
-//     });
+//       gsap.to(activeSlideImages[index], {
+//         opacity: currentZ < 100 ? 1 : 0,
+//         duration: 1.5,
+//         ease: "power3.out",
+//       });
+//     },
 //   });
 // });
 
@@ -77,29 +52,26 @@ window.addEventListener("load", function () {
       trigger: container,
       start: "top top",
       end: "bottom bottom",
-      scrub: true,
+      scrub: 1,
       onUpdate: (self) => {
         const progress = self.progress;
         const zIncrement = progress * 22500;
-
         const currentZ = -13500 + index * 1500 + zIncrement;
+        // const currentZ = -6000 + index * 1500 + zIncrement;
 
-        let opacity;
-
-        if (currentZ > -1500) {
-          opacity = 1;
-        } else if (currentZ > -2800) {
-          opacity = 0.5;
-        } else {
-          opacity = 0;
-        }
-
-        slide.style.opacity = opacity;
-        slide.style.transform = `translateX(-50%) translateY(-50%) translateZ(${currentZ}px)`;
+        // Efficiently update styles using GSAP
+        gsap.to(slide, {
+          opacity: currentZ > -1500 ? 1 : currentZ > -2800 ? 0.5 : 0,
+          xPercent: -50,
+          yPercent: -50,
+          z: currentZ,
+          duration: 0.1,
+          ease: "none",
+        });
 
         gsap.to(activeSlideImages[index], {
           opacity: currentZ < 100 ? 1 : 0,
-          duration: 1.5,
+          duration: 0.5,
           ease: "power3.out",
         });
       },
@@ -128,15 +100,20 @@ const placeholder = document.querySelector(".placeholder");
 const subheader = document.querySelector("#subheader");
 
 function changeColors() {
-  gsap.to(".containerShuffle", { backgroundColor: "#000", duration: 0.5 });
-  gsap.to(".placeholder, nav, footer, p", { color: "#fff", duration: 0.5 });
+  gsap.to(".containerShuffle", { backgroundColor: "white", duration: 0.5 });
+  gsap.to(".placeholder, nav, footer, p", {
+    color: "#000",
+    duration: 0.5,
+  });
 }
 
 function revertColors() {
-  gsap.to(".containerShuffle", { backgroundColor: "#e3e3e3", duration: 0.5 });
-  gsap.to(".placeholder, nav, footer, p", { color: "#000", duration: 0.5 });
+  gsap.to(".containerShuffle", { backgroundColor: "#000", duration: 0.5 });
+  gsap.to(".placeholder, nav, footer, p", {
+    color: "#fff",
+    duration: 0.5,
+  });
 }
-
 items.forEach((item) => {
   item.addEventListener("mouseover", changeColors);
   item.addEventListener("mouseout", revertColors);
