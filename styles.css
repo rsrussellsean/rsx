@@ -1,6 +1,15 @@
+@import url("https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Cutive+Mono&family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Press+Start+2P&family=Tiny5&display=swap");
+
+@font-face {
+  font-family: "BookItalic";
+  src: url("./fonts/antiqua/AllrounderAntiquaTest-BookItalic.otf")
+    format("opentype");
+  font-weight: normal;
+}
+
 @font-face {
   font-family: "Grifter";
-  src: url("./fonts/grifterbold.otf") format("opentype");
+  src: url("./fonts/Grifterbold.otf") format("opentype");
   font-weight: bold;
 }
 
@@ -29,10 +38,22 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+  scroll-behavior: smooth;
 }
 
 body {
-  background: #000;
+  background-color: #000 !important;
+  overflow-x: hidden !important;
+}
+
+body.no-scroll {
+  overflow: hidden;
+  height: 100vh;
+}
+
+.no-scroll {
+  overflow: hidden;
+  height: 100vh;
 }
 
 img {
@@ -46,8 +67,12 @@ p {
   color: var(--color-accent);
   text-decoration: none;
   font-family: Arial, Helvetica, sans-serif;
-  text-transform: uppercase;
+  /* text-transform: uppercase; */
   font-size: 12px;
+}
+
+section .main-content {
+  z-index: -2;
 }
 
 .nav2 {
@@ -98,10 +123,13 @@ nav > div {
 }
 
 /* start of work page */
-.container {
+
+.workContainer {
   width: 100%;
-  height: 500vh !important;
-  /* height: 200vh !important; */
+  /* height: 340vh !important; */
+  /* main content overall height */
+
+  /* height: 400vh !important; */
 }
 
 .active-slide {
@@ -264,12 +292,27 @@ nav > div {
 
 .intro-wrapper {
   height: 100vh;
-  scroll-snap-type: y mandatory;
-  overflow-y: auto;
-  scroll-behavior: smooth;
+  scroll-snap-type: y mandatory !important;
+  scroll-behavior: smooth !important;
+  /* overflow-y: auto;
+  overflow-x: hidden; */
+  position: relative;
+  z-index: 1;
+  overflow: hidden !important;
+
+  /* position: absolute; */
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: auto;
+  height: auto;
+  min-width: 100%;
+  min-height: 100%;
+  object-fit: cover;
+  opacity: 0.85;
 }
 
-.intro,
+/* .intro,
 .outro {
   height: 100vh;
   background: #000;
@@ -278,19 +321,12 @@ nav > div {
   justify-content: center;
   align-items: center;
   font-size: 2em;
-  text-transform: uppercase;
   scroll-snap-align: start;
   position: relative;
   z-index: 1;
-}
+} */
 
 /* end of intro outro page */
-/* 
-.main-container {
-  scroll-snap-type: y mandatory !important;
-  overflow-y: auto !important;
-  scroll-behavior: smooth !important;
-} */
 
 /* start of Font shuffle css */
 
@@ -299,21 +335,8 @@ nav > div {
   height: 100%;
   font-family: "Franklin Gothic Medium", "Arial Narrow", Arial, sans-serif;
   text-transform: uppercase;
-  /* color: white; */
   background: black;
-
-  /* background: #e3e3e3; */
 }
-
-/* nav,
-footer {
-  position: absolute;
-  padding: 2em;
-  width: 100%;
-  display: flex;
-  justify-content: space-between;
-  color: white !important;
-} */
 
 .header {
   position: absolute;
@@ -322,6 +345,7 @@ footer {
   transform: translate(-50%, -50%);
   width: 75%;
   color: white !important;
+  /* z-index: 10 !important; */
 }
 
 p {
@@ -331,13 +355,10 @@ p {
 
 .placeholder {
   text-align: center;
-  /* font-family: Arial, Helvetica, sans-serif; */
   font-size: 300px;
   color: #fff;
-  /* color: #000; */
-
   line-height: 1.2;
-  font-family: "grifter", sans-serif;
+  font-family: "Grifter", sans-serif;
 }
 
 .logoImage {
@@ -352,7 +373,6 @@ p {
 
 #subheader {
   font-size: 50px;
-  /* color: white; */
   text-align: left;
   font-family: "MADERegular", sans-serif;
   color: white;
@@ -364,4 +384,202 @@ p {
   padding: 2em;
   cursor: pointer;
   width: 10%;
+}
+
+.hero-background {
+  background-color: #000 !important;
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  z-index: 1;
+}
+
+.hero {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  /* background-color: #15161b; */
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  clip-path: polygon(0% 45%, 0% 45%, 0% 55%, 0% 55%);
+  will-change: clip-path;
+  z-index: 1;
+}
+
+.progress-bar {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  transform: translateY(-50%);
+  width: 25vw;
+  padding: 2em;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: white !important ;
+}
+
+.progress-bar p {
+  color: black;
+}
+
+.video-container {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 100vw;
+  height: 100svh !important;
+  background-color: #000;
+  clip-path: polygon(20% 20%, 80% 20%, 80% 80%, 20% 80%);
+  will-change: transform, clip-path;
+  overflow: hidden !important;
+}
+
+/* About me */
+
+.aboutContainer {
+  width: 100%;
+  min-height: 100vh;
+  overflow: visible; /* or auto */
+  background-color: #000000;
+  font-family: "MADERegular", sans-serif !important;
+  position: relative; /* not absolute */
+}
+
+/* Gradient CSS */
+.blob {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 650px;
+  height: 650px;
+  border-radius: 100%;
+  background-image: linear-gradient(#1100ff 10%, #ff00f2);
+  filter: blur(250px);
+  transition: all 450ms ease-out;
+  position: absolute;
+  pointer-events: none;
+  left: 0;
+  top: 0;
+  transform: translate(calc(-50% + 15px), -50%);
+  z-index: 0;
+}
+
+#textContainer {
+  position: relative; /* or static */
+  width: 100%;
+  height: 40vh; /* use vh to size relative to viewport height */
+  overflow: hidden;
+  color: #ffffff !important;
+  background-color: transparent !important;
+  z-index: 1; /* low enough to not block other stuff */
+  font-family: "MADEBold", sans-serif !important;
+}
+
+canvas {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: block;
+  width: 100%;
+  height: 100%;
+  background-color: transparent !important;
+  font-family: "MADEBold", sans-serif !important;
+}
+
+.change-text {
+  /* animation-name: fontChange;
+  animation-duration: 2s;
+  animation-iteration-count: infinite; */
+  color: lightgray;
+  font-size: 50px;
+  position: absolute;
+  top: 40%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  font-family: "Grifter", sans-serif;
+}
+
+.skillsContainer {
+  position: absolute;
+  top: 70%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: white;
+  display: flex;
+  gap: 100px; /* space between the two sides */
+  align-items: center;
+  justify-content: center;
+}
+
+.animate-font {
+  animation: fontChange 2s steps(1, end) infinite;
+}
+
+.skillsContainer img {
+  width: 40px;
+  height: auto;
+  margin: 5px;
+}
+
+.descriptionContainer {
+  width: 50%;
+}
+.descriptionContainer p {
+  font-size: 24px;
+  font-family: "MADEthin", sans-serif !important;
+  color: white;
+}
+
+.myskillsContainer p {
+  font-family: "BookItalic", sans-serif !important;
+  font-size: 24px;
+  color: white;
+  text-align: left;
+  padding-left: 10px;
+}
+
+.webdevskills {
+  padding: 20px 0;
+}
+
+@keyframes fontChange {
+  0% {
+    font-family: "Grifter";
+  }
+  10% {
+    font-family: "Playfair Display", serif;
+  }
+  20% {
+    font-family: "Cinzel Decorative";
+  }
+  30% {
+    font-family: "Cutive Mono";
+  }
+  40% {
+    /* font-family: "Press Start 2P Display"; */
+    font-family: "Tiny5";
+  }
+  50% {
+    font-family: "Grifter";
+  }
+
+  60% {
+    font-family: "Grifter";
+  }
+
+  80% {
+    font-family: "Grifter";
+  }
+
+  100% {
+    font-family: "Grifter";
+  }
 }

@@ -1,0 +1,312 @@
+/* @import url("https://fonts.cdnfonts.com/css/blanquotey"); */
+
+@import url("https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Cutive+Mono&family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Press+Start+2P&family=Tiny5&display=swap");
+@font-face {
+  font-family: "MADERegular";
+  src: url("../fonts/MADERegular.otf") format("opentype");
+  font-weight: normal;
+}
+@font-face {
+  font-family: "MADEThin";
+  src: url("../fonts/MADEThin.otf") format("opentype");
+  font-weight: normal;
+}
+@font-face {
+  font-family: "BookItalic";
+  src: url("../fonts/antiqua/AllrounderAntiquaTest-BookItalic.otf")
+    format("opentype");
+  font-weight: normal;
+}
+@font-face {
+  font-family: "grifter";
+  src: url("../fonts/grifterbold.otf") format("opentype");
+  font-weight: normal;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background-color: #000000;
+  font-family: "MADERegular", sans-serif !important;
+}
+
+/* Gradient CSS */
+.blob {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 650px;
+  height: 650px;
+  border-radius: 100%;
+  background-image: linear-gradient(#1100ff 10%, #ff00f2);
+  filter: blur(250px);
+  transition: all 450ms ease-out;
+  position: absolute;
+  pointer-events: none;
+  left: 0;
+  top: 0;
+  transform: translate(calc(-50% + 15px), -50%);
+  z-index: 0;
+}
+
+#textContainer {
+  position: absolute;
+  width: 100%;
+  height: 40%;
+  overflow: hidden;
+  color: #ffffff !important;
+  background-color: transparent !important;
+}
+
+canvas {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: block;
+  width: 100%;
+  height: 100%;
+  background-color: transparent !important;
+}
+
+.change-text {
+  /* animation-name: fontChange;
+  animation-duration: 2s;
+  animation-iteration-count: infinite; */
+  color: lightgray;
+  font-size: 50px;
+  position: absolute;
+  top: 35%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+}
+
+.skillsContainer {
+  position: absolute;
+  top: 70%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: left;
+  color: white;
+  display: flex;
+  gap: 120px; /* space between the two sides */
+  align-items: center;
+  justify-content: center;
+}
+
+.animate-font {
+  animation: fontChange 2s steps(1, end) infinite;
+}
+
+.skillsContainer img {
+  width: 40px;
+  height: auto;
+  margin: 5px;
+}
+
+.descriptionContainer {
+  width: 40%;
+  font-size: 24px;
+  font-family: "MADEthin", sans-serif !important;
+}
+
+.myskillsContainer {
+  font-family: "BookItalic", sans-serif !important;
+  font-size: 24px;
+}
+
+@keyframes fontChange {
+  0% {
+    font-family: "grifter";
+  }
+  10% {
+    font-family: "Playfair Display", serif;
+  }
+  20% {
+    font-family: "Cinzel Decorative";
+  }
+  30% {
+    font-family: "Cutive Mono";
+  }
+  40% {
+    /* font-family: "Press Start 2P Display"; */
+    font-family: "Tiny5";
+  }
+  50% {
+    font-family: "grifter";
+  }
+
+  60% {
+    font-family: "grifter";
+  }
+
+  80% {
+    font-family: "grifter";
+  }
+
+  100% {
+    font-family: "grifter";
+  }
+}
+
+/* About me */
+/* @import url("https://fonts.cdnfonts.com/css/blanquotey"); */
+
+@import url("https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Cutive+Mono&family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Press+Start+2P&family=Tiny5&display=swap");
+@font-face {
+  font-family: "MADERegular";
+  src: url("../fonts/MADERegular.otf") format("opentype");
+  font-weight: normal;
+}
+@font-face {
+  font-family: "MADEThin";
+  src: url("../fonts/MADEThin.otf") format("opentype");
+  font-weight: normal;
+}
+@font-face {
+  font-family: "BookItalic";
+  src: url("../fonts/antiqua/AllrounderAntiquaTest-BookItalic.otf")
+    format("opentype");
+  font-weight: normal;
+}
+@font-face {
+  font-family: "grifter";
+  src: url("../fonts/grifterbold.otf") format("opentype");
+  font-weight: normal;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background-color: #000000;
+  font-family: "MADERegular", sans-serif !important;
+}
+
+/* Gradient CSS */
+.blob {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 650px;
+  height: 650px;
+  border-radius: 100%;
+  background-image: linear-gradient(#1100ff 10%, #ff00f2);
+  filter: blur(250px);
+  transition: all 450ms ease-out;
+  position: absolute;
+  pointer-events: none;
+  left: 0;
+  top: 0;
+  transform: translate(calc(-50% + 15px), -50%);
+  z-index: 0;
+}
+
+#textContainer {
+  position: absolute;
+  width: 100%;
+  height: 40%;
+  overflow: hidden;
+  color: #ffffff !important;
+  background-color: transparent !important;
+}
+
+canvas {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: block;
+  width: 100%;
+  height: 100%;
+  background-color: transparent !important;
+}
+
+.change-text {
+  /* animation-name: fontChange;
+  animation-duration: 2s;
+  animation-iteration-count: infinite; */
+  color: lightgray;
+  font-size: 50px;
+  position: absolute;
+  top: 35%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+}
+
+.skillsContainer {
+  position: absolute;
+  top: 70%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: left;
+  color: white;
+  display: flex;
+  gap: 120px; /* space between the two sides */
+  align-items: center;
+  justify-content: center;
+}
+
+.animate-font {
+  animation: fontChange 2s steps(1, end) infinite;
+}
+
+.skillsContainer img {
+  width: 40px;
+  height: auto;
+  margin: 5px;
+}
+
+.descriptionContainer {
+  width: 40%;
+  font-size: 24px;
+  font-family: "MADEthin", sans-serif !important;
+}
+
+.myskillsContainer {
+  font-family: "BookItalic", sans-serif !important;
+  font-size: 24px;
+}
+
+@keyframes fontChange {
+  0% {
+    font-family: "grifter";
+  }
+  10% {
+    font-family: "Playfair Display", serif;
+  }
+  20% {
+    font-family: "Cinzel Decorative";
+  }
+  30% {
+    font-family: "Cutive Mono";
+  }
+  40% {
+    /* font-family: "Press Start 2P Display"; */
+    font-family: "Tiny5";
+  }
+  50% {
+    font-family: "grifter";
+  }
+
+  60% {
+    font-family: "grifter";
+  }
+
+  80% {
+    font-family: "grifter";
+  }
+
+  100% {
+    font-family: "grifter";
+  }
+}
