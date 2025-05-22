@@ -231,7 +231,7 @@ gsap.registerPlugin(CustomEase);
 const customEase = CustomEase.create("custom", ".87,0,.13,1");
 const counter = document.getElementById("counter");
 
-gsap.set(".video-container", {
+gsap.set(".loadingContainer", {
   scale: 0,
   rotation: -20,
 });
@@ -270,7 +270,7 @@ gsap.to(".hero", {
   ease: customEase,
   delay: 5,
   onStart: () => {
-    gsap.to(".video-container", {
+    gsap.to(".loadingContainer", {
       scale: 1,
       rotation: 0,
       clipPath: "polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%)",

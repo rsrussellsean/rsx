@@ -31,7 +31,7 @@
   font-weight: normal;
 }
 :root {
-  --color-accent: rgb(199, 199, 199);
+  --color-accent: rgb(255, 255, 255);
 }
 
 * {
@@ -312,8 +312,7 @@ nav > div {
   opacity: 0.85;
 }
 
-/* .intro,
-.outro {
+.intro {
   height: 100vh;
   background: #000;
   color: white;
@@ -324,7 +323,7 @@ nav > div {
   scroll-snap-align: start;
   position: relative;
   z-index: 1;
-} */
+}
 
 /* end of intro outro page */
 
@@ -356,7 +355,7 @@ p {
 .placeholder {
   text-align: center;
   font-size: 300px;
-  color: #fff;
+  /* color: #fff; */
   line-height: 1.2;
   font-family: "Grifter", sans-serif;
 }
@@ -421,13 +420,15 @@ p {
   justify-content: space-between;
   align-items: center;
   background-color: white !important ;
+  font-family: "MADEBold";
 }
 
 .progress-bar p {
+  font-family: "MADEThin";
   color: black;
 }
 
-.video-container {
+.loadingContainer {
   position: absolute;
   top: 50%;
   left: 50%;
@@ -497,7 +498,7 @@ canvas {
   /* animation-name: fontChange;
   animation-duration: 2s;
   animation-iteration-count: infinite; */
-  color: lightgray;
+  color: white !important;
   font-size: 50px;
   position: absolute;
   top: 40%;
@@ -536,6 +537,7 @@ canvas {
   font-size: 24px;
   font-family: "MADEthin", sans-serif !important;
   color: white;
+  text-align: left;
 }
 
 .myskillsContainer p {
