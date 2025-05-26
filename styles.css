@@ -343,7 +343,7 @@ nav > div {
   background: black;
 }
 
-.header {
+.introHeader {
   position: absolute;
   top: 50%;
   left: 50%;
@@ -363,7 +363,7 @@ p {
   font-size: 300px;
   /* color: #fff; */
   line-height: 1.2;
-  font-family: "Grifter", sans-serif;
+  font-family: "Grifter", sans-serif !important;
 }
 
 .logoImage {

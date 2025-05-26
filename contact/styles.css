@@ -155,7 +155,7 @@ section.website-content {
   transform: translateX(-50%); /* only center horizontally */
   width: 350px;
   height: 350px;
-  background: url(../images/contact/sphere1.png) no-repeat 50% 50%;
+  background: url(./images/contact/sphere1.png) no-repeat 50% 50%;
   background-size: cover;
   border-radius: 100%;
   z-index: 0;
