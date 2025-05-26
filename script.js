@@ -334,7 +334,7 @@ function createTextTexture(text, font, size, color, fontWeight = "100") {
   const fontSize = size || 600; // sets font size to 200px
   //font color
   ctx.fillStyle = "#ffffff";
-  ctx.font = `${fontWeight} ${fontSize}px "${font || "MADEBold"}"`;
+  ctx.font = `${fontWeight} ${fontSize}px "${font || "MADERegular"}"`;
   ctx.textAlign = "center";
   ctx.textBaseline = "middle";
 
