@@ -270,12 +270,11 @@ gsap.to(".hero", {
   },
 });
 
-// every refresh it will fo back to hero
+// every refresh it will go back to hero
 window.addEventListener("load", () => {
   if (performance.navigation.type === performance.navigation.TYPE_RELOAD) {
     // document.body.classList.remove("no-scroll");
-    // This means the page was reloaded/refreshed
-    window.location.href = "/gsapPortfolio/"; // change '/' to the URL of your first page
+    window.location.href = "/";
   }
 });
 
