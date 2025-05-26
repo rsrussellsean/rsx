@@ -1,23 +1,3 @@
-// const cursor = document.querySelector(".blob");
-// const introWrapper = document.querySelector(".intro-wrapper");
-
-// // Move the blob on mousemove
-// document.addEventListener("mousemove", (e) => {
-//   cursor.style.transform = `translate3d(calc(${e.clientX}px - 50%), calc(${e.clientY}px - 50%), 0)`;
-// });
-
-// // Show/hide the blob on scroll
-// window.addEventListener("scroll", () => {
-//   const rect = introWrapper.getBoundingClientRect();
-//   const isVisible = rect.bottom > 0 && rect.top < window.innerHeight;
-
-//   if (isVisible) {
-//     cursor.classList.remove("hidden");
-//   } else {
-//     cursor.classList.add("hidden");
-//   }
-// });
-
 //work JS
 gsap.registerPlugin(ScrollTrigger);
 
@@ -73,7 +53,7 @@ window.addEventListener("load", function () {
 document.querySelector(".intro-wrapper").addEventListener("wheel", (e) => {
   if (e.deltaY > 50) {
     document
-      .querySelector(".main-content")
+      .querySelector(".workSection")
       .scrollIntoView({ behavior: "smooth" });
   }
 });
@@ -523,3 +503,99 @@ skills.addEventListener("mouseenter", () => {
 skills.addEventListener("mouseleave", () => {
   text.classList.remove("animate-font");
 });
+
+// Contact Page
+const wrapper = document.querySelector(".tracker");
+const emoji = document.querySelector(".emoji");
+const emojiFace = document.querySelector(".emoji-face");
+
+const moveEvent = (e) => {
+  const emojiRect = emoji.getBoundingClientRect();
+
+  const relX = e.clientX - (emojiRect.left + emojiRect.width / 2);
+  const relY = e.clientY - (emojiRect.top + emojiRect.height / 2);
+
+  // Reduced displacement for subtler movement
+  const emojiMaxDisplacement = 20;
+  const emojiFaceMaxDisplacement = 30;
+
+  const emojiDisplacementX = (relX / emojiRect.width) * emojiMaxDisplacement;
+  const emojiDisplacementY = (relY / emojiRect.height) * emojiMaxDisplacement;
+
+  const emojiFaceDisplacementX =
+    (relX / emojiRect.width) * emojiFaceMaxDisplacement;
+  const emojiFaceDisplacementY =
+    (relY / emojiRect.height) * emojiFaceMaxDisplacement;
+
+  gsap.to(emoji, {
+    x: emojiDisplacementX,
+    y: emojiDisplacementY,
+    ease: "power3.out",
+    duration: 0.3,
+  });
+
+  gsap.to(emojiFace, {
+    x: emojiFaceDisplacementX,
+    y: emojiFaceDisplacementY,
+    ease: "power3.out",
+    duration: 0.3,
+  });
+};
+
+const leaveEvent = () => {
+  gsap.to([emoji, emojiFace], {
+    x: 0,
+    y: 0,
+    ease: "power3.out",
+    duration: 0.6,
+  });
+};
+
+wrapper.addEventListener("mousemove", moveEvent);
+wrapper.addEventListener("mouseleave", leaveEvent);
+
+// Initialize EmailJS with your public key
+emailjs.init("yJzaHnW-3TbbFF3Hh");
+
+// Handle form submission
+document
+  .getElementById("contact-form")
+  .addEventListener("submit", function (e) {
+    e.preventDefault();
+    console.log("Submit event triggered.");
+
+    // Validate email input before sending
+    const email = this.elements["from_email"].value.trim();
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+    if (!emailRegex.test(email)) {
+      alert("Please enter a valid email address.");
+      console.log("Invalid email:", email);
+      return; // STOP form submission here if email is invalid
+    }
+
+    alert("Sending message...");
+
+    // Log current form values
+    const formData = new FormData(this);
+    for (let [key, value] of formData.entries()) {
+      console.log(`${key}: ${value}`);
+    }
+
+    try {
+      emailjs.sendForm("service_5l54kff", "template_qw7shd8", this).then(
+        function () {
+          alert("Message sent successfully!");
+          console.log("EmailJS sendForm success.");
+          document.getElementById("contact-form").reset();
+        },
+        function (error) {
+          alert("Failed to send message. Please try again later.");
+          console.error("EmailJS error:", error);
+        }
+      );
+    } catch (err) {
+      alert("Unexpected error occurred.");
+      console.error("Unexpected error:", err);
+    }
+  });
