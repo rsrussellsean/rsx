@@ -222,10 +222,6 @@ nav img {
     opacity: 0;
     transform: translate(-50%, -52%);
   }
-  /* 50% {
-    opacity: 0.6;
-    transform: translate(-50%, -48%);
-  } */
   100% {
     opacity: 1;
     transform: translate(-50%, -50%);
