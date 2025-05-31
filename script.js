@@ -191,92 +191,143 @@ items.forEach((item) => {
 
 window.onload = () => {
   restPlaceholderText(); // triggers the initial shuffle
+  animateSubheader();
 };
 
-// From text animation
-gsap.from("#subheader", {
-  delay: 6.5,
-  y: 50,
-  opacity: 0,
-  duration: 0.5, // snappy duration
-  ease: "power4.out", // sharp easing
-});
+function animateSubheader(delay = 6.5) {
+  gsap.from("#subheader", {
+    delay: delay,
+    y: 50,
+    opacity: 0,
+    duration: 0.5,
+    ease: "power4.out",
+  });
+}
 
 // Disable scroll initially
-document.body.classList.add("no-scroll");
+// document.body.classList.add("no-scroll");
 
-//loading animation
 gsap.registerPlugin(CustomEase);
 
 const customEase = CustomEase.create("custom", ".87,0,.13,1");
 const counter = document.getElementById("counter");
 
-gsap.set(".loadingContainer", {
-  scale: 0,
-  rotation: -20,
-});
+// Always show intro-wrapper no matter what
+const introWrapper = document.querySelector(".intro-wrapper");
+if (introWrapper) {
+  introWrapper.style.display = "block";
+  introWrapper.style.opacity = "1";
+  introWrapper.style.visibility = "visible";
+}
 
-gsap.to(".hero", {
-  clipPath: "polygon(0% 45%, 25% 45%, 25% 55%, 0% 55%)",
-  duration: 1.5,
-  ease: customEase,
-  delay: 1,
-});
+// Check if URL has #work
+const isDirectToWork = window.location.hash === "#work";
 
-gsap.to(".hero", {
-  clipPath: "polygon(0% 45%, 100% 45%, 100% 55%, 0% 55%)",
-  duration: 2,
-  ease: customEase,
-  delay: 3,
-  onStart: () => {
-    gsap.to(".progress-bar", {
-      width: "100vw",
-      duration: 2,
-      ease: customEase,
-    });
+if (!isDirectToWork) {
+  // Normal animation flow with loading
+  document.body.classList.add("no-scroll");
 
-    gsap.to(counter, {
-      innerHTML: 100,
-      duration: 2,
-      ease: customEase,
-      snap: { innerHTML: 1 },
-    });
-  },
-});
+  gsap.set(".loadingContainer", {
+    scale: 0,
+    rotation: -20,
+  });
 
-gsap.to(".hero", {
-  clipPath: "polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%)",
-  duration: 1,
-  ease: customEase,
-  delay: 5,
-  onStart: () => {
-    gsap.to(".loadingContainer", {
-      scale: 1,
-      rotation: 0,
-      clipPath: "polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%)",
-      ease: customEase,
-    });
+  gsap.to(".hero", {
+    clipPath: "polygon(0% 45%, 25% 45%, 25% 55%, 0% 55%)",
+    duration: 1.5,
+    ease: customEase,
+    delay: 1,
+  });
 
-    // Call the shuffle animation here
-    shuffleLetters("VISION");
+  gsap.to(".hero", {
+    clipPath: "polygon(0% 45%, 100% 45%, 100% 55%, 0% 55%)",
+    duration: 2,
+    ease: customEase,
+    delay: 3,
+    onStart: () => {
+      gsap.to(".progress-bar", {
+        width: "100vw",
+        duration: 2,
+        ease: customEase,
+      });
 
-    gsap.to(".progress-bar", {
-      opacity: 0,
-      duration: 0.3,
-    });
+      gsap.to(counter, {
+        innerHTML: 100,
+        duration: 2,
+        ease: customEase,
+        snap: { innerHTML: 1 },
+      });
+    },
+  });
 
-    // Enable scroll when the animation is complete
-    document.body.classList.remove("no-scroll");
-  },
-});
+  gsap.to(".hero", {
+    clipPath: "polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%)",
+    duration: 1,
+    ease: customEase,
+    delay: 5,
+    onStart: () => {
+      gsap.to(".loadingContainer", {
+        scale: 1,
+        rotation: 0,
+        clipPath: "polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%)",
+        ease: customEase,
+      });
 
-// every refresh it will go back to hero
+      shuffleLetters("VISION");
+
+      gsap.to(".progress-bar", {
+        opacity: 0,
+        duration: 0.3,
+      });
+    },
+    onComplete: () => {
+      document.body.classList.remove("no-scroll");
+    },
+  });
+} else {
+  // If user lands directly in #work, skip animation, set final states
+
+  // Enable scrolling immediately
+  document.body.classList.remove("no-scroll");
+
+  // Set loadingContainer visible and at final scale/rotation
+  gsap.set(".loadingContainer", {
+    scale: 1,
+    rotation: 0,
+    clipPath: "polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%)",
+  });
+
+  // Set hero clipPath to final state
+  gsap.set(".hero", {
+    opacity: 1,
+    clipPath: "polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%)",
+  });
+
+  // gsap.fromTo(
+  //   ".hero",
+  //   { opacity: 0 },
+  //   { opacity: 1, duration: 2, ease: "power4.out" }
+  // );
+
+  // Set progress bar invisible
+  gsap.set(".progress-bar", {
+    opacity: 0,
+  });
+}
+
+// Redirect to homepage on refresh
 window.addEventListener("load", () => {
   if (performance.navigation.type === performance.navigation.TYPE_RELOAD) {
-    // document.body.classList.remove("no-scroll");
     window.location.href = "/";
   }
 });
+
+window.onload = () => {
+  if (!isDirectToWork) {
+    restPlaceholderText();
+    animateSubheader();
+  }
+};
 
 // About me JS
 const textContainer = document.getElementById("textContainer");
@@ -553,13 +604,28 @@ const leaveEvent = () => {
 wrapper.addEventListener("mousemove", moveEvent);
 wrapper.addEventListener("mouseleave", leaveEvent);
 
-// Initialize EmailJS with your public key
-emailjs.init("yJzaHnW-3TbbFF3Hh");
+document.addEventListener("DOMContentLoaded", function () {
+  // Check if EmailJS is loaded
+  if (typeof emailjs === "undefined") {
+    console.error(
+      "EmailJS is not loaded. Please include the EmailJS script before this one."
+    );
+    return;
+  }
 
-// Handle form submission
-document
-  .getElementById("contact-form")
-  .addEventListener("submit", function (e) {
+  // Initialize EmailJS with your public key
+  emailjs.init("yJzaHnW-3TbbFF3Hh");
+
+  // Get the contact form
+  const contactForm = document.getElementById("contact-form");
+
+  if (!contactForm) {
+    console.error("Contact form not found.");
+    return;
+  }
+
+  // Handle form submission
+  contactForm.addEventListener("submit", function (e) {
     e.preventDefault();
     console.log("Submit event triggered.");
 
@@ -568,33 +634,60 @@ document
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
     if (!emailRegex.test(email)) {
-      alert("Please enter a valid email address.");
+      Swal.fire({
+        icon: "error",
+        title: "Invalid Email",
+        text: "Please enter a valid email address.",
+      });
       console.log("Invalid email:", email);
-      return; // STOP form submission here if email is invalid
+      return; // Stop form submission if email is invalid
     }
 
-    alert("Sending message...");
+    // Show sending modal
+    Swal.fire({
+      title: "Sending message...",
+      allowOutsideClick: false,
+      didOpen: () => {
+        Swal.showLoading();
+      },
+    });
 
-    // Log current form values
-    const formData = new FormData(this);
-    for (let [key, value] of formData.entries()) {
-      console.log(`${key}: ${value}`);
-    }
-
-    try {
-      emailjs.sendForm("service_5l54kff", "template_qw7shd8", this).then(
-        function () {
-          alert("Message sent successfully!");
-          console.log("EmailJS sendForm success.");
-          document.getElementById("contact-form").reset();
-        },
-        function (error) {
-          alert("Failed to send message. Please try again later.");
-          console.error("EmailJS error:", error);
-        }
-      );
-    } catch (err) {
-      alert("Unexpected error occurred.");
-      console.error("Unexpected error:", err);
-    }
+    // Send the form using EmailJS
+    emailjs.sendForm("service_5l54kff", "template_qw7shd8", this).then(
+      function () {
+        Swal.fire({
+          icon: "success",
+          title: "Message sent successfully!",
+          confirmButtonText: "OK",
+        });
+        console.log("EmailJS sendForm success.");
+        contactForm.reset();
+      },
+      function (error) {
+        Swal.fire({
+          icon: "error",
+          title: "Failed to send message",
+          text: "Please try again later.",
+        });
+        console.error("EmailJS error:", error);
+      }
+    );
   });
+});
+
+document.querySelectorAll(".slide a").forEach((link) => {
+  link.addEventListener("click", function (e) {
+    e.preventDefault(); // prevent immediate navigation
+
+    const href = this.getAttribute("href");
+    const overlay = document.getElementById("black-transition");
+
+    // Animate black div
+    overlay.style.top = "0";
+
+    // Navigate after animation
+    setTimeout(() => {
+      window.location.href = href;
+    }, 800); // matches the CSS transition duration
+  });
+});
