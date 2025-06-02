@@ -321,3 +321,87 @@ nav img {
   background-color: rgba(0, 0, 0, 0.7); /* Change 0.1 to control visibility */
   z-index: -1; /* Same as bg-blur but rendered above it */
 }
+
+/* Responsive */
+/* Laptop (1025px - 1440px) */
+@media (max-width: 1440px) {
+}
+
+/* iPad / Tablet (768px - 1024px) */
+@media (max-width: 1024px) {
+  .site-info {
+    display: flex;
+    flex-direction: column;
+    gap: 12px; /* reduced gap */
+    padding: 20px;
+    width: 100%;
+    max-width: 400px;
+    text-align: center;
+
+    margin-top: -6em;
+  }
+
+  .site-info p {
+    margin: 0; /* remove default margin */
+  }
+
+  .site-info p span {
+    font-size: 24px;
+    line-height: 1.2;
+  }
+
+  .visit-info {
+    margin: 0; /* reset if any default margin */
+    padding: 0;
+  }
+
+  .visit-info a {
+    font-size: 16px;
+    padding: 12px 16px;
+  }
+}
+
+/* Mobile device */
+@media (max-width: 768px) {
+  .site-info {
+    display: flex;
+    flex-direction: column;
+    gap: 12px; /* reduced gap */
+    padding: 20px;
+    width: 100%;
+    max-width: 400px;
+    text-align: center;
+
+    margin-top: -6.5em;
+  }
+
+  .site-info p {
+    margin: 0; /* remove default margin */
+  }
+
+  .site-info p span {
+    font-size: 22px;
+    line-height: 1.2;
+  }
+
+  .visit-info {
+    margin: 0; /* reset if any default margin */
+    padding: 0;
+  }
+
+  .visit-info a {
+    font-size: 12px;
+    padding: 12px 16px;
+  }
+
+  nav a {
+    font-size: 16px;
+    width: 150px;
+    display: flex; /* add this */
+    align-items: center; /* add this */
+    gap: 6px; /* optional: spacing between image and text */
+    margin: 0; /* reset margin if needed */
+    text-decoration: none;
+    color: white;
+  }
+}
