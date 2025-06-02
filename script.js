@@ -26,9 +26,14 @@ window.addEventListener("load", function () {
         const progress = self.progress;
         // const zIncrement = progress * 12500;
         // decrease this for height and less scrolls
-        const zIncrement = progress * 15000;
-        const currentZ = -13500 + index * 1500 + zIncrement;
+        // const zIncrement = progress * 15000;
+        const zIncrement = progress * 11000;
+
+        // const currentZ = -13500 + index * 1500 + zIncrement;
         // const currentZ = -6000 + index * 1500 + zIncrement;
+
+        //adjust this to closer the currentz when scrolling
+        const currentZ = -9000 + index * 1500 + zIncrement;
 
         // Efficiently update styles using GSAP
         gsap.to(slide, {
@@ -318,7 +323,7 @@ if (!isDirectToWork) {
 // Redirect to homepage on refresh
 window.addEventListener("load", () => {
   if (performance.navigation.type === performance.navigation.TYPE_RELOAD) {
-    window.location.href = "/rsx";
+    window.location.href = "/";
   }
 });
 

@@ -1277,7 +1277,7 @@ section.website-content {
     margin-bottom: 0.75em;
   }
 
-  #slide-1 {
+  /* #slide-1 {
     position: absolute;
     top: 70%;
     left: 70%;
@@ -1302,7 +1302,7 @@ section.website-content {
     transform: translateX(-50%) translateY(-50%) translateZ(-10500px);
     opacity: 0;
     width: 30%;
-  }
+  } */
 
   #slide-4 {
     position: absolute;

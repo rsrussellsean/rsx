@@ -1,0 +1,407 @@
+@font-face {
+  font-family: "MADEBold";
+  src: url("../../fonts/MADEBold.otf") format("opentype");
+  font-weight: normal;
+}
+
+@font-face {
+  font-family: "MADERegular";
+  src: url("../../fonts/MADERegular.otf") format("opentype");
+  font-weight: normal;
+}
+
+@font-face {
+  font-family: "BookItalic";
+  src: url("../../fonts/antiqua/AllrounderAntiquaTest-BookItalic.otf")
+    format("opentype");
+  font-weight: normal;
+}
+
+@font-face {
+  font-family: "Book";
+  src: url("../../fonts/antiqua/AllrounderAntiquaTest-Book.otf")
+    format("opentype");
+  font-weight: normal;
+}
+
+@font-face {
+  font-family: "Grifter";
+  src: url("../../fonts/grifterbold.otf") format("opentype");
+  font-weight: bold;
+}
+
+@font-face {
+  font-family: "MADERegular";
+  src: url("../../fonts/MADERegular.otf") format("opentype");
+  font-weight: normal;
+}
+
+@font-face {
+  font-family: "MADEBold";
+  src: url("../../fonts/MADEBold.otf") format("opentype");
+  font-weight: normal;
+}
+
+@font-face {
+  font-family: "MADEThin";
+  src: url("../../fonts/MADEThin.otf") format("opentype");
+  font-weight: normal;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: "Courier New", Courier, monospace;
+  overflow: hidden !important;
+}
+
+img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: opacity 0.2s;
+  user-select: none;
+}
+
+p {
+  font-size: 14px;
+  font-weight: 600;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  user-select: none;
+}
+
+.container {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden !important;
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.8s ease-in, transform 0.8s ease-in;
+}
+.container.loaded {
+  overflow: hidden !important;
+  opacity: 1;
+  transform: translateY(0);
+}
+
+nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  padding: 1.5em 2.5em;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: white;
+  font-family: "MADERegular", sans-serif;
+  z-index: 1;
+}
+
+nav a {
+  font-size: 20px;
+  width: 200px;
+  display: flex; /* add this */
+  align-items: center; /* add this */
+  gap: 0.5em; /* optional: spacing between image and text */
+  margin: 0; /* reset margin if needed */
+  text-decoration: none;
+  color: white;
+}
+
+nav img {
+  width: 1em; /* adjust size to match text */
+  height: auto;
+  display: block; /* remove bottom spacing */
+}
+
+.site-info {
+  position: absolute;
+  top: 40%;
+  left: 1.5em;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  width: 400px;
+  padding-left: 20px;
+}
+
+.site-info p span {
+  color: white;
+  font-size: 40px;
+  font-family: "MADEBold", sans-serif;
+  text-transform: uppercase;
+  line-height: 1.2;
+}
+
+.visit-info a {
+  display: inline-block;
+  padding: 16px 16px;
+  color: white;
+  text-decoration: none;
+  border-radius: 12px;
+  font-family: "MADERegular", sans-serif;
+  /* text-transform: uppercase; */
+  font-size: 18px;
+  background: rgba(255, 255, 255, 0.1); /* semi-transparent white */
+  backdrop-filter: blur(10px); /* glass effect */
+  -webkit-backdrop-filter: blur(10px); /* Safari support */
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+}
+
+.visit-info a:hover {
+  background: rgba(255, 255, 255, 0.25);
+  color: #ffffff;
+  border: 1px solid rgba(255, 255, 255, 0.5);
+}
+
+.img-preview {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 50%;
+  height: 75%;
+  overflow: hidden;
+}
+
+.img-preview img {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.minimap {
+  position: absolute;
+  top: 40%;
+  right: 6em;
+  width: 200px;
+}
+
+.indicator {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 150px;
+  border: 2px solid rgb(48, 48, 48);
+  z-index: 2;
+}
+
+.items {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 0px;
+  will-change: transform;
+}
+
+.item {
+  width: 100%;
+  height: 150px;
+  padding: 5px;
+  cursor: pointer;
+}
+
+@keyframes fadeSmooth {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, -52%);
+  }
+  /* 50% {
+    opacity: 0.6;
+    transform: translate(-50%, -48%);
+  } */
+  100% {
+    opacity: 1;
+    transform: translate(-50%, -50%);
+  }
+}
+
+.img-preview img.animate {
+  animation: fadeSmooth 1s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  transform-origin: center;
+}
+
+@media (max-width: 900px) {
+  body {
+    overflow: hidden;
+    touch-action: none;
+  }
+
+  .container {
+    touch-action: none;
+  }
+
+  .site-info {
+    top: 10em;
+    left: 50%;
+    transform: translateX(-50%);
+    text-align: center !important;
+    padding: 0;
+  }
+
+  .site-info p span {
+    color: white;
+    font-size: 24px;
+    font-family: "MADEBold", sans-serif;
+    text-transform: uppercase;
+  }
+
+  .minimap {
+    top: auto;
+    right: auto;
+    bottom: 5em;
+    left: 50%;
+    width: auto;
+    height: 80px;
+    touch-action: none;
+  }
+
+  .indicator {
+    top: 0;
+    left: 0;
+    width: 60px;
+    height: 100%;
+  }
+
+  .items {
+    flex-direction: row;
+    width: max-content;
+    height: 100%;
+    touch-action: none;
+  }
+
+  .item {
+    width: 60px;
+    height: 100%;
+    padding: 5px;
+  }
+
+  .img-preview {
+    top: 45%;
+    width: 75%;
+    height: 50%;
+  }
+}
+
+.bg-blur {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-size: cover;
+  background-position: center;
+  filter: blur(50px);
+  z-index: -1;
+}
+
+.dark-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.7); /* Change 0.1 to control visibility */
+  z-index: -1; /* Same as bg-blur but rendered above it */
+}
+
+/* Responsive */
+/* Laptop (1025px - 1440px) */
+@media (max-width: 1440px) {
+}
+
+/* iPad / Tablet (768px - 1024px) */
+@media (max-width: 1024px) {
+  .site-info {
+    display: flex;
+    flex-direction: column;
+    gap: 12px; /* reduced gap */
+    padding: 20px;
+    width: 100%;
+    max-width: 400px;
+    text-align: center;
+
+    margin-top: -6em;
+  }
+
+  .site-info p {
+    margin: 0; /* remove default margin */
+  }
+
+  .site-info p span {
+    font-size: 24px;
+    line-height: 1.2;
+  }
+
+  .visit-info {
+    margin: 0; /* reset if any default margin */
+    padding: 0;
+  }
+
+  .visit-info a {
+    font-size: 16px;
+    padding: 12px 16px;
+  }
+}
+
+/* Mobile device */
+@media (max-width: 768px) {
+  .site-info {
+    display: flex;
+    flex-direction: column;
+    gap: 12px; /* reduced gap */
+    padding: 20px;
+    width: 100%;
+    max-width: 400px;
+    text-align: center;
+
+    margin-top: -6.5em;
+  }
+
+  .site-info p {
+    margin: 0; /* remove default margin */
+  }
+
+  .site-info p span {
+    font-size: 22px;
+    line-height: 1.2;
+  }
+
+  .visit-info {
+    margin: 0; /* reset if any default margin */
+    padding: 0;
+  }
+
+  .visit-info a {
+    font-size: 12px;
+    padding: 12px 16px;
+  }
+
+  nav a {
+    font-size: 16px;
+    width: 150px;
+    display: flex; /* add this */
+    align-items: center; /* add this */
+    gap: 6px; /* optional: spacing between image and text */
+    margin: 0; /* reset margin if needed */
+    text-decoration: none;
+    color: white;
+  }
+}
