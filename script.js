@@ -33,7 +33,7 @@ window.addEventListener("load", function () {
         // const currentZ = -6000 + index * 1500 + zIncrement;
 
         //adjust this to closer the currentz when scrolling
-        const currentZ = -9000 + index * 1500 + zIncrement;
+        const currentZ = -10500 + index * 1500 + zIncrement;
 
         // Efficiently update styles using GSAP
         gsap.to(slide, {
