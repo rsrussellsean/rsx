@@ -27,7 +27,7 @@ window.addEventListener("load", function () {
         // const zIncrement = progress * 12500;
         // decrease this for height and less scrolls
         // const zIncrement = progress * 15000;
-        const zIncrement = progress * 14000;
+        const zIncrement = progress * 13000;
 
         // const currentZ = -13500 + index * 1500 + zIncrement;
         // const currentZ = -6000 + index * 1500 + zIncrement;
