@@ -323,7 +323,7 @@ if (!isDirectToWork) {
 // Redirect to homepage on refresh
 window.addEventListener("load", () => {
   if (performance.navigation.type === performance.navigation.TYPE_RELOAD) {
-    window.location.href = "/";
+    window.location.href = "/rsx";
   }
 });
 
