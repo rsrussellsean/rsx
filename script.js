@@ -1,5 +1,17 @@
 //work JS
-gsap.registerPlugin(ScrollTrigger);
+gsap.registerPlugin(ScrollTrigger, CustomEase);
+
+// Global Scroll Progress Track
+gsap.to(".scroll-progress", {
+  width: "100%",
+  ease: "none",
+  scrollTrigger: {
+    trigger: "body",
+    start: "top top",
+    end: "bottom bottom",
+    scrub: true,
+  },
+});
 
 window.addEventListener("load", function () {
   const slides = gsap.utils.toArray(".slide");
@@ -8,51 +20,136 @@ window.addEventListener("load", function () {
   const intro = document.querySelector(".intro");
   const outro = document.querySelector(".outro");
   const container = document.querySelector(".workContainer");
+  const slider = document.querySelector(".slider");
+  const workListContainer = document.querySelector(".workListContainer");
 
-  // Dynamically set container height based on slides + intro + outro
-  const totalSlides = slides.length;
-  const vhPerSlide = 60; // adjust as needed
-  // const vhPerSlide = container / totalSlides;
+  let workCtx; // We will hold the GSAP context here to easily revert the whole 3D container
 
-  container.style.height = `${totalSlides * vhPerSlide}vh`;
+  function initAnimatedView() {
+    workCtx = gsap.context(() => {
+      // Dynamically set container height based on slides
+      const totalSlides = slides.length;
+      const vhPerSlide = 60; // adjust as needed
+      container.style.height = `${totalSlides * vhPerSlide}vh`;
 
-  slides.forEach((slide, index) => {
-    ScrollTrigger.create({
-      trigger: container,
-      start: "top top",
-      end: "bottom bottom",
-      scrub: 2,
-      onUpdate: (self) => {
-        const progress = self.progress;
-        // const zIncrement = progress * 12500;
-        // decrease this for height and less scrolls
-        // const zIncrement = progress * 15000;
-        const zIncrement = progress * 13000;
+      slides.forEach((slide, index) => {
+        // Clear any leftover inline styles
+        gsap.set(slide, { clearProps: "all" });
+        gsap.set(activeSlideImages[index], { clearProps: "all" });
+        ScrollTrigger.create({
+          trigger: container,
+          start: "top top",
+          end: "bottom bottom",
+          scrub: 2,
+          onUpdate: (self) => {
+            const progress = self.progress;
+            const zIncrement = progress * 13000;
+            const currentZ = -12000 + index * 1500 + zIncrement;
 
-        // const currentZ = -13500 + index * 1500 + zIncrement;
-        // const currentZ = -6000 + index * 1500 + zIncrement;
+            // Efficiently update styles using GSAP
+            gsap.to(slide, {
+              opacity: currentZ > -1500 ? 1 : currentZ > -2800 ? 0.5 : 0,
+              xPercent: -50,
+              yPercent: -50,
+              z: currentZ,
+              duration: 1, // Slightly longer for smoothness
+              ease: "power4.out", // Smoother easing
+              overwrite: "auto",
+            });
 
-        //adjust this to closer the currentz when scrolling
-        const currentZ = -12000 + index * 1500 + zIncrement;
-
-        // Efficiently update styles using GSAP
-        gsap.to(slide, {
-          opacity: currentZ > -1500 ? 1 : currentZ > -2800 ? 0.5 : 0,
-          xPercent: -50,
-          yPercent: -50,
-          z: currentZ,
-          duration: 1, // Slightly longer for smoothness
-          ease: "power4.out", // Smoother easing
+            gsap.to(activeSlideImages[index], {
+              opacity: currentZ < 100 ? 1 : 0,
+              duration: 0.5,
+              ease: "power4.out",
+              overwrite: "auto",
+            });
+          },
         });
+      });
+    }, container);
+  }
 
-        gsap.to(activeSlideImages[index], {
-          opacity: currentZ < 100 ? 1 : 0,
-          duration: 0.5,
-          ease: "power4.out",
-        });
-      },
+  // Init the 3D scroll animations on load
+  initAnimatedView();
+
+  // Toggle View Logic for Work Section
+  const btnAnimated = document.getElementById("btn-animated-view");
+  const btnList = document.getElementById("btn-list-view");
+
+  if (btnAnimated && btnList) {
+    btnList.addEventListener("click", () => {
+      // Don't do anything if already active
+      if (btnList.classList.contains("active")) return;
+
+      btnList.classList.add("active");
+      btnAnimated.classList.remove("active");
+
+      // Cleanup: revert the GSAP context to kill triggers & clear inline styles
+      if (workCtx) {
+        workCtx.revert();
+      }
+
+      // Hide 3D view containers, show List view
+      gsap.to([container, slider], {
+        opacity: 0,
+        duration: 0.4,
+        onComplete: () => {
+          container.style.display = "none";
+          slider.style.display = "none";
+          workListContainer.style.display = "flex";
+          
+          gsap.fromTo(
+            workListContainer,
+            { opacity: 0 },
+            { opacity: 1, duration: 0.4 }
+          );
+
+          // Animate list items in
+          gsap.fromTo(
+            ".list-item",
+            { opacity: 0, y: 30 },
+            {
+              opacity: 1,
+              y: 0,
+              duration: 0.6,
+              stagger: 0.1,
+              ease: "power2.out",
+            }
+          );
+          
+          ScrollTrigger.refresh();
+        },
+      });
     });
-  });
+
+    btnAnimated.addEventListener("click", () => {
+      if (btnAnimated.classList.contains("active")) return;
+
+      btnAnimated.classList.add("active");
+      btnList.classList.remove("active");
+
+      // Hide List view, show 3D view
+      gsap.to(workListContainer, {
+        opacity: 0,
+        duration: 0.4,
+        onComplete: () => {
+          workListContainer.style.display = "none";
+          container.style.display = "block";
+          slider.style.display = "block";
+
+          gsap.fromTo(
+            [container, slider],
+            { opacity: 0 },
+            { opacity: 1, duration: 0.4 }
+          );
+
+          // Re-initialize 3D ScrollTriggers
+          initAnimatedView();
+          ScrollTrigger.refresh();
+        },
+      });
+    });
+  }
 });
 
 document.querySelector(".intro-wrapper").addEventListener("wheel", (e) => {
@@ -211,8 +308,6 @@ function animateSubheader(delay = 6.5) {
 
 // Disable scroll initially
 // document.body.classList.add("no-scroll");
-
-gsap.registerPlugin(CustomEase);
 
 const customEase = CustomEase.create("custom", ".87,0,.13,1");
 const counter = document.getElementById("counter");
@@ -541,12 +636,14 @@ function onWindowResize() {
   reloadTexture();
 }
 
+// Cursor Optimization using gsap.quickTo for true 60fps performance
 var cursor = document.querySelector(".blob");
+let xTo = gsap.quickTo(cursor, "x", { duration: 0.4, ease: "power3" }),
+    yTo = gsap.quickTo(cursor, "y", { duration: 0.4, ease: "power3" });
 
 document.addEventListener("mousemove", function (e) {
-  var x = e.clientX;
-  var y = e.clientY;
-  cursor.style.transform = `translate3d(calc(${e.clientX}px - 50%), calc(${e.clientY}px - 50%), 0)`;
+  xTo(e.clientX);
+  yTo(e.clientY);
 });
 
 const skills = document.querySelector("#textContainer");
