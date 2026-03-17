@@ -1,75 +1,85 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>RSXDesigns</title>
-    <link rel="stylesheet" href="styles.css" />
-    <link rel="icon" type="image/png" href="./images/rsx1.png" />
-  </head>
-  <body>
-    <div class="hero-background">
-      <div class="hero">
-        <div class="progress-bar">
-          <p>loading</p>
-          <p><span id="counter">0</span></p>
-        </div>
 
-        <div class="intro-wrapper loadingContainer">
-          <section class="intro">
-            <div class="containerShuffle">
-              <nav class="nav1">
-                <div id="item-1">RSX</div>
-              </nav>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>RSXDesigns</title>
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="icon" type="image/png" href="./images/rsx1.png" />
+</head>
 
-              <div class="introHeader">
-                <p id="subheader">From</p>
-                <div class="placeholder">VISION</div>
-              </div>
+<body>
+  <!-- Scroll Progress Indicator -->
+  <div class="scroll-progress"></div>
+
+  <div class="hero-background">
+    <div class="hero">
+      <div class="progress-bar">
+        <p>loading</p>
+        <p><span id="counter">0</span></p>
+      </div>
+
+      <div class="intro-wrapper loadingContainer">
+        <section class="intro">
+          <div class="containerShuffle">
+            <nav class="nav1">
+              <div id="item-1">RSX</div>
+            </nav>
+
+            <div class="introHeader">
+              <p id="subheader">From</p>
+              <div class="placeholder">VISION</div>
             </div>
-          </section>
-        </div>
+          </div>
+        </section>
       </div>
     </div>
+  </div>
 
-    <section class="workSection" id="work">
-      <nav class="nav2">
-        <!-- <div class="links-1">
+  <section class="workSection" id="work">
+    <nav class="nav2">
+      <!-- <div class="links-1">
           <a href="#">Works</a>
           <a href="#">Archive</a>
         </div> -->
-        <div class="logo">
-          <p id="toLogo">To</p>
-          <img class="logoImage" src="./images/elite1.png" alt="" />
-        </div>
-        <!-- <div class="links-2">
+      <div class="logo">
+        <p id="toLogo">To</p>
+        <img class="logoImage" src="./images/elite1.png" alt="" />
+      </div>
+      <!-- <div class="links-2">
           <a href="#">Info</a>
           <a href="#">Contact</a>
         </div> -->
-      </nav>
+    </nav>
 
-      <!-- <footer>
+    <!-- <footer>
         <p>Watch Showreel</p>
         <p>Coming Soon</p>
       </footer> -->
 
-      <div class="workContainer">
-        <div class="active-slide">
-          <!-- <img src="./images/works/en2.png" alt="" />
-          <img src="./images/works/realestate.png" alt="" />-->
-          <img src="./images/works/en2.png" alt="" />
-          <img src="./images/works/ai4.jpg" alt="" />
-          <img src="./images/works/realestate.png" alt="" />
-          <img src="./images/works/alliance2.png" alt="" />
-          <img src="./images/works/gym.png" alt="" />
-          <img src="./images/works/m1.png" alt="" />
-          <img src="./images/works/df1.png" alt="" />
-          <img src="./images/works/kp1.png" alt="" />
-        </div>
-      </div>
+    <div class="work-view-toggle">
+      <button id="btn-animated-view" class="active">Animated</button>
+      <button id="btn-list-view">List</button>
+    </div>
 
-      <div class="slider">
-        <!-- <div class="slide" id="slide-1">
+    <div class="workContainer">
+      <div class="active-slide">
+        <!-- <img src="./images/works/en2.png" alt="" />
+          <img src="./images/works/realestate.png" alt="" />-->
+        <img src="./images/works/en2.png" alt="" />
+        <img src="./images/works/ai4.jpg" alt="" />
+        <img src="./images/works/realestate.png" alt="" />
+        <img src="./images/works/alliance2.png" alt="" />
+        <img src="./images/works/gym.png" alt="" />
+        <img src="./images/works/m1.png" alt="" />
+        <img src="./images/works/df1.png" alt="" />
+        <img src="./images/works/kp1.png" alt="" />
+      </div>
+    </div>
+
+    <div class="slider">
+      <!-- <div class="slide" id="slide-1">
           <div class="slide-copy">
             <p>Neo Elegance</p>
             <p id="index">(ES 2025 1)</p>
@@ -89,273 +99,321 @@
           </div>
         </div> -->
 
-        <div class="slide" id="slide-2">
-          <div class="slide-copy">
-            <p>Ealy Nexus</p>
-            <p id="index">(EST 2024)</p>
-          </div>
-          <div class="slide-img">
-            <a href="./works/nexus/nexus.html">
-              <img src="./images/works/en2.png" alt="" />
-            </a>
-          </div>
+      <div class="slide" id="slide-2">
+        <div class="slide-copy">
+          <p>Ealy Nexus</p>
+          <p id="index">(EST 2024)</p>
         </div>
-
-        <div class="slide" id="slide-3">
-          <div class="slide-copy">
-            <p>AI Chatbot</p>
-            <p id="index">(EST 2024)</p>
-          </div>
-          <div class="slide-img">
-            <a href="./works/ai/ai.html">
-              <img src="./images/works/ai4.jpg" alt="" />
-            </a>
-          </div>
+        <div class="slide-img">
+          <a href="./works/nexus/nexus.html">
+            <img src="./images/works/en2.png" alt="" />
+          </a>
         </div>
+      </div>
 
-        <div class="slide" id="slide-4">
-          <div class="slide-copy">
-            <p>Sereno</p>
-            <p id="index">(EST 2024)</p>
-          </div>
-          <div class="slide-img">
-            <a href="./works/sereno/sereno.html">
-              <img src="./images/works/realestate.png" alt="" />
-            </a>
-          </div>
+      <div class="slide" id="slide-3">
+        <div class="slide-copy">
+          <p>AI Chatbot</p>
+          <p id="index">(EST 2024)</p>
         </div>
-
-        <div class="slide" id="slide-5">
-          <div class="slide-copy">
-            <p>Alliance</p>
-            <p id="index">(EST 2023)</p>
-          </div>
-          <div class="slide-img">
-            <a href="./works/alliance/alliance.html">
-              <img src="./images/works/alliance2.png" alt="" />
-            </a>
-          </div>
+        <div class="slide-img">
+          <a href="./works/ai/ai.html">
+            <img src="./images/works/ai4.jpg" alt="" />
+          </a>
         </div>
+      </div>
 
-        <div class="slide" id="slide-6">
-          <div class="slide-copy">
-            <p>Gym Trainer</p>
-            <p id="index">(ES 2025)</p>
-          </div>
-          <div class="slide-img">
-            <a href="./works/gym/gym.html">
-              <img src="./images/works/gym.png" alt="" />
-            </a>
-          </div>
+      <div class="slide" id="slide-4">
+        <div class="slide-copy">
+          <p>Sereno</p>
+          <p id="index">(EST 2024)</p>
         </div>
-
-        <div class="slide" id="slide-7">
-          <div class="slide-copy">
-            <p>Moola</p>
-            <p id="index">(EST 2025)</p>
-          </div>
-          <div class="slide-img">
-            <a href="./works/moola/moola.html">
-              <img src="./images/works/m1.png" alt="" />
-            </a>
-          </div>
+        <div class="slide-img">
+          <a href="./works/sereno/sereno.html">
+            <img src="./images/works/realestate.png" alt="" />
+          </a>
         </div>
+      </div>
 
-        <div class="slide" id="slide-8">
-          <div class="slide-copy">
-            <p>My Shop Scandiweb</p>
-            <p id="index">(EST 2025)</p>
-          </div>
-          <div class="slide-img">
-            <a href="./works/scandiweb/scandiweb.html">
-              <img src="./images/assets/scandi1.jpg" alt="" />
-            </a>
-          </div>
+      <div class="slide" id="slide-5">
+        <div class="slide-copy">
+          <p>Alliance</p>
+          <p id="index">(EST 2023)</p>
         </div>
-
-        <div class="slide" id="slide-9">
-          <div class="slide-copy">
-            <p>Kat & Perry Kitchenette</p>
-            <p id="index">(EST 2025)</p>
-          </div>
-          <div class="slide-img">
-            <a href="./works/work.html">
-              <img src="./images/works/kp1.png" alt="" />
-            </a>
-          </div>
+        <div class="slide-img">
+          <a href="./works/alliance/alliance.html">
+            <img src="./images/works/alliance2.png" alt="" />
+          </a>
         </div>
+      </div>
 
-        <div class="slide" id="slide-10">
-          <div class="slide-copy">
-            <p>Downfield (Shopify)</p>
-            <p id="index">(ES 2025)</p>
+      <div class="slide" id="slide-6">
+        <div class="slide-copy">
+          <p>Gym Trainer</p>
+          <p id="index">(ES 2025)</p>
+        </div>
+        <div class="slide-img">
+          <a href="./works/gym/gym.html">
+            <img src="./images/works/gym.png" alt="" />
+          </a>
+        </div>
+      </div>
+
+      <div class="slide" id="slide-7">
+        <div class="slide-copy">
+          <p>Moola</p>
+          <p id="index">(EST 2025)</p>
+        </div>
+        <div class="slide-img">
+          <a href="./works/moola/moola.html">
+            <img src="./images/works/m1.png" alt="" />
+          </a>
+        </div>
+      </div>
+
+      <div class="slide" id="slide-8">
+        <div class="slide-copy">
+          <p>My Shop Scandiweb</p>
+          <p id="index">(EST 2025)</p>
+        </div>
+        <div class="slide-img">
+          <a href="./works/scandiweb/scandiweb.html">
+            <img src="./images/assets/scandi1.jpg" alt="" />
+          </a>
+        </div>
+      </div>
+
+      <div class="slide" id="slide-9">
+        <div class="slide-copy">
+          <p>Kat & Perry Kitchenette</p>
+          <p id="index">(EST 2025)</p>
+        </div>
+        <div class="slide-img">
+          <a href="./works/work.html">
+            <img src="./images/works/kp1.png" alt="" />
+          </a>
+        </div>
+      </div>
+
+      <div class="slide" id="slide-10">
+        <div class="slide-copy">
+          <p>Downfield (Shopify)</p>
+          <p id="index">(ES 2025)</p>
+        </div>
+        <div class="slide-img">
+          <a href="./works/downfield/downfield.html">
+            <img src="./images/works/df1.png" alt="" loading="lazy" />
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- New List View Container -->
+    <div class="workListContainer" style="display: none;">
+      <a href="./works/nexus/nexus.html" class="list-item" style="text-decoration: none;">
+        <div class="item-img">
+          <img src="./images/works/en2.png" alt="Ealy Nexus" loading="lazy" />
+        </div>
+        <div class="item-copy">
+          <p>Ealy Nexus</p>
+          <p id="index">(EST 2024)</p>
+        </div>
+      </a>
+      <a href="./works/ai/ai.html" class="list-item" style="text-decoration: none;">
+        <div class="item-img">
+          <img src="./images/works/ai4.jpg" alt="AI Chatbot" loading="lazy" />
+        </div>
+        <div class="item-copy">
+          <p>AI Chatbot</p>
+          <p id="index">(EST 2024)</p>
+        </div>
+      </a>
+      <a href="./works/sereno/sereno.html" class="list-item" style="text-decoration: none;">
+        <div class="item-img">
+          <img src="./images/works/realestate.png" alt="Sereno" loading="lazy" />
+        </div>
+        <div class="item-copy">
+          <p>Sereno</p>
+          <p id="index">(EST 2024)</p>
+        </div>
+      </a>
+      <a href="./works/alliance/alliance.html" class="list-item" style="text-decoration: none;">
+        <div class="item-img">
+          <img src="./images/works/alliance2.png" alt="Alliance" loading="lazy" />
+        </div>
+        <div class="item-copy">
+          <p>Alliance</p>
+          <p id="index">(EST 2023)</p>
+        </div>
+      </a>
+      <a href="./works/gym/gym.html" class="list-item" style="text-decoration: none;">
+        <div class="item-img">
+          <img src="./images/works/gym.png" alt="Gym Trainer" loading="lazy" />
+        </div>
+        <div class="item-copy">
+          <p>Gym Trainer</p>
+          <p id="index">(ES 2025)</p>
+        </div>
+      </a>
+      <a href="./works/moola/moola.html" class="list-item" style="text-decoration: none;">
+        <div class="item-img">
+          <img src="./images/works/m1.png" alt="Moola" loading="lazy" />
+        </div>
+        <div class="item-copy">
+          <p>Moola</p>
+          <p id="index">(EST 2025)</p>
+        </div>
+      </a>
+      <a href="./works/scandiweb/scandiweb.html" class="list-item" style="text-decoration: none;">
+        <div class="item-img">
+          <img src="./images/assets/scandi1.jpg" alt="Shop Scandiweb" loading="lazy" />
+        </div>
+        <div class="item-copy">
+          <p>My Shop Scandiweb</p>
+          <p id="index">(EST 2025)</p>
+        </div>
+      </a>
+      <a href="./works/work.html" class="list-item" style="text-decoration: none;">
+        <div class="item-img">
+          <img src="./images/works/kp1.png" alt="Kitchenette" loading="lazy" />
+        </div>
+        <div class="item-copy">
+          <p>Kat & Perry Kitchenette</p>
+          <p id="index">(EST 2025)</p>
+        </div>
+      </a>
+      <a href="./works/downfield/downfield.html" class="list-item" style="text-decoration: none;">
+        <div class="item-img">
+          <img src="./images/works/df1.png" alt="Downfield Shopify" loading="lazy" />
+        </div>
+        <div class="item-copy">
+          <p>Downfield (Shopify)</p>
+          <p id="index">(ES 2025)</p>
+        </div>
+      </a>
+    </div>
+  </section>
+  <div id="black-transition"></div>
+
+  <div class="scroll-container">
+    <section class="aboutSection">
+      <!--Gradient-->
+      <div class="blob"></div>
+      <div id="textContainer"></div>
+      <div>
+        <p class="change-text">CREATIVE DEVELOPER</p>
+      </div>
+
+      <div class="skillsContainer">
+        <div class="descriptionContainer">
+          <p>
+            A Filipino creative developer turning bold visions into elite,
+            immersive web experiences.
+          </p>
+          <a href="#contactPage">Let's Create Together
+            <span>
+              <img src="./images/arrow.png" alt="" />
+            </span>
+          </a>
+        </div>
+        <div class="myskillsContainer">
+          <p>my skills</p>
+          <div class="webdevskills">
+            <img src="./images/skills/react.png" alt="" />
+            <img src="./images/skills/next.png" alt="" />
+            <img src="./images/skills/angular.png" alt="" />
+            <img src="./images/skills/node.png" alt="" />
+            <img src="./images/skills/java.png" alt="" />
+            <img src="./images/skills/js.png" alt="" />
           </div>
-          <div class="slide-img">
-            <a href="./works/downfield/downfield.html">
-              <img src="./images/works/df1.png" alt="" />
-            </a>
+          <div>
+            <img src="./images/skills/wordpress.png" alt="" />
+            <img src="./images/skills/shopify.png" alt="" />
+            <img src="./images/skills/figma.png" alt="" />
+            <img src="./images/skills/photoshop.png" alt="" />
           </div>
         </div>
       </div>
     </section>
-    <div id="black-transition"></div>
 
-    <div class="scroll-container">
-      <section class="aboutSection">
-        <!--Gradient-->
-        <div class="blob"></div>
-        <div id="textContainer"></div>
-        <div><p class="change-text">CREATIVE DEVELOPER</p></div>
+    <!-- Contact page -->
 
-        <div class="skillsContainer">
-          <div class="descriptionContainer">
-            <p>
-              A Filipino creative developer turning bold visions into elite,
-              immersive web experiences.
-            </p>
-            <a href="#contactPage"
-              >Let's Create Together
-              <span>
-                <img src="./images/arrow.png" alt="" />
-              </span>
-            </a>
-          </div>
-          <div class="myskillsContainer">
-            <p>my skills</p>
-            <div class="webdevskills">
-              <img src="./images/skills/react.png" alt="" />
-              <img src="./images/skills/next.png" alt="" />
-              <img src="./images/skills/angular.png" alt="" />
-              <img src="./images/skills/node.png" alt="" />
-              <img src="./images/skills/java.png" alt="" />
-              <img src="./images/skills/js.png" alt="" />
-            </div>
-            <div>
-              <img src="./images/skills/wordpress.png" alt="" />
-              <img src="./images/skills/shopify.png" alt="" />
-              <img src="./images/skills/figma.png" alt="" />
-              <img src="./images/skills/photoshop.png" alt="" />
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <!-- Contact page -->
-
-      <section class="contactSection" id="contactPage">
-        <div class="contactContainer">
-          <section class="sticky">
-            <div class="trackerContainer">
-              <div class="tracker">
-                <div class="contactHeader">
-                  <a
-                    href="https://www.instagram.com/rsrussellsean/"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    <span class="top">Instagram</span>
-                    <span class="bottom">Instagram</span>
-                  </a>
-                  <a
-                    href="https://www.facebook.com/russellsean.gonzalve/"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    <span class="top">Facebook</span
-                    ><span class="bottom">Facebook</span>
-                  </a>
-                  <a
-                    href="https://www.linkedin.com/in/russell-sean-gonzalve/"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    <span class="top">Linkedin</span
-                    ><span class="bottom">Linkedin</span>
-                  </a>
-                  <a
-                    href="https://github.com/rsrussellsean"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    <span class="top">Github</span
-                    ><span class="bottom">Github</span>
-                  </a>
-                </div>
-
-                <div class="emoji">
-                  <div class="emoji-face">
-                    <div class="eyes">
-                      <img src="./images/contact/eye.svg" alt="" />
-                      <img src="./images/contact/eye.svg" alt="" />
-                    </div>
-                    <div class="mouth-wrapper">
-                      <div class="mouth"></div>
-                    </div>
-                  </div>
-                </div>
-
-                <!-- Your Contact Section -->
-                <div class="contact-container">
-                  <div class="contact-title">
-                    <p>Let's Create Together</p>
-                  </div>
-
-                  <form id="contact-form" class="contact-form">
-                    <div class="form-group">
-                      <p>TO</p>
-                      <textarea
-                        type="email"
-                        name="to_email"
-                        placeholder="russell.sean.rs@gmail.com"
-                        readonly
-                      >
-russell.sean.rs@gmail.com</textarea
-                      >
-                    </div>
-
-                    <div class="form-group">
-                      <p>FROM</p>
-                      <textarea
-                        type="email"
-                        name="from_email"
-                        placeholder="Your email address."
-                        required
-                      ></textarea>
-                    </div>
-
-                    <div class="form-group">
-                      <p>SUBJECT</p>
-                      <textarea
-                        name="subject"
-                        placeholder="Choose a reason for your message."
-                        required
-                      >
-Let's Create Together</textarea
-                      >
-                    </div>
-
-                    <div class="form-group">
-                      <p>MESSAGE</p>
-                      <textarea
-                        name="message"
-                        placeholder="Drop me a line with your name and details here, and I'll get back to you."
-                        required
-                        class="messageTextarea"
-                      ></textarea>
-                    </div>
-
-                    <button type="submit" class="sendButton">
-                      SEND YOUR MESSAGE
-                    </button>
-                  </form>
-                </div>
-
-                <!-- end of contact form -->
+    <section class="contactSection" id="contactPage">
+      <div class="contactContainer">
+        <section class="sticky">
+          <div class="trackerContainer">
+            <div class="tracker">
+              <div class="contactHeader">
+                <a href="https://www.instagram.com/rsrussellsean/" target="_blank" rel="noopener noreferrer">
+                  <span class="top">Instagram</span>
+                  <span class="bottom">Instagram</span>
+                </a>
+                <a href="https://www.facebook.com/russellsean.gonzalve/" target="_blank" rel="noopener noreferrer">
+                  <span class="top">Facebook</span><span class="bottom">Facebook</span>
+                </a>
+                <a href="https://www.linkedin.com/in/russell-sean-gonzalve/" target="_blank" rel="noopener noreferrer">
+                  <span class="top">Linkedin</span><span class="bottom">Linkedin</span>
+                </a>
+                <a href="https://github.com/rsrussellsean" target="_blank" rel="noopener noreferrer">
+                  <span class="top">Github</span><span class="bottom">Github</span>
+                </a>
               </div>
-            </div>
-          </section>
 
-          <!-- <section class="website-content">
+              <div class="emoji">
+                <div class="emoji-face">
+                  <div class="eyes">
+                    <img src="./images/contact/eye.svg" alt="" />
+                    <img src="./images/contact/eye.svg" alt="" />
+                  </div>
+                  <div class="mouth-wrapper">
+                    <div class="mouth"></div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Your Contact Section -->
+              <div class="contact-container">
+                <div class="contact-title">
+                  <p>Let's Create Together</p>
+                </div>
+
+                <form id="contact-form" class="contact-form">
+                  <div class="form-group">
+                    <p>TO</p>
+                    <textarea type="email" name="to_email" placeholder="russell.sean.rs@gmail.com" readonly>
+russell.sean.rs@gmail.com</textarea>
+                  </div>
+
+                  <div class="form-group">
+                    <p>FROM</p>
+                    <textarea type="email" name="from_email" placeholder="Your email address." required></textarea>
+                  </div>
+
+                  <div class="form-group">
+                    <p>SUBJECT</p>
+                    <textarea name="subject" placeholder="Choose a reason for your message." required>
+Let's Create Together</textarea>
+                  </div>
+
+                  <div class="form-group">
+                    <p>MESSAGE</p>
+                    <textarea name="message"
+                      placeholder="Drop me a line with your name and details here, and I'll get back to you." required
+                      class="messageTextarea"></textarea>
+                  </div>
+
+                  <button type="submit" class="sendButton">
+                    SEND YOUR MESSAGE
+                  </button>
+                </form>
+              </div>
+
+              <!-- end of contact form -->
+            </div>
+          </div>
+        </section>
+
+        <!-- <section class="website-content">
         <div class="section-header">
           <h1>Events</h1>
           <p>
@@ -375,9 +433,8 @@ Let's Create Together</textarea
           </div>
         </div>
       </section> -->
-        </div>
-      </section>
-    </div>
+      </div>
+    </section>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
@@ -387,11 +444,9 @@ Let's Create Together</textarea
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/0.155.0/three.min.js"></script>
     <script src="script.js"></script>
     <<!-- Load EmailJS SDK -->
-    <script
-      type="text/javascript"
-      src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"
-    ></script>
-    <!-- Load SweetAlert2 -->
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-  </body>
+      <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+      <!-- Load SweetAlert2 -->
+      <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</body>
+
 </html>
