@@ -1,5 +1,16 @@
 //work JS
-gsap.registerPlugin(ScrollTrigger, CustomEase);
+gsap.registerPlugin(
+  ScrollTrigger,
+  CustomEase,
+  SplitText,
+  ScrambleTextPlugin,
+  ScrollToPlugin,
+  Observer
+);
+
+const prefersReduced = window.matchMedia(
+  "(prefers-reduced-motion: reduce)"
+).matches;
 
 // Global Scroll Progress Track
 gsap.to(".scroll-progress", {
@@ -291,11 +302,6 @@ items.forEach((item) => {
   item.addEventListener("mouseout", restPlaceholderText);
 });
 
-window.onload = () => {
-  restPlaceholderText(); // triggers the initial shuffle
-  animateSubheader();
-};
-
 function animateSubheader(delay = 6.5) {
   gsap.from("#subheader", {
     delay: delay,
@@ -415,19 +421,12 @@ if (!isDirectToWork) {
   });
 }
 
-// Redirect to homepage on refresh
 window.addEventListener("load", () => {
-  if (performance.navigation.type === performance.navigation.TYPE_RELOAD) {
-    window.location.href = "/";
-  }
-});
-
-window.onload = () => {
   if (!isDirectToWork) {
     restPlaceholderText();
     animateSubheader();
   }
-};
+});
 
 // About me JS
 const textContainer = document.getElementById("textContainer");
