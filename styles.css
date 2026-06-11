@@ -1,43 +1,95 @@
-@import url("https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Cutive+Mono&family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Press+Start+2P&family=Tiny5&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400&family=Cutive+Mono&family=Playfair+Display:ital@0;1&family=Tiny5&display=swap");
 
 @font-face {
   font-family: "BookItalic";
   src: url("./fonts/antiqua/AllrounderAntiquaTest-BookItalic.otf") format("opentype");
   font-weight: normal;
+  font-display: swap;
 }
 
 @font-face {
   font-family: "Book";
   src: url("./fonts/antiqua/AllrounderAntiquaTest-Book.otf") format("opentype");
   font-weight: normal;
+  font-display: swap;
 }
 
 @font-face {
   font-family: "Grifter";
   src: url("./fonts/grifterbold.otf") format("opentype");
   font-weight: bold;
+  font-display: swap;
 }
 
 @font-face {
   font-family: "MADERegular";
   src: url("./fonts/MADERegular.otf") format("opentype");
   font-weight: normal;
+  font-display: swap;
 }
 
 @font-face {
   font-family: "MADEBold";
   src: url("./fonts/MADEBold.otf") format("opentype");
   font-weight: normal;
+  font-display: swap;
 }
 
 @font-face {
   font-family: "MADEThin";
   src: url("./fonts/MADEThin.otf") format("opentype");
   font-weight: normal;
+  font-display: swap;
 }
 
 :root {
-  --color-accent: rgb(255, 255, 255);
+  --bg: #050505;
+  --fg: #f2f1ec;
+  --fg-dim: rgba(242, 241, 236, 0.45);
+  --accent-a: #1100ff;
+  --accent-b: #ff00f2;
+  --color-accent: var(--fg);
+
+  /* Fluid type scale */
+  --text-display: clamp(4.5rem, 19vw, 21rem);
+  --text-h2: clamp(3rem, 8vw, 7.5rem);
+  --text-h3: clamp(1.5rem, 3vw, 2.5rem);
+  --text-body: clamp(1rem, 1.1vw, 1.25rem);
+  --text-label: 0.75rem;
+  --label-tracking: 0.3em;
+
+  /* Spacing scale */
+  --space-1: 0.5rem;
+  --space-2: 1rem;
+  --space-3: 2rem;
+  --space-4: 4rem;
+  --space-5: 8rem;
+
+  /* Signature easing (mirrors CustomEase ".87,0,.13,1") */
+  --ease-rsx: cubic-bezier(0.87, 0, 0.13, 1);
+  --ease-out-soft: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+::selection {
+  background: var(--fg);
+  color: var(--bg);
+}
+
+:focus-visible {
+  outline: 2px solid var(--fg);
+  outline-offset: 3px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }
 
 * {
@@ -48,7 +100,7 @@
 }
 
 body {
-  background-color: #000 !important;
+  background-color: var(--bg) !important;
   overflow-x: hidden !important;
 }
 
@@ -548,9 +600,8 @@ p {
 
 .placeholder {
   text-align: center;
-  font-size: 300px;
-  /* color: #fff; */
-  line-height: 1.2;
+  font-size: var(--text-display);
+  line-height: 0.92;
   font-family: "Grifter", sans-serif !important;
 }
 
@@ -1171,10 +1222,6 @@ section.website-content {
 /* Responsive */
 /* Laptop (1025px - 1440px) */
 @media (max-width: 1440px) {
-  .placeholder {
-    font-size: 200px;
-  }
-
   #subheader {
     font-size: 36px;
     margin-left: 60px;
@@ -1288,10 +1335,6 @@ section.website-content {
 
 /* iPad / Tablet (768px - 1024px) */
 @media (max-width: 1024px) {
-  .placeholder {
-    font-size: 150px;
-  }
-
   #subheader {
     font-size: 36px;
     margin-left: 2px;
@@ -1462,13 +1505,8 @@ section.website-content {
     margin-left: -34px;
   }
 
-  .placeholder {
-    font-size: 2.2em;
-  }
-
   #subheader {
-    font-size: 0.5em;
-    /* margin-left: 0.1em; */
+    font-size: 1rem;
     width: 100%;
   }
 
