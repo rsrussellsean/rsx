@@ -1032,7 +1032,7 @@ p {
   width: 650px;
   height: 650px;
   border-radius: 100%;
-  background-image: linear-gradient(#1100ff 10%, #ff00f2);
+  background-image: linear-gradient(var(--accent-a) 10%, var(--accent-b));
   filter: blur(250px);
   /* transition: all 450ms ease-out; */
   position: absolute;
@@ -1041,6 +1041,17 @@ p {
   top: 0;
   transform: translate(calc(-50% + 15px), -50%);
   z-index: 0;
+}
+
+/* blur(250px) is too expensive on touch devices — pre-blurred gradient instead */
+@media (hover: none) {
+  .blob {
+    filter: none;
+    background: radial-gradient(circle,
+        rgba(17, 0, 255, 0.4) 0%,
+        rgba(255, 0, 242, 0.18) 55%,
+        transparent 75%);
+  }
 }
 
 #textContainer {
@@ -1081,18 +1092,53 @@ canvas {
   font-family: "MADERegular", sans-serif !important;
 }
 
-.change-text {
-  /* animation-name: fontChange;
-  animation-duration: 2s;
-  animation-iteration-count: infinite; */
-  color: white !important;
-  font-size: 50px;
+.about-title {
   position: absolute;
   top: 40%;
   left: 50%;
   transform: translate(-50%, -50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  margin: 0;
+  font-weight: normal;
+  z-index: 2;
+  pointer-events: none;
+}
+
+.about-title-serif {
+  font-family: "BookItalic", serif;
+  font-style: italic;
+  font-size: clamp(1.5rem, 3vw, 3rem);
+  color: var(--fg);
+  margin-bottom: -0.35em;
+  position: relative;
+  z-index: 1;
+}
+
+.change-text {
+  color: var(--fg) !important;
+  font-size: var(--text-h2);
+  line-height: 1;
+  text-transform: uppercase;
   text-align: center;
   font-family: "Grifter", sans-serif;
+}
+
+/* Scrubbed char-fill reveal keeps chars visible but dim until scrolled */
+.change-text .char-fill {
+  opacity: 0.15;
+}
+
+/* Static fallback when WebGL is unavailable */
+.russell-fallback {
+  font-family: "MADERegular", sans-serif;
+  font-size: clamp(3rem, 10vw, 10rem);
+  color: var(--fg);
+  text-align: center;
+  line-height: 40vh;
+  letter-spacing: 0.05em;
 }
 
 .skillsContainer {
@@ -1171,8 +1217,30 @@ canvas {
   padding-left: 10px;
 }
 
-.webdevskills {
+.skills-marquee {
+  overflow: hidden;
+  max-width: 380px;
   padding: 20px 0;
+}
+
+.skills-track {
+  display: inline-flex;
+  align-items: center;
+  white-space: nowrap;
+  will-change: transform;
+}
+
+.skills-track img {
+  width: 40px;
+  height: auto;
+  margin: 5px 14px;
+  flex-shrink: 0;
+  filter: grayscale(1) opacity(0.5);
+  transition: filter 0.3s ease;
+}
+
+.skills-track img:hover {
+  filter: grayscale(0) opacity(1);
 }
 
 @keyframes fontChange {
@@ -1690,19 +1758,9 @@ section.website-content {
     margin-bottom: 0.75em;
   }
 
-  .change-text {
-    /* animation-name: fontChange;
-    animation-duration: 2s;
-    animation-iteration-count: infinite; */
-    width: 90%;
-    color: white !important;
-    font-size: 40px;
-    position: absolute;
+  .about-title {
     top: 30%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    text-align: center;
-    font-family: "Grifter", sans-serif;
+    width: 90%;
   }
 
   .skillsContainer {
@@ -1953,19 +2011,9 @@ section.website-content {
     overflow-x: hidden;
   }
 
-  .change-text {
-    /* animation-name: fontChange;
-    animation-duration: 2s;
-    animation-iteration-count: infinite; */
-    width: 90%;
-    color: white !important;
-    font-size: 24px;
-    position: absolute;
+  .about-title {
     top: 28%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    text-align: center;
-    font-family: "Grifter", sans-serif;
+    width: 90%;
   }
 
   .skillsContainer {
@@ -2003,17 +2051,13 @@ section.website-content {
     /* margin-bottom: 20px; */
   }
 
-  .myskillsContainer .webdevskills,
-  .myskillsContainer div:last-child {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 2px;
+  .skills-marquee {
+    max-width: 90vw;
+    margin: 0 auto;
   }
 
-  .myskillsContainer img {
-    width: 8%;
-    height: auto;
+  .skills-track img {
+    width: 32px;
   }
 
   .contactHeader {

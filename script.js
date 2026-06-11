@@ -601,7 +601,7 @@ function initializeScene(texture) {
   renderer = new THREE.WebGLRenderer({ antialias: true });
   renderer.setClearColor(0xffffff, 1);
   renderer.setSize(window.innerWidth, window.innerHeight);
-  renderer.setPixelRatio(window.devicePixelRatio);
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.5));
 
   textContainer.appendChild(renderer.domElement);
 }
@@ -618,12 +618,19 @@ function reloadTexture() {
   planeMesh.material.uniforms.u_texture.value = newTexture;
 }
 
-initializeScene(
-  createTextTexture("RUSSELL", "MADERegular", null, "transparent", "100")
-);
+// Lifecycle: lazy-init when the about section nears the viewport, render only
+// while it's in view and the tab is visible
+let aboutSceneInit = false;
+let aboutInView = false;
+let aboutRafId = null;
 
-function animateScene() {
-  requestAnimationFrame(animateScene);
+function renderAboutFrame() {
+  if (!aboutInView || document.hidden) {
+    aboutRafId = null;
+    return;
+  }
+  aboutRafId = requestAnimationFrame(renderAboutFrame);
+
   mousePosition.x += (targetMousePosition.x - mousePosition.x) * easeFactor;
   mousePosition.y += (targetMousePosition.y - mousePosition.y) * easeFactor;
 
@@ -640,7 +647,47 @@ function animateScene() {
   renderer.render(scene, camera);
 }
 
-animateScene();
+function showRussellFallback() {
+  textContainer.innerHTML = '<p class="russell-fallback">RUSSELL</p>';
+}
+
+function resumeAboutScene() {
+  if (!aboutSceneInit) {
+    aboutSceneInit = true;
+    try {
+      initializeScene(
+        createTextTexture("RUSSELL", "MADERegular", null, "transparent", "100")
+      );
+    } catch (err) {
+      console.warn("WebGL unavailable for about scene:", err);
+      showRussellFallback();
+      return;
+    }
+  }
+  if (renderer && !aboutRafId) renderAboutFrame();
+}
+
+const aboutSection = document.querySelector(".aboutSection");
+if (textContainer && aboutSection) {
+  if (prefersReduced || typeof THREE === "undefined") {
+    showRussellFallback();
+  } else {
+    new IntersectionObserver(
+      (entries) => {
+        aboutInView = entries[0].isIntersecting;
+        if (aboutInView && !document.hidden) {
+          document.fonts.ready.then(resumeAboutScene);
+        }
+      },
+      { rootMargin: "100% 0px" }
+    ).observe(aboutSection);
+
+    document.addEventListener("visibilitychange", () => {
+      if (!document.hidden && aboutInView) resumeAboutScene();
+    });
+  }
+}
+
 textContainer.addEventListener("mousemove", handleMouseMove);
 textContainer.addEventListener("mouseenter", handleMouseEnter);
 textContainer.addEventListener("mouseleave", handleMouseLeave);
@@ -672,6 +719,7 @@ function handleMouseLeave() {
 window.addEventListener("resize", onWindowResize, false);
 
 function onWindowResize() {
+  if (!renderer) return;
   const aspectRatio = window.innerWidth / window.innerHeight;
   camera.left = -1;
   camera.right = 1;
@@ -684,8 +732,77 @@ function onWindowResize() {
   reloadTexture();
 }
 
+// About section reveals
+const aboutTitleEl = document.querySelector(".change-text");
+if (aboutTitleEl && !prefersReduced) {
+  // Scrubbed char fill: dim chars brighten as the section scrolls in
+  const fillSplit = SplitText.create(aboutTitleEl, {
+    type: "chars",
+    charsClass: "char-fill",
+  });
+  gsap.to(fillSplit.chars, {
+    opacity: 1,
+    stagger: 0.04,
+    ease: "none",
+    scrollTrigger: {
+      trigger: ".aboutSection",
+      start: "top 75%",
+      end: "top 30%",
+      scrub: true,
+    },
+  });
+
+  gsap.from(".about-title-serif", {
+    autoAlpha: 0,
+    yPercent: 60,
+    duration: 0.9,
+    ease: "power4.out",
+    scrollTrigger: { trigger: ".aboutSection", start: "top 70%", once: true },
+  });
+}
+
+const aboutBio = document.querySelector(".about-bio");
+if (aboutBio && !prefersReduced) {
+  const bioSplit = SplitText.create(aboutBio, { type: "lines", mask: "lines" });
+  gsap.from(bioSplit.lines, {
+    yPercent: 100,
+    duration: 0.8,
+    stagger: 0.07,
+    ease: "power4.out",
+    scrollTrigger: {
+      trigger: ".skillsContainer",
+      start: "top 80%",
+      once: true,
+    },
+  });
+}
+
+// Infinite skills logo marquee
+const skillsTrack = document.querySelector(".skills-track");
+if (skillsTrack && !prefersReduced) {
+  gsap.to(skillsTrack, {
+    xPercent: -50,
+    repeat: -1,
+    duration: 28,
+    ease: "none",
+  });
+}
+
 // Cursor Optimization using gsap.quickTo for true 60fps performance
 var cursor = document.querySelector(".blob");
+
+// Keep the blob centered on its translation point and give it an idle pulse
+gsap.set(cursor, { xPercent: -50, yPercent: -50, x: 15, y: 0 });
+if (!prefersReduced) {
+  gsap.to(cursor, {
+    scale: 1.08,
+    duration: 4,
+    ease: "sine.inOut",
+    yoyo: true,
+    repeat: -1,
+  });
+}
+
 let xTo = gsap.quickTo(cursor, "x", { duration: 0.4, ease: "power3" }),
     yTo = gsap.quickTo(cursor, "y", { duration: 0.4, ease: "power3" });
 
