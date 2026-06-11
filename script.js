@@ -51,7 +51,9 @@ window.addEventListener("load", function () {
       // Pre-build one setter bundle per slide — zero tween allocation per tick
       const setters = slides.map((slide, index) => {
         gsap.set(slide, { clearProps: "all" });
-        gsap.set(activeSlideImages[index], { clearProps: "all" });
+        if (activeSlideImages[index]) {
+          gsap.set(activeSlideImages[index], { clearProps: "all" });
+        }
         gsap.set(slide, { xPercent: -50, yPercent: -50 });
 
         const img = slide.querySelector(".slide-img img");
@@ -76,7 +78,9 @@ window.addEventListener("load", function () {
           z: gsap.quickSetter(slide, "z", "px"),
           rotateY: gsap.quickSetter(slide, "rotateY", "deg"),
           opacity: gsap.quickSetter(slide, "opacity"),
-          bgOpacity: gsap.quickSetter(activeSlideImages[index], "opacity"),
+          bgOpacity: activeSlideImages[index]
+            ? gsap.quickSetter(activeSlideImages[index], "opacity")
+            : null,
           imgY: img ? gsap.quickSetter(img, "yPercent") : null,
           dir: slide.offsetLeft < window.innerWidth / 2 ? 1 : -1,
           titleTween,
@@ -94,9 +98,11 @@ window.addEventListener("load", function () {
             gsap.utils.clamp(0, 1, gsap.utils.mapRange(-3500, -1500, 0, 1, z))
           );
           // Background image hands off as its slide passes the camera
-          s.bgOpacity(
-            gsap.utils.clamp(0, 1, gsap.utils.mapRange(600, 100, 0, 1, z))
-          );
+          if (s.bgOpacity) {
+            s.bgOpacity(
+              gsap.utils.clamp(0, 1, gsap.utils.mapRange(600, 100, 0, 1, z))
+            );
+          }
           if (s.imgY) s.imgY(gsap.utils.clamp(-6, 6, -z / 1500));
           if (s.titleTween) {
             if (z > -1500 && z < 900) {
@@ -732,7 +738,8 @@ function onWindowResize() {
   reloadTexture();
 }
 
-// About section reveals
+// About section reveals — split only after fonts load so masks measure correctly
+document.fonts.ready.then(() => {
 const aboutTitleEl = document.querySelector(".change-text");
 if (aboutTitleEl && !prefersReduced) {
   // Scrubbed char fill: dim chars brighten as the section scrolls in
@@ -776,6 +783,7 @@ if (aboutBio && !prefersReduced) {
     },
   });
 }
+}); // end fonts.ready (about reveals)
 
 // Infinite skills logo marquee
 const skillsTrack = document.querySelector(".skills-track");
@@ -871,9 +879,11 @@ const leaveEvent = () => {
 wrapper.addEventListener("mousemove", moveEvent);
 wrapper.addEventListener("mouseleave", leaveEvent);
 
-// Contact entrance reveals
-const contactTitle = document.querySelector(".contact-title p");
-if (contactTitle && !prefersReduced) {
+// Contact entrance reveals — split only after fonts load
+document.fonts.ready.then(() => {
+  const contactTitle = document.querySelector(".contact-title p");
+  if (!contactTitle || prefersReduced) return;
+
   const ctSplit = SplitText.create(contactTitle, {
     type: "lines",
     mask: "lines",
@@ -897,7 +907,7 @@ if (contactTitle && !prefersReduced) {
     ease: "back.out(1.4)",
     scrollTrigger: { trigger: ".contactSection", start: "top 60%", once: true },
   });
-}
+});
 
 // Magnetic send button
 const sendBtn = document.querySelector(".sendButton");
