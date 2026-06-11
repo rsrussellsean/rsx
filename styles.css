@@ -541,53 +541,51 @@ nav>div {
   margin: 0 auto;
   display: flex;
   justify-content: center;
-  gap: 1.5rem;
+  gap: 0.4rem;
   z-index: 20;
-  padding: 1rem 2.5rem;
-  background: rgba(0, 0, 0, 0.4);
+  padding: 0.4rem;
+  background: rgba(5, 5, 5, 0.4);
   backdrop-filter: blur(15px);
   border-radius: 50px;
   width: max-content;
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(242, 241, 236, 0.1);
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+}
+
+.work-view-toggle .toggle-thumb {
+  position: absolute;
+  top: 0.4rem;
+  bottom: 0.4rem;
+  left: 0;
+  width: 0;
+  background: var(--fg);
+  border-radius: 40px;
+  z-index: 0;
+  will-change: transform, width;
 }
 
 .work-view-toggle button {
   background: transparent;
   border: none;
-  color: rgba(255, 255, 255, 0.5);
+  color: rgba(242, 241, 236, 0.5);
   font-family: "MADERegular", sans-serif;
-  font-size: 14px;
+  font-size: 13px;
   text-transform: uppercase;
   letter-spacing: 2px;
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: color 0.3s ease;
   position: relative;
-  padding: 0;
-}
-
-.work-view-toggle button::after {
-  content: '';
-  position: absolute;
-  bottom: -4px;
-  left: 50%;
-  width: 0;
-  height: 1px;
-  background: white;
-  transition: all 0.3s ease;
-  transform: translateX(-50%);
+  z-index: 1;
+  padding: 0.6rem 1.4rem;
+  border-radius: 40px;
 }
 
 .work-view-toggle button:hover {
-  color: white;
+  color: var(--fg);
 }
 
 .work-view-toggle button.active {
-  color: white;
-}
-
-.work-view-toggle button.active::after {
-  width: 100%;
+  color: #050505;
 }
 
 .workContainer {
@@ -752,11 +750,12 @@ nav>div {
 .workListContainer {
   width: 100vw;
   min-height: 100vh;
-  background: #000;
+  background: var(--bg);
   padding: 10vh 5vw 15vh 5vw;
   display: flex;
   flex-direction: column;
   position: relative;
+  counter-reset: work-item;
 }
 
 .list-item {
@@ -826,6 +825,15 @@ nav>div {
   color: white;
   border-top: none;
   padding: 0;
+}
+
+.item-copy::before {
+  counter-increment: work-item;
+  content: "0" counter(work-item);
+  font-family: "MADEThin", sans-serif;
+  font-size: var(--text-label);
+  letter-spacing: var(--label-tracking);
+  color: var(--fg-dim);
 }
 
 .item-copy p:first-child {

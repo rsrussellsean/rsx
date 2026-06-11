@@ -126,20 +126,64 @@ window.addEventListener("load", function () {
     }, container);
   }
 
+  // List view reveals: one code path for both scroll and toggle entrance
+  let listCtx;
+
+  function initListReveals() {
+    listCtx = gsap.context(() => {
+      if (prefersReduced) {
+        gsap.set(".list-item", { opacity: 1, y: 0 });
+        return;
+      }
+      ScrollTrigger.batch(".list-item", {
+        start: "top 90%",
+        once: true,
+        onEnter: (batch) =>
+          gsap.to(batch, {
+            opacity: 1,
+            y: 0,
+            duration: 0.8,
+            ease: "power3.out",
+            stagger: 0.06,
+            overwrite: true,
+          }),
+      });
+    }, workListContainer);
+  }
+
   // Init the 3D scroll animations on load
   initAnimatedView();
 
   // Toggle View Logic for Work Section
   const btnAnimated = document.getElementById("btn-animated-view");
   const btnList = document.getElementById("btn-list-view");
+  const toggleThumb = document.querySelector(".toggle-thumb");
+
+  function moveThumb(btn, animate = true) {
+    if (!toggleThumb) return;
+    gsap.to(toggleThumb, {
+      x: btn.offsetLeft,
+      width: btn.offsetWidth,
+      duration: animate && !prefersReduced ? 0.45 : 0,
+      ease: "power3.inOut",
+    });
+  }
+
+  function setActiveButton(activeBtn, inactiveBtn) {
+    activeBtn.classList.add("active");
+    activeBtn.setAttribute("aria-pressed", "true");
+    inactiveBtn.classList.remove("active");
+    inactiveBtn.setAttribute("aria-pressed", "false");
+    moveThumb(activeBtn);
+  }
 
   if (btnAnimated && btnList) {
     btnList.addEventListener("click", () => {
       // Don't do anything if already active
       if (btnList.classList.contains("active")) return;
 
-      btnList.classList.add("active");
-      btnAnimated.classList.remove("active");
+      setActiveButton(btnList, btnAnimated);
+      localStorage.setItem("rsx-work-view", "list");
 
       // Cleanup: revert the GSAP context to kill triggers & clear inline styles
       if (workCtx) {
@@ -154,27 +198,15 @@ window.addEventListener("load", function () {
           container.style.display = "none";
           slider.style.display = "none";
           workListContainer.style.display = "flex";
-          
+
           gsap.fromTo(
             workListContainer,
             { opacity: 0 },
             { opacity: 1, duration: 0.4 }
           );
 
-          // Animate list items in
-          gsap.fromTo(
-            ".list-item",
-            { opacity: 0, y: 30 },
-            {
-              opacity: 1,
-              y: 0,
-              duration: 0.6,
-              stagger: 0.1,
-              ease: "power2.out",
-            }
-          );
-          
           ScrollTrigger.refresh();
+          initListReveals();
         },
       });
     });
@@ -182,14 +214,17 @@ window.addEventListener("load", function () {
     btnAnimated.addEventListener("click", () => {
       if (btnAnimated.classList.contains("active")) return;
 
-      btnAnimated.classList.add("active");
-      btnList.classList.remove("active");
+      setActiveButton(btnAnimated, btnList);
+      localStorage.setItem("rsx-work-view", "animated");
 
       // Hide List view, show 3D view
       gsap.to(workListContainer, {
         opacity: 0,
         duration: 0.4,
         onComplete: () => {
+          if (listCtx) {
+            listCtx.revert();
+          }
           workListContainer.style.display = "none";
           container.style.display = "block";
           slider.style.display = "block";
@@ -206,6 +241,13 @@ window.addEventListener("load", function () {
         },
       });
     });
+
+    // Restore persisted view choice; position the thumb either way
+    if (localStorage.getItem("rsx-work-view") === "list") {
+      btnList.click();
+    } else {
+      moveThumb(btnAnimated, false);
+    }
   }
 });
 
