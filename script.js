@@ -776,6 +776,151 @@ document.addEventListener("DOMContentLoaded", function () {
   });
 });
 
+// ---------- Global polish: cursor, marquee, labels, footer ----------
+
+// Work links expand the cursor ring into a "View" badge
+document.querySelectorAll(".slide a, .list-item").forEach((el) => {
+  el.setAttribute("data-cursor", "view");
+});
+
+// Custom cursor (desktop pointer devices only, additive to native cursor)
+if (
+  window.matchMedia("(hover: hover) and (pointer: fine)").matches &&
+  !prefersReduced
+) {
+  document.body.classList.add("has-cursor");
+  const cursorDot = document.querySelector(".cursor-dot");
+  const cursorRing = document.querySelector(".cursor-ring");
+
+  const dotX = gsap.quickTo(cursorDot, "x", { duration: 0.12, ease: "power3" });
+  const dotY = gsap.quickTo(cursorDot, "y", { duration: 0.12, ease: "power3" });
+  const ringX = gsap.quickTo(cursorRing, "x", { duration: 0.5, ease: "power3" });
+  const ringY = gsap.quickTo(cursorRing, "y", { duration: 0.5, ease: "power3" });
+
+  document.addEventListener("mousemove", (e) => {
+    dotX(e.clientX);
+    dotY(e.clientY);
+    ringX(e.clientX);
+    ringY(e.clientY);
+  });
+
+  document.addEventListener("mouseover", (e) => {
+    if (e.target.closest("[data-cursor='view']")) {
+      cursorRing.classList.add("is-view");
+    }
+  });
+
+  document.addEventListener("mouseout", (e) => {
+    if (e.target.closest("[data-cursor='view']")) {
+      cursorRing.classList.remove("is-view");
+    }
+  });
+}
+
+// Velocity-reactive marquee
+const marqueeTrack = document.querySelector(".marquee-track");
+if (marqueeTrack && !prefersReduced) {
+  const marqueeTween = gsap.to(marqueeTrack, {
+    xPercent: -50,
+    repeat: -1,
+    duration: 22,
+    ease: "none",
+  });
+
+  let marqueeSettle;
+  ScrollTrigger.create({
+    trigger: ".marquee",
+    start: "top bottom",
+    end: "bottom top",
+    onUpdate: (self) => {
+      const boost = gsap.utils.clamp(-4, 4, self.getVelocity() / 300);
+      marqueeTween.timeScale(1 + Math.abs(boost));
+      gsap.to(marqueeTrack, {
+        skewX: gsap.utils.clamp(-6, 6, boost * 1.5),
+        duration: 0.3,
+        ease: "power2.out",
+        overwrite: "auto",
+      });
+
+      clearTimeout(marqueeSettle);
+      marqueeSettle = setTimeout(() => {
+        gsap.to(marqueeTween, {
+          timeScale: 1,
+          duration: 1.2,
+          ease: "power2.out",
+        });
+        gsap.to(marqueeTrack, {
+          skewX: 0,
+          duration: 0.8,
+          ease: "power2.out",
+          overwrite: "auto",
+        });
+      }, 120);
+    },
+  });
+}
+
+// Section label reveals
+gsap.utils.toArray(".section-label").forEach((label) => {
+  const rule = label.querySelector(".rule");
+  const text = label.querySelector("p");
+  if (prefersReduced) return;
+
+  gsap
+    .timeline({
+      scrollTrigger: { trigger: label, start: "top 85%", once: true },
+    })
+    .from(rule, {
+      scaleX: 0,
+      duration: 0.8,
+      ease: "power3.inOut",
+    })
+    .from(text, { autoAlpha: 0, x: -10, duration: 0.5 }, "-=0.3");
+});
+
+// Live Manila clock
+const manilaTime = document.getElementById("manila-time");
+if (manilaTime) {
+  const manilaFormat = new Intl.DateTimeFormat("en-US", {
+    timeZone: "Asia/Manila",
+    hour: "2-digit",
+    minute: "2-digit",
+    second: "2-digit",
+    hour12: false,
+  });
+  const tickClock = () => (manilaTime.textContent = manilaFormat.format(new Date()));
+  tickClock();
+  setInterval(tickClock, 1000);
+}
+
+// Back to top
+document.getElementById("back-to-top")?.addEventListener("click", () => {
+  gsap.to(window, { scrollTo: 0, duration: 1.2, ease: "custom" });
+});
+
+// Footer wordmark scrubbed reveal
+if (document.querySelector(".footer-wordmark")) {
+  if (prefersReduced) {
+    gsap.set(".footer-wordmark", { clipPath: "inset(0% 0 0 0)" });
+  } else {
+    gsap.fromTo(
+      ".footer-wordmark",
+      { clipPath: "inset(100% 0 0 0)", yPercent: 20 },
+      {
+        clipPath: "inset(0% 0 0 0)",
+        yPercent: 0,
+        ease: "none",
+        scrollTrigger: {
+          trigger: ".site-footer",
+          start: "top 90%",
+          end: "bottom bottom",
+          scrub: 1,
+        },
+      }
+    );
+  }
+}
+
 document.querySelectorAll(".slide a").forEach((link) => {
   link.addEventListener("click", function (e) {
     e.preventDefault(); // prevent immediate navigation

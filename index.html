@@ -16,6 +16,13 @@
   <!-- Scroll Progress Indicator -->
   <div class="scroll-progress"></div>
 
+  <!-- Film grain overlay -->
+  <div class="grain" aria-hidden="true"></div>
+
+  <!-- Custom cursor (desktop only, additive) -->
+  <div class="cursor-dot" aria-hidden="true"></div>
+  <div class="cursor-ring" aria-hidden="true"><span class="cursor-label">View</span></div>
+
   <div class="hero-background">
     <div class="hero">
       <div class="progress-bar">
@@ -41,6 +48,10 @@
   </div>
 
   <section class="workSection" id="work">
+    <div class="section-label">
+      <span class="rule"></span>
+      <p>01 — Work</p>
+    </div>
     <nav class="nav2">
       <!-- <div class="links-1">
           <a href="#">Works</a>
@@ -299,7 +310,18 @@
   <div id="black-transition"></div>
 
   <div class="scroll-container">
+    <div class="marquee" aria-hidden="true">
+      <div class="marquee-track">
+        <span>Available for freelance — Creative Developer — Manila, PH —&nbsp;</span>
+        <span>Available for freelance — Creative Developer — Manila, PH —&nbsp;</span>
+      </div>
+    </div>
+
     <section class="aboutSection">
+      <div class="section-label">
+        <span class="rule"></span>
+        <p>02 — About</p>
+      </div>
       <!--Gradient-->
       <div class="blob"></div>
       <div id="textContainer"></div>
@@ -342,6 +364,10 @@
     <!-- Contact page -->
 
     <section class="contactSection" id="contactPage">
+      <div class="section-label">
+        <span class="rule"></span>
+        <p>03 — Contact</p>
+      </div>
       <div class="contactContainer">
         <section class="sticky">
           <div class="trackerContainer">
@@ -438,6 +464,23 @@ Let's Create Together</textarea>
       </section> -->
       </div>
     </section>
+
+    <footer class="site-footer">
+      <div class="footer-meta">
+        <div class="footer-socials">
+          <a href="https://www.instagram.com/rsrussellsean/" target="_blank" rel="noopener noreferrer">Instagram</a>
+          <a href="https://www.facebook.com/russellsean.gonzalve/" target="_blank" rel="noopener noreferrer">Facebook</a>
+          <a href="https://www.linkedin.com/in/russell-sean-gonzalve/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+          <a href="https://github.com/rsrussellsean" target="_blank" rel="noopener noreferrer">GitHub</a>
+        </div>
+        <div class="footer-info">
+          <p>Manila, PH — <span id="manila-time">00:00:00</span></p>
+          <p>© 2026 Russell Sean Gonzalve</p>
+          <button id="back-to-top" type="button">Back to top ↑</button>
+        </div>
+      </div>
+      <div class="footer-wordmark" aria-hidden="true">RSX</div>
+    </footer>
   </div>
 
   <!-- GSAP core + plugins (all free since 3.13) -->
