@@ -163,13 +163,25 @@ window.addEventListener("load", function () {
   }
 });
 
-document.querySelector(".intro-wrapper").addEventListener("wheel", (e) => {
-  if (e.deltaY > 50) {
-    document
-      .querySelector(".workSection")
-      .scrollIntoView({ behavior: "smooth" });
-  }
-});
+// Wheel-down over the hero nudges to the work section — only while actually
+// at the top of the page, so it can never hijack scrolling later
+document.querySelector(".intro-wrapper").addEventListener(
+  "wheel",
+  (e) => {
+    if (
+      e.deltaY > 50 &&
+      window.scrollY < 10 &&
+      !document.body.classList.contains("no-scroll")
+    ) {
+      gsap.to(window, {
+        scrollTo: { y: "#work", autoKill: true },
+        duration: 1,
+        ease: "custom",
+      });
+    }
+  },
+  { passive: true }
+);
 
 // Font shuffle animation
 const subHeaders = [
@@ -211,71 +223,21 @@ function animateScale(element, scaleValue) {
   );
 }
 
-function wrapLetters(text) {
-  placeholder.innerHTML = "";
-  [...text].forEach((letter) => {
-    const span = document.createElement("span");
-    span.style.filter = "blur(8px)";
-    span.textContent = letter;
-    placeholder.appendChild(span);
-  });
-}
-
-function animateBlurEffect() {
-  const letters = placeholder.children;
-  let index = 0;
-
-  function clearNextLetter() {
-    if (index < letters.length) {
-      gsap.to(letters[index], { filter: "blur(3px)", duration: 0.5 });
-      index++;
-
-      if (index < letters.length) {
-        setTimeout(clearNextLetter, 100);
-      }
-    }
+function scrambleTo(finalText) {
+  if (prefersReduced) {
+    placeholder.textContent = finalText;
+    return;
   }
-
-  setTimeout(clearNextLetter, 0);
-}
-
-function shuffleLetters(finalText) {
-  placeholder.innerHTML = "";
-
-  // Wrap each character in a span
-  finalText.split("").forEach((char) => {
-    const span = document.createElement("span");
-    span.textContent = char;
-    placeholder.appendChild(span);
+  gsap.to(placeholder, {
+    duration: 1.1,
+    scrambleText: {
+      text: finalText,
+      chars: "upperCase",
+      speed: 0.4,
+    },
+    ease: "none",
+    overwrite: "auto",
   });
-
-  const letters = placeholder.children;
-  const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-  let steps = 12;
-
-  for (let i = 0; i < letters.length; i++) {
-    let currentStep = 0;
-    const originalChar = finalText[i];
-    letters[i].style.filter = "blur(5px)";
-    gsap.to(letters[i], {
-      filter: "blur(0px)",
-      delay: 0.5 + i * 0.05,
-      duration: 2,
-    });
-
-    const interval = setInterval(() => {
-      if (currentStep < steps) {
-        letters[i].textContent =
-          chars[Math.floor(Math.random() * chars.length)];
-        currentStep++;
-      } else {
-        clearInterval(interval);
-        letters[i].textContent = originalChar;
-      }
-    }, 40 + i * 10); // offset by index to create staggered animation
-  }
-
-  animateBlurEffect();
 }
 
 function updatePlaceholderText(event) {
@@ -285,7 +247,7 @@ function updatePlaceholderText(event) {
 
   subheader.textContent = newSubHeaderText;
   animateScale(placeholder, 1.25);
-  shuffleLetters(newText);
+  scrambleTo(newText);
 }
 
 function restPlaceholderText() {
@@ -294,7 +256,7 @@ function restPlaceholderText() {
 
   subheader.textContent = defaultSubHeaderText;
   animateScale(placeholder, 1.25);
-  shuffleLetters(defaultText);
+  scrambleTo(defaultText);
 }
 
 items.forEach((item) => {
@@ -302,18 +264,20 @@ items.forEach((item) => {
   item.addEventListener("mouseout", restPlaceholderText);
 });
 
-function animateSubheader(delay = 6.5) {
-  gsap.from("#subheader", {
-    delay: delay,
-    y: 50,
-    opacity: 0,
-    duration: 0.5,
+function heroTextReveal() {
+  if (prefersReduced) return;
+  const split = SplitText.create("#subheader", {
+    type: "lines",
+    mask: "lines",
+  });
+  gsap.from(split.lines, {
+    yPercent: 100,
+    duration: 0.9,
+    stagger: 0.08,
     ease: "power4.out",
+    onComplete: () => split.revert(),
   });
 }
-
-// Disable scroll initially
-// document.body.classList.add("no-scroll");
 
 const customEase = CustomEase.create("custom", ".87,0,.13,1");
 const counter = document.getElementById("counter");
@@ -329,8 +293,26 @@ if (introWrapper) {
 // Check if URL has #work
 const isDirectToWork = window.location.hash === "#work";
 
-if (!isDirectToWork) {
-  // Normal animation flow with loading
+const finishPreloader = () => {
+  document.body.classList.remove("no-scroll");
+  document.dispatchEvent(new CustomEvent("rsx:loaded"));
+};
+
+if (isDirectToWork || prefersReduced) {
+  // Skip the intro: set final states, unlock scroll immediately
+  gsap.set(".loadingContainer", {
+    scale: 1,
+    rotation: 0,
+    clipPath: "polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%)",
+  });
+  gsap.set(".hero", {
+    opacity: 1,
+    clipPath: "polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%)",
+  });
+  gsap.set(".progress-bar", { opacity: 0 });
+  finishPreloader();
+} else {
+  // Compressed preloader (~3s total): strip opens, counter runs, full reveal
   document.body.classList.add("no-scroll");
 
   gsap.set(".loadingContainer", {
@@ -338,95 +320,74 @@ if (!isDirectToWork) {
     rotation: -20,
   });
 
-  gsap.to(".hero", {
-    clipPath: "polygon(0% 45%, 25% 45%, 25% 55%, 0% 55%)",
-    duration: 1.5,
-    ease: customEase,
-    delay: 1,
-  });
-
-  gsap.to(".hero", {
-    clipPath: "polygon(0% 45%, 100% 45%, 100% 55%, 0% 55%)",
-    duration: 2,
-    ease: customEase,
-    delay: 3,
-    onStart: () => {
-      gsap.to(".progress-bar", {
-        width: "100vw",
-        duration: 2,
-        ease: customEase,
-      });
-
-      gsap.to(counter, {
-        innerHTML: 100,
-        duration: 2,
-        ease: customEase,
-        snap: { innerHTML: 1 },
-      });
-    },
-  });
-
-  gsap.to(".hero", {
-    clipPath: "polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%)",
-    duration: 1,
-    ease: customEase,
-    delay: 5,
-    onStart: () => {
-      gsap.to(".loadingContainer", {
+  gsap
+    .timeline({
+      defaults: { ease: customEase },
+      onComplete: finishPreloader,
+    })
+    .to(
+      ".hero",
+      { clipPath: "polygon(0% 45%, 25% 45%, 25% 55%, 0% 55%)", duration: 0.8 },
+      0.2
+    )
+    .to(
+      ".hero",
+      { clipPath: "polygon(0% 45%, 100% 45%, 100% 55%, 0% 55%)", duration: 1.2 },
+      1.0
+    )
+    .to(".progress-bar", { width: "100vw", duration: 1.2 }, 1.0)
+    .to(counter, { innerHTML: 100, duration: 1.2, snap: { innerHTML: 1 } }, 1.0)
+    .to(
+      ".loadingContainer",
+      {
         scale: 1,
         rotation: 0,
         clipPath: "polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%)",
-        ease: customEase,
-      });
-
-      shuffleLetters("VISION");
-
-      gsap.to(".progress-bar", {
-        opacity: 0,
-        duration: 0.3,
-      });
-    },
-    onComplete: () => {
-      document.body.classList.remove("no-scroll");
-    },
-  });
-} else {
-  // If user lands directly in #work, skip animation, set final states
-
-  // Enable scrolling immediately
-  document.body.classList.remove("no-scroll");
-
-  // Set loadingContainer visible and at final scale/rotation
-  gsap.set(".loadingContainer", {
-    scale: 1,
-    rotation: 0,
-    clipPath: "polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%)",
-  });
-
-  // Set hero clipPath to final state
-  gsap.set(".hero", {
-    opacity: 1,
-    clipPath: "polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%)",
-  });
-
-  // gsap.fromTo(
-  //   ".hero",
-  //   { opacity: 0 },
-  //   { opacity: 1, duration: 2, ease: "power4.out" }
-  // );
-
-  // Set progress bar invisible
-  gsap.set(".progress-bar", {
-    opacity: 0,
-  });
+        duration: 0.8,
+      },
+      2.2
+    )
+    .to(
+      ".hero",
+      { clipPath: "polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%)", duration: 0.8 },
+      2.2
+    )
+    .to(".progress-bar", { opacity: 0, duration: 0.3 }, 2.3)
+    .add(() => {
+      scrambleTo("VISION");
+      heroTextReveal();
+    }, 2.3);
 }
 
-window.addEventListener("load", () => {
-  if (!isDirectToWork) {
-    restPlaceholderText();
-    animateSubheader();
-  }
-});
+// Scroll hint: appears once the preloader finishes, fades on first scroll
+const scrollHint = document.querySelector(".scroll-hint");
+if (scrollHint && !prefersReduced) {
+  gsap.set(scrollHint, { autoAlpha: 0 });
+
+  document.addEventListener(
+    "rsx:loaded",
+    () => {
+      gsap.to(scrollHint, { autoAlpha: 1, duration: 0.6 });
+      gsap.to(scrollHint, {
+        opacity: 0.35,
+        duration: 1.4,
+        ease: "sine.inOut",
+        yoyo: true,
+        repeat: -1,
+        delay: 0.6,
+      });
+    },
+    { once: true }
+  );
+
+  window.addEventListener(
+    "scroll",
+    () => {
+      gsap.to(scrollHint, { autoAlpha: 0, duration: 0.4, overwrite: true });
+    },
+    { once: true, passive: true }
+  );
+}
 
 // About me JS
 const textContainer = document.getElementById("textContainer");
