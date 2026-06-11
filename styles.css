@@ -904,6 +904,38 @@ nav>div {
   font-family: "Franklin Gothic Medium", "Arial Narrow", Arial, sans-serif;
   text-transform: uppercase;
   background: black;
+  position: relative;
+}
+
+/* Hero WebGL particle canvas sits behind the hero copy
+   (the global canvas rule supplies the centering transform) */
+.gl-hero {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 0;
+  pointer-events: none;
+}
+
+/* Static vignette stands in for the particle field when WebGL is gated off */
+.no-webgl .containerShuffle {
+  background: radial-gradient(ellipse at center, #0b0b15 0%, #000 70%);
+}
+
+/* Work-list distortion plane overlay */
+.gl-list {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 15;
+  pointer-events: none;
+}
+
+/* While the WebGL plane is active, the static thumbnails step aside */
+.workListContainer.gl-hover .item-img {
+  opacity: 0 !important;
 }
 
 .introHeader {
@@ -913,7 +945,7 @@ nav>div {
   transform: translate(-50%, -50%);
   width: 75%;
   color: white !important;
-  /* z-index: 10 !important; */
+  z-index: 1;
 }
 
 p {
@@ -951,6 +983,8 @@ p {
   padding: 2em;
   cursor: pointer;
   width: 10%;
+  position: relative;
+  z-index: 1;
 }
 
 .hero-background {
