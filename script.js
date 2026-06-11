@@ -35,47 +35,93 @@ window.addEventListener("load", function () {
   const workListContainer = document.querySelector(".workListContainer");
 
   let workCtx; // We will hold the GSAP context here to easily revert the whole 3D container
+  let slideTitleSplits = [];
 
   function initAnimatedView() {
+    // Revert any leftover SplitText from a previous init (context doesn't track them)
+    slideTitleSplits.forEach((s) => s.revert());
+    slideTitleSplits = [];
+
     workCtx = gsap.context(() => {
       // Dynamically set container height based on slides
       const totalSlides = slides.length;
       const vhPerSlide = 60; // adjust as needed
       container.style.height = `${totalSlides * vhPerSlide}vh`;
 
-      slides.forEach((slide, index) => {
-        // Clear any leftover inline styles
+      // Pre-build one setter bundle per slide — zero tween allocation per tick
+      const setters = slides.map((slide, index) => {
         gsap.set(slide, { clearProps: "all" });
         gsap.set(activeSlideImages[index], { clearProps: "all" });
-        ScrollTrigger.create({
-          trigger: container,
-          start: "top top",
-          end: "bottom bottom",
-          scrub: 2,
-          onUpdate: (self) => {
-            const progress = self.progress;
-            const zIncrement = progress * 13000;
-            const currentZ = -12000 + index * 1500 + zIncrement;
+        gsap.set(slide, { xPercent: -50, yPercent: -50 });
 
-            // Efficiently update styles using GSAP
-            gsap.to(slide, {
-              opacity: currentZ > -1500 ? 1 : currentZ > -2800 ? 0.5 : 0,
-              xPercent: -50,
-              yPercent: -50,
-              z: currentZ,
-              duration: 1, // Slightly longer for smoothness
-              ease: "power4.out", // Smoother easing
-              overwrite: "auto",
-            });
+        const img = slide.querySelector(".slide-img img");
+        if (img) gsap.set(img, { scale: 1.15 });
 
-            gsap.to(activeSlideImages[index], {
-              opacity: currentZ < 100 ? 1 : 0,
-              duration: 0.5,
-              ease: "power4.out",
-              overwrite: "auto",
-            });
-          },
+        const title = slide.querySelector(".slide-copy p:first-child");
+        let titleTween = null;
+        if (title && !prefersReduced) {
+          const split = SplitText.create(title, { type: "chars" });
+          slideTitleSplits.push(split);
+          titleTween = gsap.from(split.chars, {
+            opacity: 0,
+            yPercent: 40,
+            stagger: 0.02,
+            duration: 0.6,
+            ease: "power3.out",
+            paused: true,
+          });
+        }
+
+        return {
+          z: gsap.quickSetter(slide, "z", "px"),
+          rotateY: gsap.quickSetter(slide, "rotateY", "deg"),
+          opacity: gsap.quickSetter(slide, "opacity"),
+          bgOpacity: gsap.quickSetter(activeSlideImages[index], "opacity"),
+          imgY: img ? gsap.quickSetter(img, "yPercent") : null,
+          dir: slide.offsetLeft < window.innerWidth / 2 ? 1 : -1,
+          titleTween,
+        };
+      });
+
+      const applyProgress = () => {
+        const zIncrement = progressProxy.p * 13000;
+        setters.forEach((s, index) => {
+          const z = -12000 + index * 1500 + zIncrement;
+          s.z(z);
+          // Tilt toward viewport center while approaching, flatten at the camera
+          s.rotateY(s.dir * gsap.utils.clamp(-4, 4, (-z / 3000) * 4));
+          s.opacity(
+            gsap.utils.clamp(0, 1, gsap.utils.mapRange(-3500, -1500, 0, 1, z))
+          );
+          // Background image hands off as its slide passes the camera
+          s.bgOpacity(
+            gsap.utils.clamp(0, 1, gsap.utils.mapRange(600, 100, 0, 1, z))
+          );
+          if (s.imgY) s.imgY(gsap.utils.clamp(-6, 6, -z / 1500));
+          if (s.titleTween) {
+            if (z > -1500 && z < 900) {
+              s.titleTween.play();
+            } else {
+              s.titleTween.reverse();
+            }
+          }
         });
+      };
+
+      const progressProxy = { p: 0 };
+      const progressTo = gsap.quickTo(progressProxy, "p", {
+        duration: 0.6,
+        ease: "power3.out",
+        onUpdate: applyProgress,
+      });
+
+      applyProgress();
+
+      ScrollTrigger.create({
+        trigger: container,
+        start: "top top",
+        end: "bottom bottom",
+        onUpdate: (self) => progressTo(self.progress),
       });
     }, container);
   }
