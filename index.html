@@ -425,31 +425,32 @@
 
                 <form id="contact-form" class="contact-form">
                   <div class="form-group">
-                    <p>TO</p>
-                    <textarea type="email" name="to_email" placeholder="russell.sean.rs@gmail.com" readonly>
+                    <label for="field-to">TO</label>
+                    <textarea id="field-to" name="to_email" placeholder="russell.sean.rs@gmail.com" readonly>
 russell.sean.rs@gmail.com</textarea>
                   </div>
 
                   <div class="form-group">
-                    <p>FROM</p>
-                    <textarea type="email" name="from_email" placeholder="Your email address." required></textarea>
+                    <label for="field-from">FROM</label>
+                    <textarea id="field-from" name="from_email" placeholder="Your email address." required></textarea>
                   </div>
 
                   <div class="form-group">
-                    <p>SUBJECT</p>
-                    <textarea name="subject" placeholder="Choose a reason for your message." required>
+                    <label for="field-subject">SUBJECT</label>
+                    <textarea id="field-subject" name="subject" placeholder="Choose a reason for your message."
+                      required>
 Let's Create Together</textarea>
                   </div>
 
                   <div class="form-group">
-                    <p>MESSAGE</p>
-                    <textarea name="message"
+                    <label for="field-message">MESSAGE</label>
+                    <textarea id="field-message" name="message"
                       placeholder="Drop me a line with your name and details here, and I'll get back to you." required
                       class="messageTextarea"></textarea>
                   </div>
 
                   <button type="submit" class="sendButton">
-                    SEND YOUR MESSAGE
+                    Send your message
                   </button>
                 </form>
               </div>

@@ -871,6 +871,61 @@ const leaveEvent = () => {
 wrapper.addEventListener("mousemove", moveEvent);
 wrapper.addEventListener("mouseleave", leaveEvent);
 
+// Contact entrance reveals
+const contactTitle = document.querySelector(".contact-title p");
+if (contactTitle && !prefersReduced) {
+  const ctSplit = SplitText.create(contactTitle, {
+    type: "lines",
+    mask: "lines",
+  });
+  gsap.from(ctSplit.lines, {
+    yPercent: 100,
+    duration: 0.9,
+    stagger: 0.08,
+    ease: "power4.out",
+    scrollTrigger: {
+      trigger: ".contact-container",
+      start: "top 70%",
+      once: true,
+    },
+  });
+
+  gsap.from(".emoji", {
+    scale: 0.6,
+    autoAlpha: 0,
+    duration: 0.9,
+    ease: "back.out(1.4)",
+    scrollTrigger: { trigger: ".contactSection", start: "top 60%", once: true },
+  });
+}
+
+// Magnetic send button
+const sendBtn = document.querySelector(".sendButton");
+if (
+  sendBtn &&
+  window.matchMedia("(hover: hover) and (pointer: fine)").matches &&
+  !prefersReduced
+) {
+  const btnX = gsap.quickTo(sendBtn, "x", { duration: 0.4, ease: "power3" });
+  const btnY = gsap.quickTo(sendBtn, "y", { duration: 0.4, ease: "power3" });
+
+  sendBtn.addEventListener("mousemove", (e) => {
+    const rect = sendBtn.getBoundingClientRect();
+    btnX((e.clientX - (rect.left + rect.width / 2)) * 0.35);
+    btnY((e.clientY - (rect.top + rect.height / 2)) * 0.35);
+  });
+
+  sendBtn.addEventListener("mouseleave", () => {
+    gsap.to(sendBtn, {
+      x: 0,
+      y: 0,
+      duration: 0.8,
+      ease: "elastic.out(1, 0.4)",
+      overwrite: true,
+    });
+  });
+}
+
 document.addEventListener("DOMContentLoaded", function () {
   // Check if EmailJS is loaded
   if (typeof emailjs === "undefined") {

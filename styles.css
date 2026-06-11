@@ -1343,7 +1343,7 @@ section.sticky {
 
 .contactHeader a span {
   display: block;
-  transition: transform 0.4s ease;
+  transition: transform 0.5s cubic-bezier(0.76, 0, 0.24, 1);
   height: 110px;
   /* match container height */
   line-height: 110px;
@@ -1556,58 +1556,77 @@ section.website-content {
   align-items: flex-start;
   /* top align, no vertical centering */
   gap: 1rem;
+  position: relative;
 }
 
-.form-group p {
+/* Animated focus underline sweeping in from the left */
+.form-group::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  height: 1px;
+  background: var(--fg);
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform 0.5s var(--ease-out-soft);
+  pointer-events: none;
+}
+
+.form-group:focus-within::after {
+  transform: scaleX(1);
+}
+
+.form-group label {
   margin: 0;
   white-space: nowrap;
-  width: 80px;
+  width: 110px;
   padding-top: 10px;
-  padding-right: 120px;
   font-family: "MADEThin", sans-serif;
-  font-size: 1rem;
-  color: #d8d8d8;
+  font-size: var(--text-label);
+  letter-spacing: var(--label-tracking);
+  text-transform: uppercase;
+  color: var(--fg-dim);
+  text-align: left;
 }
 
 .form-group textarea {
   flex: 1;
   border: none;
-  border-bottom: 2px solid #ccc;
+  border-bottom: 1px solid rgba(242, 241, 236, 0.2);
   padding: 0.5rem;
   font-size: 1rem;
   resize: vertical;
   background: none;
   outline: none;
-  transition: border-color 0.3s ease;
-  color: white;
+  color: var(--fg);
   min-height: 40px;
   /* optional, starting height */
   max-height: 150px;
   /* optional max height */
 }
 
-.form-group textarea:focus {
-  border-bottom-color: #ffffff;
-}
-
 .sendButton {
   background: transparent;
-  /* no fill */
-  color: white;
-  /* white text */
-  border: none;
-  /* no border */
+  color: var(--fg);
+  border: 1px solid rgba(242, 241, 236, 0.3);
+  border-radius: 50px;
   cursor: pointer;
-  padding: 0.5rem 1rem;
-  font-size: 1rem;
+  padding: 1rem 2.2rem;
+  font-size: var(--text-label);
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
   align-self: flex-end;
-  transition: color 0.3s ease;
+  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
   font-family: "MADERegular", sans-serif !important;
+  will-change: transform;
 }
 
 .sendButton:hover {
-  color: #776cf5;
-  /* example hover color */
+  background: var(--fg);
+  color: var(--bg);
+  border-color: var(--fg);
 }
 
 /* Responsive */
@@ -2154,39 +2173,17 @@ section.website-content {
     display: flex;
     align-items: flex-start;
     /* top align, no vertical centering */
-    gap: 0;
+    gap: 0.5rem;
   }
 
-  .form-group p {
-    margin: 0;
-    white-space: nowrap;
-    width: 80px;
-    padding-top: 10px;
-    padding-right: 100px;
-    font-family: "MADEThin", sans-serif;
-    font-size: 12px;
-    color: #d8d8d8;
+  .form-group label {
+    width: 90px;
+    font-size: 11px;
   }
 
   .form-group textarea {
-    flex: 1;
-    border: none;
-    border-bottom: 2px solid #ccc;
-    padding: 0.5rem;
     font-size: 12px;
-    resize: vertical;
-    background: none;
-    outline: none;
-    transition: border-color 0.3s ease;
-    color: white;
     min-height: 10px;
-    /* optional, starting height */
-    max-height: 150px;
-    /* optional max height */
-  }
-
-  .sendButton {
-    font-size: 12px;
   }
 
   .messageTextarea {
