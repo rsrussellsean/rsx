@@ -38,6 +38,10 @@ window.addEventListener("load", function () {
   let slideTitleSplits = [];
 
   function initAnimatedView() {
+    // Rapid toggling can queue overlapping fade onCompletes; never let two
+    // contexts (and their ScrollTriggers) exist at once
+    if (workCtx) workCtx.revert();
+
     // Revert any leftover SplitText from a previous init (context doesn't track them)
     slideTitleSplits.forEach((s) => s.revert());
     slideTitleSplits = [];
@@ -139,6 +143,7 @@ window.addEventListener("load", function () {
   let listCtx;
 
   function initListReveals() {
+    if (listCtx) listCtx.revert();
     listCtx = gsap.context(() => {
       if (prefersReduced) {
         gsap.set(".list-item", { opacity: 1, y: 0 });
@@ -278,6 +283,22 @@ document.querySelector(".hero-background").addEventListener(
   { passive: true }
 );
 
+// In-page anchors scroll via GSAP (CSS smooth scrolling is off — it breaks
+// ScrollTrigger position measurements)
+document.querySelectorAll('a[href^="#"]').forEach((link) => {
+  const target = link.getAttribute("href");
+  if (target.length < 2) return;
+  link.addEventListener("click", (e) => {
+    if (!document.querySelector(target)) return;
+    e.preventDefault();
+    gsap.to(window, {
+      scrollTo: { y: target, autoKill: true },
+      duration: prefersReduced ? 0 : 1,
+      ease: "custom",
+    });
+  });
+});
+
 // ---------- Hero: cycling display word + entrance (no preloader) ----------
 const customEase = CustomEase.create("custom", ".87,0,.13,1");
 
@@ -373,15 +394,22 @@ if (prefersReduced) {
   gsap.set(".hero-eyebrow-rule", { scaleX: 0 });
   gsap.set(heroWordEl, { autoAlpha: 0 });
 
-  document.fonts.ready.then(() => {
-    const split = SplitText.create(heroWordEl, { type: "chars", mask: "chars" });
+  // Wait for the display font itself, not just fonts.ready — splitting while
+  // a fallback font is rendered leaves the chars mis-measured after the swap
+  Promise.all([
+    document.fonts.load('bold 100px "Grifter"'),
+    document.fonts.ready,
+  ]).then(() => {
+    // No mask: Grifter's glyphs overflow their line boxes (line-height 0.88),
+    // so masked chars get visibly cut while rising. Fade + rise can't clip.
+    const split = SplitText.create(heroWordEl, { type: "chars" });
     gsap.set(heroWordEl, { autoAlpha: 1 });
 
     gsap
       .timeline({ defaults: { ease: customEase } })
       .from(
         split.chars,
-        { yPercent: 110, duration: 1.1, stagger: 0.05 },
+        { yPercent: 60, autoAlpha: 0, duration: 1.1, stagger: 0.05 },
         0.15
       )
       .to(".hero-eyebrow-rule", { scaleX: 1, duration: 1.2 }, 0.25)

@@ -92,11 +92,14 @@
   }
 }
 
+/* NOTE: no CSS scroll-behavior: smooth here — it makes ScrollTrigger's
+   programmatic measure-scrolls animate, which corrupts trigger positions
+   whenever they refresh while the page is scrolled (e.g. the work view
+   toggle). In-page anchors scroll smoothly via ScrollToPlugin instead. */
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  scroll-behavior: smooth;
 }
 
 body {
