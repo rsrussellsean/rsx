@@ -1126,49 +1126,6 @@ gsap.utils.toArray(".section-label").forEach((label) => {
     .from(text, { autoAlpha: 0, x: -10, duration: 0.5 }, "-=0.3");
 });
 
-// Live Manila clock
-const manilaTime = document.getElementById("manila-time");
-if (manilaTime) {
-  const manilaFormat = new Intl.DateTimeFormat("en-US", {
-    timeZone: "Asia/Manila",
-    hour: "2-digit",
-    minute: "2-digit",
-    second: "2-digit",
-    hour12: false,
-  });
-  const tickClock = () => (manilaTime.textContent = manilaFormat.format(new Date()));
-  tickClock();
-  setInterval(tickClock, 1000);
-}
-
-// Back to top
-document.getElementById("back-to-top")?.addEventListener("click", () => {
-  gsap.to(window, { scrollTo: 0, duration: 1.2, ease: "custom" });
-});
-
-// Footer wordmark scrubbed reveal
-if (document.querySelector(".footer-wordmark")) {
-  if (prefersReduced) {
-    gsap.set(".footer-wordmark", { clipPath: "inset(0% 0 0 0)" });
-  } else {
-    gsap.fromTo(
-      ".footer-wordmark",
-      { clipPath: "inset(100% 0 0 0)", yPercent: 20 },
-      {
-        clipPath: "inset(0% 0 0 0)",
-        yPercent: 0,
-        ease: "none",
-        scrollTrigger: {
-          trigger: ".site-footer",
-          start: "top 90%",
-          end: "bottom bottom",
-          scrub: 1,
-        },
-      }
-    );
-  }
-}
-
 document.querySelectorAll(".slide a").forEach((link) => {
   link.addEventListener("click", function (e) {
     e.preventDefault(); // prevent immediate navigation
