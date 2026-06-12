@@ -444,8 +444,8 @@ nav>div {
 /* View Toggle Styles */
 .work-view-toggle {
   position: sticky;
-  top: calc(100vh - 5rem);
-  /* Track along the bottom */
+  top: calc(100vh - 7rem);
+  /* Track along the bottom, with breathing room below the pill */
   margin: 0 auto;
   display: flex;
   justify-content: center;
@@ -1043,8 +1043,10 @@ canvas {
   left: 50%;
   transform: translate(-50%, -50%);
   display: flex;
-  flex-direction: column;
-  align-items: center;
+  flex-direction: row;
+  align-items: baseline;
+  gap: clamp(0.5rem, 1.5vw, 1.5rem);
+  white-space: nowrap;
   text-align: center;
   margin: 0;
   font-weight: normal;
@@ -1057,7 +1059,6 @@ canvas {
   font-style: italic;
   font-size: clamp(1.5rem, 3vw, 3rem);
   color: var(--fg);
-  margin-bottom: -0.35em;
   position: relative;
   z-index: 1;
 }
