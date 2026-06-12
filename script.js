@@ -94,9 +94,12 @@ window.addEventListener("load", function () {
           s.z(z);
           // Tilt toward viewport center while approaching, flatten at the camera
           s.rotateY(s.dir * gsap.utils.clamp(-4, 4, (-z / 3000) * 4));
-          s.opacity(
-            gsap.utils.clamp(0, 1, gsap.utils.mapRange(-3500, -1500, 0, 1, z))
-          );
+          // Fade in while approaching, fade out as the slide flies past the
+          // camera — past ~600px it crosses the CSS perspective eye-plane and
+          // renders as a giant distorted fragment
+          const fadeIn = gsap.utils.mapRange(-3500, -1500, 0, 1, z);
+          const fadeOut = gsap.utils.mapRange(150, 450, 1, 0, z);
+          s.opacity(gsap.utils.clamp(0, 1, Math.min(fadeIn, fadeOut)));
           // Background image hands off as its slide passes the camera
           if (s.bgOpacity) {
             s.bgOpacity(
@@ -105,7 +108,7 @@ window.addEventListener("load", function () {
           }
           if (s.imgY) s.imgY(gsap.utils.clamp(-6, 6, -z / 1500));
           if (s.titleTween) {
-            if (z > -1500 && z < 900) {
+            if (z > -1500 && z < 500) {
               s.titleTween.play();
             } else {
               s.titleTween.reverse();
@@ -190,6 +193,7 @@ window.addEventListener("load", function () {
 
       setActiveButton(btnList, btnAnimated);
       localStorage.setItem("rsx-work-view", "list");
+      document.querySelector(".nav2")?.classList.add("is-hidden");
 
       // Cleanup: revert the GSAP context to kill triggers & clear inline styles
       if (workCtx) {
@@ -222,6 +226,7 @@ window.addEventListener("load", function () {
 
       setActiveButton(btnAnimated, btnList);
       localStorage.setItem("rsx-work-view", "animated");
+      document.querySelector(".nav2")?.classList.remove("is-hidden");
 
       // Hide List view, show 3D view
       gsap.to(workListContainer, {
@@ -1088,6 +1093,18 @@ if (marqueeTrack && !prefersReduced) {
         });
       }, 120);
     },
+  });
+}
+
+// Fade the fixed brand statement out once the carousel is scrolled past
+// (it otherwise floats over the marquee / later sections)
+const nav2El = document.querySelector(".nav2");
+if (nav2El) {
+  ScrollTrigger.create({
+    trigger: ".workSection",
+    start: "bottom 70%",
+    onEnter: () => nav2El.classList.add("is-past"),
+    onLeaveBack: () => nav2El.classList.remove("is-past"),
   });
 }
 

@@ -305,6 +305,8 @@ body.has-cursor .cursor-ring.is-view .cursor-label {
 
 /* Velocity-reactive marquee */
 .marquee {
+  /* positioned so it paints above the fixed .nav2 logo */
+  position: relative;
   overflow: hidden;
   width: 100%;
   padding: var(--space-4) 0;
@@ -487,6 +489,15 @@ section .workSection {
   padding: 1.5em 2em;
   display: flex;
   align-items: center;
+  transition: opacity 0.3s ease;
+}
+
+/* The brand statement only makes sense over the 3D carousel:
+   hidden in list view (.is-hidden) and once scrolled past it (.is-past) */
+.nav2.is-hidden,
+.nav2.is-past {
+  opacity: 0;
+  pointer-events: none;
 }
 
 footer {
@@ -518,6 +529,8 @@ nav>div {
   margin-top: 80px;
   display: flex;
   justify-content: center;
+  /* stays legible when light blurred slide backgrounds pass behind it */
+  mix-blend-mode: difference;
 }
 
 .logo p {
@@ -825,6 +838,9 @@ nav>div {
   color: white;
   border-top: none;
   padding: 0;
+  /* keep row titles above the WebGL hover plane (z-index 15) */
+  position: relative;
+  z-index: 16;
 }
 
 .item-copy::before {
@@ -1812,8 +1828,16 @@ section.website-content {
   }
 
   .about-title {
-    top: 30%;
+    top: 42%;
     width: 90%;
+  }
+
+  .about-title-serif {
+    font-size: clamp(1.2rem, 2.5vw, 2rem);
+  }
+
+  .change-text {
+    font-size: clamp(2.5rem, 6vw, 4.5rem);
   }
 
   .skillsContainer {
@@ -2065,8 +2089,16 @@ section.website-content {
   }
 
   .about-title {
-    top: 28%;
+    top: 30%;
     width: 90%;
+  }
+
+  .about-title-serif {
+    font-size: 1.1rem;
+  }
+
+  .change-text {
+    font-size: 2.2rem;
   }
 
   .skillsContainer {
