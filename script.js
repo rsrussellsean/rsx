@@ -264,14 +264,10 @@ window.addEventListener("load", function () {
 
 // Wheel-down over the hero nudges to the work section — only while actually
 // at the top of the page, so it can never hijack scrolling later
-document.querySelector(".intro-wrapper").addEventListener(
+document.querySelector(".hero-background").addEventListener(
   "wheel",
   (e) => {
-    if (
-      e.deltaY > 50 &&
-      window.scrollY < 10 &&
-      !document.body.classList.contains("no-scroll")
-    ) {
+    if (e.deltaY > 50 && window.scrollY < 10) {
       gsap.to(window, {
         scrollTo: { y: "#work", autoKill: true },
         duration: 1,
@@ -282,180 +278,128 @@ document.querySelector(".intro-wrapper").addEventListener(
   { passive: true }
 );
 
-// Font shuffle animation
-const subHeaders = [
-  "forging ahead with elite web designs.",
-  "top-notch web design components.",
-  "take the fast lane to mastery.",
-  "bring your projects to life, quicker than ever.",
+// ---------- Hero: cycling display word + entrance (no preloader) ----------
+const customEase = CustomEase.create("custom", ".87,0,.13,1");
+
+const HERO_WORDS = [
+  { word: "VISION", tagline: "Forging ahead with elite web designs." },
+  { word: "CONCEPT", tagline: "Top-notch components, engineered with intent." },
+  { word: "MOTION", tagline: "Interfaces that move, respond, and feel alive." },
+  { word: "REALITY", tagline: "Bring your project to life, quicker than ever." },
 ];
 
-const items = document.querySelectorAll("#item-1, #item-2, #item-3, #item-4");
-const placeholder = document.querySelector(".placeholder");
-const subheader = document.querySelector("#subheader");
+const heroWordEl = document.getElementById("heroWord");
+const heroTaglineEl = document.getElementById("heroTagline");
+const heroIndexEl = document.getElementById("heroIndex");
+const heroSection = document.querySelector(".hero-background");
 
-function changeColors() {
-  gsap.to(".containerShuffle", { backgroundColor: "white", duration: 0.5 });
-  gsap.to(".placeholder, nav, footer, p", {
-    color: "#000",
-    duration: 0.5,
-  });
-}
+let heroWordIndex = 0;
+let heroCycleId = null;
+let heroVisible = true;
 
-function revertColors() {
-  gsap.to(".containerShuffle", { backgroundColor: "#000", duration: 0.5 });
-  gsap.to(".placeholder, nav, footer, p", {
-    color: "#fff",
-    duration: 0.5,
-  });
-}
-items.forEach((item) => {
-  item.addEventListener("mouseover", changeColors);
-  item.addEventListener("mouseout", revertColors);
-});
+function swapHeroWord(nextIndex) {
+  heroWordIndex = nextIndex % HERO_WORDS.length;
+  const { word, tagline } = HERO_WORDS[heroWordIndex];
+  heroIndexEl.textContent = String(heroWordIndex + 1).padStart(2, "0");
 
-function animateScale(element, scaleValue) {
-  gsap.fromTo(
-    element,
-    { scale: 1 },
-    { scale: scaleValue, duration: 2, ease: "power1.out" }
-  );
-}
-
-function scrambleTo(finalText) {
-  if (prefersReduced) {
-    placeholder.textContent = finalText;
-    return;
-  }
-  gsap.to(placeholder, {
-    duration: 1.1,
-    scrambleText: {
-      text: finalText,
-      chars: "upperCase",
-      speed: 0.4,
-    },
+  gsap.to(heroWordEl, {
+    duration: 1,
+    scrambleText: { text: word, chars: "upperCase", speed: 0.4 },
     ease: "none",
     overwrite: "auto",
   });
-}
 
-function updatePlaceholderText(event) {
-  const newText = event.target.textContent.toUpperCase();
-  const itemIndex = Array.from(items).indexOf(event.target);
-  const newSubHeaderText = subHeaders[itemIndex].toUpperCase();
-
-  subheader.textContent = newSubHeaderText;
-  animateScale(placeholder, 1.25);
-  scrambleTo(newText);
-}
-
-function restPlaceholderText() {
-  const defaultText = "VISION";
-  const defaultSubHeaderText = "From";
-
-  subheader.textContent = defaultSubHeaderText;
-  animateScale(placeholder, 1.25);
-  scrambleTo(defaultText);
-}
-
-items.forEach((item) => {
-  item.addEventListener("mouseover", updatePlaceholderText);
-  item.addEventListener("mouseout", restPlaceholderText);
-});
-
-function heroTextReveal() {
-  if (prefersReduced) return;
-  const split = SplitText.create("#subheader", {
-    type: "lines",
-    mask: "lines",
-  });
-  gsap.from(split.lines, {
-    yPercent: 100,
-    duration: 0.9,
-    stagger: 0.08,
-    ease: "power4.out",
-    onComplete: () => split.revert(),
+  gsap.to(heroTaglineEl, {
+    autoAlpha: 0,
+    yPercent: -40,
+    duration: 0.3,
+    ease: "power2.in",
+    overwrite: "auto",
+    onComplete: () => {
+      heroTaglineEl.textContent = tagline;
+      gsap.fromTo(
+        heroTaglineEl,
+        { autoAlpha: 0, yPercent: 40 },
+        { autoAlpha: 1, yPercent: 0, duration: 0.5, ease: "power3.out" }
+      );
+    },
   });
 }
 
-const customEase = CustomEase.create("custom", ".87,0,.13,1");
-const counter = document.getElementById("counter");
-
-// Always show intro-wrapper no matter what
-const introWrapper = document.querySelector(".intro-wrapper");
-if (introWrapper) {
-  introWrapper.style.display = "block";
-  introWrapper.style.opacity = "1";
-  introWrapper.style.visibility = "visible";
+function startHeroCycle() {
+  stopHeroCycle();
+  heroCycleId = setInterval(() => {
+    if (!document.hidden && heroVisible) swapHeroWord(heroWordIndex + 1);
+  }, 4500);
 }
 
-// Check if URL has #work
-const isDirectToWork = window.location.hash === "#work";
+function stopHeroCycle() {
+  clearInterval(heroCycleId);
+  heroCycleId = null;
+}
 
-const finishPreloader = () => {
-  document.body.classList.remove("no-scroll");
+if (!prefersReduced && heroWordEl) {
+  // Only tick while the hero is actually on screen
+  new IntersectionObserver((entries) => {
+    heroVisible = entries[0].isIntersecting;
+  }).observe(heroSection);
+
+  // Hovering the big word skips ahead (and resets the timer)
+  document.querySelector(".hero-title").addEventListener("pointerenter", () => {
+    if (heroCycleId) {
+      swapHeroWord(heroWordIndex + 1);
+      startHeroCycle();
+    }
+  });
+}
+
+// Entrance: reveal straight away once fonts are ready — no loading screen
+const finishHeroIntro = () => {
   document.dispatchEvent(new CustomEvent("rsx:loaded"));
+  if (!prefersReduced) startHeroCycle();
 };
 
-if (isDirectToWork || prefersReduced) {
-  // Skip the intro: set final states, unlock scroll immediately
-  gsap.set(".loadingContainer", {
-    scale: 1,
-    rotation: 0,
-    clipPath: "polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%)",
-  });
-  gsap.set(".hero", {
-    opacity: 1,
-    clipPath: "polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%)",
-  });
-  gsap.set(".progress-bar", { opacity: 0 });
-  finishPreloader();
+if (prefersReduced) {
+  finishHeroIntro();
 } else {
-  // Compressed preloader (~3s total): strip opens, counter runs, full reveal
-  document.body.classList.add("no-scroll");
+  const heroChrome = [
+    ".hero-nav",
+    ".hero-footer",
+    ".hero-tagline",
+    ".hero-eyebrow-label",
+    ".hero-word-index",
+  ];
+  gsap.set(heroChrome, { autoAlpha: 0 });
+  gsap.set(".hero-eyebrow-rule", { scaleX: 0 });
+  gsap.set(heroWordEl, { autoAlpha: 0 });
 
-  gsap.set(".loadingContainer", {
-    scale: 0,
-    rotation: -20,
+  document.fonts.ready.then(() => {
+    const split = SplitText.create(heroWordEl, { type: "chars", mask: "chars" });
+    gsap.set(heroWordEl, { autoAlpha: 1 });
+
+    gsap
+      .timeline({ defaults: { ease: customEase } })
+      .from(
+        split.chars,
+        { yPercent: 110, duration: 1.1, stagger: 0.05 },
+        0.15
+      )
+      .to(".hero-eyebrow-rule", { scaleX: 1, duration: 1.2 }, 0.25)
+      .to(
+        [".hero-eyebrow-label", ".hero-word-index"],
+        { autoAlpha: 1, duration: 0.6, ease: "power2.out" },
+        0.6
+      )
+      .to(".hero-tagline", { autoAlpha: 1, duration: 0.7, ease: "power2.out" }, 0.9)
+      .to(
+        [".hero-nav", ".hero-footer"],
+        { autoAlpha: 1, duration: 0.7, ease: "power2.out" },
+        1.0
+      )
+      .add(finishHeroIntro, 1.0)
+      // Hand the word back as plain text so ScrambleText can take over
+      .add(() => split.revert(), 1.8);
   });
-
-  gsap
-    .timeline({
-      defaults: { ease: customEase },
-      onComplete: finishPreloader,
-    })
-    .to(
-      ".hero",
-      { clipPath: "polygon(0% 45%, 25% 45%, 25% 55%, 0% 55%)", duration: 0.8 },
-      0.2
-    )
-    .to(
-      ".hero",
-      { clipPath: "polygon(0% 45%, 100% 45%, 100% 55%, 0% 55%)", duration: 1.2 },
-      1.0
-    )
-    .to(".progress-bar", { width: "100vw", duration: 1.2 }, 1.0)
-    .to(counter, { innerHTML: 100, duration: 1.2, snap: { innerHTML: 1 } }, 1.0)
-    .to(
-      ".loadingContainer",
-      {
-        scale: 1,
-        rotation: 0,
-        clipPath: "polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%)",
-        duration: 0.8,
-      },
-      2.2
-    )
-    .to(
-      ".hero",
-      { clipPath: "polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%)", duration: 0.8 },
-      2.2
-    )
-    .to(".progress-bar", { opacity: 0, duration: 0.3 }, 2.3)
-    .add(() => {
-      scrambleTo("VISION");
-      heroTextReveal();
-    }, 2.3);
 }
 
 // Scroll hint: appears once the preloader finishes, fades on first scroll

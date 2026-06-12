@@ -77,7 +77,7 @@
 
   // ---------- Hero particle drift field ----------
   function initHeroParticles() {
-    const host = document.querySelector(".containerShuffle");
+    const host = document.querySelector(".hero");
     const heroSection = document.querySelector(".hero-background");
     if (!host || !heroSection) return;
 
