@@ -763,14 +763,6 @@ if (aboutTitleEl && !prefersReduced) {
       scrub: true,
     },
   });
-
-  gsap.from(".about-title-serif", {
-    autoAlpha: 0,
-    yPercent: 60,
-    duration: 0.9,
-    ease: "power4.out",
-    scrollTrigger: { trigger: ".aboutSection", start: "top 70%", once: true },
-  });
 }
 
 const aboutBio = document.querySelector(".about-bio");

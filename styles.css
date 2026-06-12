@@ -1078,10 +1078,6 @@ canvas {
   top: 40%;
   left: 50%;
   transform: translate(-50%, -50%);
-  display: flex;
-  flex-direction: row;
-  align-items: baseline;
-  gap: clamp(0.5rem, 1.5vw, 1.5rem);
   white-space: nowrap;
   text-align: center;
   margin: 0;
@@ -1090,18 +1086,9 @@ canvas {
   pointer-events: none;
 }
 
-.about-title-serif {
-  font-family: "BookItalic", serif;
-  font-style: italic;
-  font-size: clamp(1.5rem, 3vw, 3rem);
-  color: var(--fg);
-  position: relative;
-  z-index: 1;
-}
-
 .change-text {
   color: var(--fg) !important;
-  font-size: var(--text-h2);
+  font-size: clamp(2.5rem, 5.5vw, 5.5rem);
   line-height: 1;
   text-transform: uppercase;
   text-align: center;
@@ -1761,15 +1748,10 @@ section.website-content {
 
   .about-title {
     top: 42%;
-    width: 90%;
-  }
-
-  .about-title-serif {
-    font-size: clamp(1.2rem, 2.5vw, 2rem);
   }
 
   .change-text {
-    font-size: clamp(2.5rem, 6vw, 4.5rem);
+    font-size: clamp(2rem, 5vw, 4rem);
   }
 
   .skillsContainer {
@@ -2022,15 +2004,10 @@ section.website-content {
 
   .about-title {
     top: 30%;
-    width: 90%;
-  }
-
-  .about-title-serif {
-    font-size: 1.1rem;
   }
 
   .change-text {
-    font-size: 2.2rem;
+    font-size: 1.6rem;
   }
 
   .skillsContainer {
