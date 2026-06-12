@@ -337,6 +337,41 @@ body.has-cursor .cursor-ring.is-view .cursor-label {
   }
 }
 
+/* Inside the contact section the marquee hugs the bottom of the viewport
+   as a compact closing band */
+.contactSection .marquee {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  padding: var(--space-2) 0;
+  border-bottom: none;
+  background: transparent;
+}
+
+.contactSection .marquee-track span {
+  font-size: clamp(1.5rem, 3vw, 3rem);
+}
+
+/* On small screens the form reaches the bottom — let the contact containers
+   grow with their content and flow the band after it */
+@media (max-width: 768px) {
+  .contactSection section.sticky,
+  .contactSection .trackerContainer {
+    height: auto;
+    min-height: 100vh;
+  }
+
+  .contactSection .tracker {
+    height: auto;
+  }
+
+  .contactSection .marquee {
+    position: static;
+    padding: 1.5rem 0;
+  }
+}
+
 
 /* Hide vertical scrollbar but still allow scrolling */
 .scrollable-no-scrollbar {
@@ -1472,8 +1507,8 @@ section.website-content {
   gap: 100px;
   font-family: sans-serif;
   color: white;
-  /* padding-top: 100px; */
-  padding: 150px 200px 0;
+  /* fluid top padding keeps the form clear of the bottom marquee band */
+  padding: clamp(50px, 8vh, 130px) 200px 0;
 }
 
 .contact-title {
@@ -1824,7 +1859,7 @@ section.website-content {
     /* space between title and form */
     font-family: sans-serif;
     color: white;
-    padding: 150px 20px 0;
+    padding: clamp(50px, 8vh, 130px) 20px 0;
     /* reduced horizontal padding for better responsiveness */
     text-align: center;
   }
