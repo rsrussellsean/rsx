@@ -1,10 +1,15 @@
-/* Project gallery page styles — port of the per-project styles.css files.
-   Loaded only on /works/[slug]; fonts come from globals.css.
-   (The original's `* { scroll-behavior: smooth }` is dropped — the page
-   never scrolls, and smooth scrolling corrupts ScrollTrigger elsewhere.) */
+/* Project gallery page styles — editorial redesign matching the home.
+   Loaded only on /works/[slug]; fonts + tokens come from globals.css.
+   The page never scrolls (single-viewport minimap experience), so smooth
+   scrolling is intentionally absent (it also corrupts ScrollTrigger elsewhere).
+   Class/structure names are scoped to this route; the minimap scrub math in
+   ProjectGallery.tsx reads live element sizes, so dimensions here are free to
+   change as long as .item and .indicator stay consistent. */
 
 body {
-  font-family: "Courier New", Courier, monospace;
+  font-family: "MADERegular", sans-serif;
+  background-color: var(--bg);
+  color: var(--fg);
   overflow: hidden !important;
 }
 
@@ -12,16 +17,13 @@ img {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  transition: opacity 0.2s;
+  transition: opacity 0.25s var(--ease-out-soft);
   user-select: none;
 }
 
 p {
-  font-size: 14px;
-  font-weight: 600;
-  /* globals.css centers paragraphs for the homepage; restore inheritance so
-     the title is left-aligned on desktop and centered on mobile like before */
-  text-align: inherit;
+  /* globals.css centers paragraphs for the homepage; this route is left-aligned */
+  text-align: left;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   user-select: none;
@@ -33,94 +35,211 @@ p {
   height: 100vh;
   overflow: hidden !important;
   opacity: 0;
-  transform: translateY(20px);
-  transition: opacity 0.8s ease-in, transform 0.8s ease-in;
+  transition: opacity 0.8s var(--ease-out-soft);
 }
 .container.loaded {
-  overflow: hidden !important;
   opacity: 1;
-  transform: translateY(0);
 }
 
-nav {
+/* ---- Backdrop ---- */
+.bg-blur {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  background-size: cover;
+  background-position: center;
+  filter: blur(60px) saturate(1.1);
+  transform: scale(1.2);
+  opacity: 0.55;
+  z-index: -2;
+}
+
+.dark-overlay {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  background:
+    radial-gradient(
+      120% 120% at 70% 30%,
+      rgba(5, 5, 5, 0.55) 0%,
+      rgba(5, 5, 5, 0.9) 70%
+    ),
+    var(--bg);
+  z-index: -1;
+}
+
+/* ---- Exit sweep (mirrors home's #black-transition) ---- */
+.work-transition {
+  position: fixed;
+  top: -100%;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: #000;
+  z-index: 9999;
+  transition: top 0.8s cubic-bezier(0.87, 0, 0.13, 1);
+  pointer-events: none;
+}
+
+/* ---- Top nav ---- */
+.project-nav {
   position: fixed;
   top: 0;
   left: 0;
   width: 100vw;
-  padding: 1.5em 2.5em;
+  padding: var(--space-3) clamp(1.25rem, 4vw, 3rem);
   display: flex;
   justify-content: space-between;
   align-items: center;
-  color: white;
-  font-family: "MADERegular", sans-serif;
-  z-index: 1;
+  z-index: 5;
 }
 
-nav a {
-  font-size: 20px;
-  width: 200px;
+.project-brand {
+  font-family: "Grifter", sans-serif;
+  font-size: 1.5rem;
+  letter-spacing: 0.02em;
+  color: var(--fg);
+  text-decoration: none;
+}
+
+.project-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6em;
+  font-family: "MADERegular", sans-serif;
+  font-size: var(--text-label);
+  letter-spacing: var(--label-tracking);
+  text-transform: uppercase;
+  color: var(--fg);
+  text-decoration: none;
+  transition: opacity 0.4s var(--ease-out-soft);
+}
+.project-back .back-arrow {
+  display: inline-block;
+  transition: transform 0.5s var(--ease-rsx);
+}
+.project-back:hover .back-arrow {
+  transform: translateX(-0.4em);
+}
+.project-back:hover,
+.project-brand:hover {
+  opacity: 0.6;
+}
+
+/* ---- Eyebrow (echoes SectionLabel) ---- */
+.project-eyebrow {
+  position: fixed;
+  top: clamp(5rem, 12vh, 8rem);
+  left: clamp(1.25rem, 4vw, 3rem);
   display: flex;
   align-items: center;
-  gap: 0.5em;
-  margin: 0;
-  text-decoration: none;
-  color: white;
+  gap: 1rem;
+  z-index: 4;
+}
+.project-eyebrow-rule {
+  width: clamp(2rem, 5vw, 4rem);
+  height: 1px;
+  background: var(--fg-dim);
+}
+.project-eyebrow-label {
+  font-family: "MADERegular", sans-serif;
+  font-size: var(--text-label);
+  letter-spacing: var(--label-tracking);
+  text-transform: uppercase;
+  color: var(--fg-dim);
 }
 
-nav img {
-  width: 1em;
-  height: auto;
-  display: block;
-}
-
-.site-info {
+/* ---- Project info block ---- */
+.project-info {
   position: absolute;
-  top: 40%;
-  left: 1.5em;
+  top: 50%;
+  left: clamp(1.25rem, 4vw, 3rem);
+  transform: translateY(-50%);
   display: flex;
   flex-direction: column;
-  gap: 24px;
-  width: 400px;
-  padding-left: 20px;
+  align-items: flex-start;
+  gap: 1.25rem;
+  max-width: min(46vw, 640px);
+  z-index: 3;
 }
 
-.site-info p span {
-  color: white;
-  font-size: 40px;
-  font-family: "MADEBold", sans-serif;
-  text-transform: uppercase;
-  line-height: 1.2;
-}
-
-.visit-info a {
-  display: inline-block;
-  padding: 16px 16px;
-  color: white;
-  text-decoration: none;
-  border-radius: 12px;
+.project-index {
   font-family: "MADERegular", sans-serif;
-  font-size: 18px;
-  background: rgba(255, 255, 255, 0.1);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.3);
-  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
-  transition: all 0.3s ease;
+  font-size: var(--text-label);
+  letter-spacing: var(--label-tracking);
+  color: var(--fg);
+}
+.project-index span {
+  color: var(--fg-dim);
 }
 
+.project-title {
+  font-family: "Grifter", sans-serif;
+  font-size: clamp(2.75rem, 3.5vw, 6rem);
+  line-height: 0.9;
+  letter-spacing: -0.01em;
+  font-kerning: none; /* prevent kerning snap, as on the home hero */
+  text-transform: uppercase;
+  color: var(--fg);
+  margin: 0;
+}
+
+.project-est {
+  font-family: "MADERegular", sans-serif;
+  font-size: var(--text-label);
+  letter-spacing: var(--label-tracking);
+  text-transform: uppercase;
+  color: var(--fg-dim);
+}
+
+/* ---- Glass "Visit" CTA (mirrors home's visit button) ---- */
+.visit-info {
+  margin-top: 0.5rem;
+}
+.visit-info a {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6em;
+  padding: 0.9em 1.4em;
+  color: var(--fg);
+  text-decoration: none;
+  border-radius: 999px;
+  font-family: "MADERegular", sans-serif;
+  font-size: var(--text-label);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  background: rgba(242, 241, 236, 0.06);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(242, 241, 236, 0.25);
+  transition:
+    background 0.4s var(--ease-out-soft),
+    border-color 0.4s var(--ease-out-soft);
+}
+.visit-info a .visit-arrow {
+  display: inline-block;
+  transition: transform 0.5s var(--ease-rsx);
+}
 .visit-info a:hover {
-  background: rgba(255, 255, 255, 0.25);
-  color: #ffffff;
-  border: 1px solid rgba(255, 255, 255, 0.5);
+  background: rgba(242, 241, 236, 0.14);
+  border-color: rgba(242, 241, 236, 0.5);
+}
+.visit-info a:hover .visit-arrow {
+  transform: translate(0.25em, -0.25em);
 }
 
+/* ---- Centered preview ---- */
 .img-preview {
   position: absolute;
   top: 50%;
-  left: 50%;
+  /* Pushed right of centre so it clears the title on the left and the
+     minimap rail on the right (re-centred at <=900px below). */
+  left: 65%;
   transform: translate(-50%, -50%);
-  width: 50%;
-  height: 75%;
+  width: 44%;
+  height: 72%;
   overflow: hidden;
 }
 
@@ -134,44 +253,10 @@ nav img {
   object-fit: contain;
 }
 
-.minimap {
-  position: absolute;
-  top: 40%;
-  right: 6em;
-  width: 200px;
-}
-
-.indicator {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 150px;
-  border: 2px solid rgb(48, 48, 48);
-  z-index: 2;
-}
-
-.items {
-  position: relative;
-  width: 100%;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  gap: 0px;
-  will-change: transform;
-}
-
-.item {
-  width: 100%;
-  height: 150px;
-  padding: 5px;
-  cursor: pointer;
-}
-
 @keyframes fadeSmooth {
   0% {
     opacity: 0;
-    transform: translate(-50%, -52%);
+    transform: translate(-50%, -53%);
   }
   100% {
     opacity: 1;
@@ -180,49 +265,134 @@ nav img {
 }
 
 .img-preview img.animate {
-  animation: fadeSmooth 1s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  animation: fadeSmooth 0.9s var(--ease-out-soft) forwards;
   transform-origin: center;
 }
 
-@media (max-width: 900px) {
-  body {
-    overflow: hidden;
-    touch-action: none;
-  }
+/* ---- Minimap rail ---- */
+.minimap {
+  position: fixed;
+  top: 50%;
+  right: 90px;
+  transform: translateY(-50%);
+  width: 200px;
+}
 
+.indicator {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 132px;
+  border: 1px solid var(--fg);
+  box-shadow:
+    0 0 28px rgba(17, 0, 255, 0.25),
+    0 0 28px rgba(255, 0, 242, 0.15);
+  z-index: 2;
+  pointer-events: none;
+}
+
+.items {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  will-change: transform;
+}
+
+.item {
+  width: 100%;
+  height: 132px;
+  padding: 6px;
+  cursor: pointer;
+}
+.item img {
+  filter: grayscale(40%);
+  transition:
+    opacity 0.25s var(--ease-out-soft),
+    filter 0.4s var(--ease-out-soft);
+}
+.item:hover img {
+  filter: grayscale(0%);
+}
+
+/* ---- iPad / Tablet ---- */
+@media (max-width: 1024px) {
+  .project-info {
+    max-width: 70vw;
+    gap: 1rem;
+  }
+  .project-title {
+    font-size: clamp(2.5rem, 8vw, 4rem);
+  }
+  .img-preview {
+    left: 56%;
+    width: 50%;
+    height: 60%;
+  }
+}
+
+/* ---- Mobile: minimap goes horizontal (matches JS innerWidth < 900) ---- */
+@media (max-width: 900px) {
+  body,
   .container {
     touch-action: none;
   }
 
-  .site-info {
-    top: 10em;
-    left: 50%;
-    transform: translateX(-50%);
-    text-align: center !important;
-    padding: 0;
+  .project-eyebrow {
+    display: none;
   }
 
-  .site-info p span {
-    color: white;
-    font-size: 24px;
-    font-family: "MADEBold", sans-serif;
-    text-transform: uppercase;
+  .project-info {
+    top: clamp(7rem, 18vh, 11rem);
+    left: 50%;
+    transform: none;
+    margin-left: -45vw;
+    align-items: center;
+    text-align: center;
+    max-width: 90vw;
+  }
+  .project-info p {
+    text-align: center;
+  }
+  .project-title {
+    font-size: clamp(2.25rem, 11vw, 3.25rem);
+  }
+
+  .img-preview {
+    top: 47%;
+    left: 50%;
+    width: 80%;
+    height: 44%;
+  }
+
+  .visit-info {
+    position: fixed;
+    bottom: calc(clamp(2rem, 7vh, 4rem) + 76px + 3.5rem);
+    left: 50%;
+    transform: translateX(-50%);
+    margin: 0;
+    white-space: nowrap;
   }
 
   .minimap {
+    position: fixed;
     top: auto;
     right: auto;
-    bottom: 5em;
+    bottom: clamp(2rem, 7vh, 4rem);
     left: 50%;
+    transform: translateX(-50%);
     width: auto;
-    height: 80px;
+    height: 76px;
     touch-action: none;
   }
 
   .indicator {
     top: 0;
     left: 0;
-    width: 60px;
+    width: 56px;
     height: 100%;
   }
 
@@ -234,115 +404,28 @@ nav img {
   }
 
   .item {
-    width: 60px;
+    width: 56px;
     height: 100%;
     padding: 5px;
   }
-
-  .img-preview {
-    top: 45%;
-    width: 75%;
-    height: 50%;
-  }
 }
 
-.bg-blur {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  background-size: cover;
-  background-position: center;
-  filter: blur(50px);
-  z-index: -1;
-}
-
-.dark-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  background-color: rgba(0, 0, 0, 0.7);
-  z-index: -1;
-}
-
-/* iPad / Tablet (768px - 1024px) */
-@media (max-width: 1024px) {
-  .site-info {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-    padding: 20px;
-    width: 100%;
-    max-width: 400px;
-    text-align: center;
-
-    margin-top: -6em;
-  }
-
-  .site-info p {
-    margin: 0;
-  }
-
-  .site-info p span {
-    font-size: 24px;
-    line-height: 1.2;
-  }
-
-  .visit-info {
-    margin: 0;
-    padding: 0;
-  }
-
-  .visit-info a {
-    font-size: 16px;
-    padding: 12px 16px;
-  }
-}
-
-/* Mobile device */
 @media (max-width: 768px) {
-  .site-info {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-    padding: 20px;
-    width: 100%;
-    max-width: 400px;
-    text-align: center;
-
-    margin-top: -6.5em;
+  .project-brand {
+    font-size: 1.25rem;
   }
-
-  .site-info p {
-    margin: 0;
+  .project-back span:last-child {
+    /* keep the arrow, drop the label on small screens to avoid wrapping */
+    display: none;
   }
+}
 
-  .site-info p span {
-    font-size: 22px;
-    line-height: 1.2;
+@media (prefers-reduced-motion: reduce) {
+  .img-preview img.animate {
+    animation: none;
   }
-
-  .visit-info {
-    margin: 0;
-    padding: 0;
-  }
-
-  .visit-info a {
-    font-size: 12px;
-    padding: 12px 16px;
-  }
-
-  nav a {
-    font-size: 16px;
-    width: 150px;
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    margin: 0;
-    text-decoration: none;
-    color: white;
+  .project-back .back-arrow,
+  .visit-info a .visit-arrow {
+    transition: none;
   }
 }

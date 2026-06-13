@@ -1,9 +1,13 @@
 "use client";
 
 // Project page: wheel/click/touch-driven minimap gallery with a lerped
-// indicator and blurred backdrop. Direct port of works/*/script.js.
+// indicator and blurred backdrop. The scrub mechanic is a frozen port of
+// works/*/script.js; the editorial chrome + transitions are the redesign.
 import { useEffect, useRef } from "react";
-import type { Work } from "@/lib/works-data";
+import { gsap, prefersReduced } from "@/lib/gsap";
+import { WORKS, type Work } from "@/lib/works-data";
+
+const pad = (n: number) => String(n).padStart(2, "0");
 
 export default function ProjectGallery({ work }: { work: Work }) {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -11,6 +15,69 @@ export default function ProjectGallery({ work }: { work: Work }) {
   const indicatorRef = useRef<HTMLDivElement>(null);
   const previewRef = useRef<HTMLImageElement>(null);
   const bgBlurRef = useRef<HTMLDivElement>(null);
+  const overlayRef = useRef<HTMLDivElement>(null);
+
+  const index = WORKS.findIndex((w) => w.slug === work.slug);
+
+  // Sweep the black overlay over, flag the home page to reveal-from-black, then
+  // hard-navigate (full reload is intentional — works.css restyles globals).
+  function triggerExit(href: string) {
+    const overlay = overlayRef.current;
+    if (overlay) overlay.style.top = "0";
+    try {
+      sessionStorage.setItem("rsx-returning", "1");
+    } catch {}
+    setTimeout(() => {
+      window.location.href = href;
+    }, 800); // matches the CSS overlay transition duration
+  }
+
+  // Escape is a quick, discoverable way back to the work section
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") triggerExit("/#work");
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, []);
+
+  // Editorial entrance — staggers the chrome in over the CSS container fade.
+  // Pure y/opacity (no SplitText) to sidestep the hero's kerning-snap issue.
+  useEffect(() => {
+    if (prefersReduced()) return;
+    const ctx = gsap.context(() => {
+      // Text chrome rises in (no base transform → yPercent is safe)
+      gsap.from(
+        [
+          ".project-eyebrow",
+          ".project-index",
+          ".project-title",
+          ".project-est",
+          ".visit-info",
+          ".project-nav a",
+        ],
+        {
+          yPercent: 18,
+          autoAlpha: 0,
+          duration: 1,
+          ease: "custom",
+          stagger: 0.07,
+          delay: 0.2,
+          clearProps: "transform,opacity,visibility",
+        }
+      );
+      // The preview + minimap are CSS-centered via translate(); fade only so
+      // GSAP doesn't fight their centering transform during the intro.
+      gsap.from([".img-preview", ".minimap"], {
+        autoAlpha: 0,
+        duration: 1.1,
+        ease: "custom",
+        delay: 0.45,
+        clearProps: "opacity,visibility",
+      });
+    }, containerRef);
+    return () => ctx.revert();
+  }, [work.slug]);
 
   useEffect(() => {
     const container = containerRef.current!;
@@ -248,34 +315,63 @@ export default function ProjectGallery({ work }: { work: Work }) {
     };
   }, [work.slug]);
 
+  const handleBack = (e: React.MouseEvent<HTMLAnchorElement>) => {
+    e.preventDefault();
+    triggerExit(e.currentTarget.getAttribute("href")!);
+  };
+
   return (
     <>
       <div className="bg-blur" ref={bgBlurRef}></div>
       <div className="dark-overlay"></div>
+      {/* Exit sweep — mirrors the home page's #black-transition */}
+      <div className="work-transition" ref={overlayRef} aria-hidden="true"></div>
 
       <div className="container" ref={containerRef}>
-        <nav>
-          {/* Full page loads on purpose: this route's CSS restyles body/p/nav
-              globally, so client-side navigation would leak it onto the home page */}
+        {/* Full page loads on purpose: this route's CSS restyles body/p/nav
+            globally, so client-side navigation would leak it onto the home page */}
+        <nav className="project-nav">
           {/* eslint-disable-next-line @next/next/no-html-link-for-pages */}
-          <a href="/">RSX</a>
+          <a href="/" className="project-brand" data-cursor="view" onClick={handleBack}>
+            RSX
+          </a>
           {/* eslint-disable-next-line @next/next/no-html-link-for-pages */}
-          <a href="/#work">
-            <span>
-              <img src="/images/arrowleft.png" alt="" />
+          <a
+            href="/#work"
+            className="project-back"
+            data-cursor="view"
+            onClick={handleBack}
+          >
+            <span className="back-arrow" aria-hidden="true">
+              &larr;
             </span>
-            <span> Back to Work</span>
+            <span>Back to Work</span>
           </a>
         </nav>
 
-        <div className="site-info">
-          <p>
-            <span>{work.pageTitle}</span>
+        <div className="project-eyebrow" aria-hidden="true">
+          <span className="project-eyebrow-rule"></span>
+          <span className="project-eyebrow-label">Selected Work</span>
+        </div>
+
+        <div className="project-info">
+          <p className="project-index">
+            {pad(index + 1)} <span>/ {pad(WORKS.length)}</span>
           </p>
+          <h1 className="project-title">{work.pageTitle}</h1>
+          <p className="project-est">{work.est}</p>
           {work.visitUrl && (
             <div className="visit-info">
-              <a href={work.visitUrl} target="_blank" rel="noopener noreferrer">
-                Visit the site
+              <a
+                href={work.visitUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                data-cursor="view"
+              >
+                <span>Visit the site</span>
+                <span className="visit-arrow" aria-hidden="true">
+                  &#8599;
+                </span>
               </a>
             </div>
           )}

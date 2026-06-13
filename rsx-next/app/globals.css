@@ -193,10 +193,19 @@ body {
   }
 }
 
-/* Custom cursor — only shown once JS adds body.has-cursor */
+
+/* Custom cursor — hide native, show custom when JS adds body.has-cursor */
 .cursor-dot,
 .cursor-ring {
   display: none;
+}
+
+body.has-cursor {
+  cursor: none;
+}
+
+body.has-cursor * {
+  cursor: none;
 }
 
 body.has-cursor .cursor-dot {
@@ -495,7 +504,7 @@ nav > div {
   font-size: 13px;
   text-transform: uppercase;
   letter-spacing: 2px;
-  cursor: pointer;
+  cursor: none;
   transition: color 0.3s ease;
   position: relative;
   z-index: 1;
@@ -744,7 +753,7 @@ nav > div {
 .item-copy p:first-child {
   font-family: "MADEBold", sans-serif;
   text-transform: uppercase;
-  font-size: clamp(2rem, 4vw, 5rem);
+  font-size: clamp(1rem, 2vw, 2.5rem);
   margin: 0;
   transition: color 0.4s ease;
 }
@@ -998,6 +1007,12 @@ p {
   z-index: 9999;
   transition: top 0.8s ease-in-out;
   pointer-events: none;
+}
+
+/* Arriving back from a project page: start covered, then SiteChrome removes
+   this class on the next frame so the overlay sweeps up to reveal home. */
+.rsx-returning #black-transition {
+  top: 0;
 }
 
 canvas {

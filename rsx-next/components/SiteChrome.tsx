@@ -12,6 +12,25 @@ export default function SiteChrome() {
   const ringRef = useRef<HTMLDivElement>(null);
 
   useGSAP(() => {
+    // Reveal-from-black: when we land here from a project page's exit sweep,
+    // the inline layout script already covered us (html.rsx-returning). Drop
+    // that class on the next painted frame so #black-transition's CSS top
+    // transition sweeps it back up — continuous with the project's black.
+    let returning = false;
+    try {
+      returning = sessionStorage.getItem("rsx-returning") === "1";
+      if (returning) sessionStorage.removeItem("rsx-returning");
+    } catch {}
+    if (returning) {
+      requestAnimationFrame(() =>
+        requestAnimationFrame(() =>
+          document.documentElement.classList.remove("rsx-returning")
+        )
+      );
+    } else {
+      document.documentElement.classList.remove("rsx-returning");
+    }
+
     // CSS fallbacks key off body.no-webgl (vignette instead of particles, …)
     if (webglGateFails()) document.body.classList.add("no-webgl");
 
@@ -51,7 +70,6 @@ export default function SiteChrome() {
       ringY(e.clientY);
     };
 
-    // Work links expand the cursor ring into a "View" badge
     const onOver = (e: MouseEvent) => {
       if ((e.target as Element).closest("[data-cursor='view']")) {
         cursorRing.classList.add("is-view");

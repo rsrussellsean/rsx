@@ -778,7 +778,7 @@ nav > div {
 .item-copy p:first-child {
   font-family: "MADEBold", sans-serif;
   text-transform: uppercase;
-  font-size: clamp(2rem, 4vw, 5rem);
+  font-size: clamp(0.75rem, 1.2vw, 1.8rem);
   margin: 0;
   transition: color 0.4s ease;
 }
