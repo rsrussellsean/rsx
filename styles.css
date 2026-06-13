@@ -927,6 +927,9 @@ p {
   letter-spacing: -0.01em;
   margin-left: -0.04em; /* optical left alignment of the glyphs */
   text-align: left;
+  /* The entrance splits the word into per-char elements, which loses
+     kerning; keep it off so the word doesn't snap tighter on revert */
+  font-kerning: none;
 }
 
 .hero-word {

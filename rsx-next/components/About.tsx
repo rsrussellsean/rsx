@@ -56,7 +56,7 @@ function createTextTexture(
   font: string,
   size: number | null,
   color: string,
-  fontWeight = "100"
+  fontWeight = "100",
 ) {
   const canvas = document.createElement("canvas");
   const ctx = canvas.getContext("2d")!;
@@ -91,7 +91,7 @@ function createTextTexture(
     0,
     scaleFactor / aspectCorrection,
     canvasWidth / 2,
-    canvasHeight / 2
+    canvasHeight / 2,
   );
 
   ctx.strokeStyle = "#ffffff";
@@ -125,8 +125,10 @@ export default function About() {
       let scene: THREE.Scene | null = null;
       let camera: THREE.OrthographicCamera | null = null;
       let renderer: THREE.WebGLRenderer | null = null;
-      let planeMesh: THREE.Mesh<THREE.PlaneGeometry, THREE.ShaderMaterial> | null =
-        null;
+      let planeMesh: THREE.Mesh<
+        THREE.PlaneGeometry,
+        THREE.ShaderMaterial
+      > | null = null;
       const mousePosition = { x: 0.5, y: 0.5 };
       let targetMousePosition = { x: 0.5, y: 0.5 };
       let prevPosition = { x: 0.5, y: 0.5 };
@@ -146,7 +148,7 @@ export default function About() {
           1 / aspectRatio,
           -1 / aspectRatio,
           0.1,
-          1000
+          1000,
         );
         camera.position.z = 1;
 
@@ -160,7 +162,7 @@ export default function About() {
             },
             vertexShader,
             fragmentShader,
-          })
+          }),
         );
 
         scene.add(planeMesh);
@@ -180,7 +182,7 @@ export default function About() {
           "MADERegular",
           null,
           "transparent",
-          "100"
+          "100",
         );
         planeMesh.material.uniforms.u_texture.value = newTexture;
       }
@@ -192,17 +194,19 @@ export default function About() {
         }
         aboutRafId = requestAnimationFrame(renderAboutFrame);
 
-        mousePosition.x += (targetMousePosition.x - mousePosition.x) * easeFactor;
-        mousePosition.y += (targetMousePosition.y - mousePosition.y) * easeFactor;
+        mousePosition.x +=
+          (targetMousePosition.x - mousePosition.x) * easeFactor;
+        mousePosition.y +=
+          (targetMousePosition.y - mousePosition.y) * easeFactor;
 
         planeMesh!.material.uniforms.u_mouse.value.set(
           mousePosition.x,
-          1.0 - mousePosition.y
+          1.0 - mousePosition.y,
         );
 
         planeMesh!.material.uniforms.u_prevMouse.value.set(
           prevPosition.x,
-          1.0 - prevPosition.y
+          1.0 - prevPosition.y,
         );
 
         renderer!.render(scene!, camera!);
@@ -217,7 +221,13 @@ export default function About() {
           aboutSceneInit = true;
           try {
             initializeScene(
-              createTextTexture("RUSSELL", "MADERegular", null, "transparent", "100")
+              createTextTexture(
+                "RUSSELL",
+                "MADERegular",
+                null,
+                "transparent",
+                "100",
+              ),
             );
           } catch (err) {
             console.warn("WebGL unavailable for about scene:", err);
@@ -245,7 +255,7 @@ export default function About() {
               document.fonts.ready.then(resumeAboutScene);
             }
           },
-          { rootMargin: "100% 0px" }
+          { rootMargin: "100% 0px" },
         );
         aboutIO.observe(aboutSection);
         document.addEventListener("visibilitychange", onVisChange);
@@ -342,7 +352,7 @@ export default function About() {
               },
             });
           }
-        })
+        }),
       );
 
       // ----- Infinite skills logo marquee -----
@@ -397,7 +407,7 @@ export default function About() {
         }
       };
     },
-    { scope: sectionRef }
+    { scope: sectionRef },
   );
 
   // In-page anchors scroll via GSAP (CSS smooth scrolling is off — it breaks
@@ -426,8 +436,7 @@ export default function About() {
       <div className="skillsContainer">
         <div className="descriptionContainer">
           <p className="about-bio" ref={bioRef}>
-            A Filipino creative developer turning bold visions into elite,
-            immersive web experiences.
+            A Filipino creative developer bold visions into elite, immersive web experiences.
           </p>
           <a href="#contactPage" onClick={handleContactAnchor}>
             Let&apos;s Create Together
@@ -442,7 +451,11 @@ export default function About() {
             className="skills-marquee"
             aria-label="Skills: React, Next.js, Angular, Node, Java, JavaScript, WordPress, Shopify, Figma, Photoshop"
           >
-            <div className="skills-track" aria-hidden="true" ref={skillsTrackRef}>
+            <div
+              className="skills-track"
+              aria-hidden="true"
+              ref={skillsTrackRef}
+            >
               {[...SKILLS, ...SKILLS].map((s, i) => (
                 <img src={`/images/skills/${s}.png`} alt="" key={`${s}-${i}`} />
               ))}
