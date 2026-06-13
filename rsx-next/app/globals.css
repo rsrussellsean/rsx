@@ -1,46 +1,62 @@
+/* Decorative families used by the .animate-font hover easter egg */
 @import url("https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400&family=Cutive+Mono&family=Playfair+Display:ital@0;1&family=Tiny5&display=swap");
+@import "tailwindcss";
 
+/* Brand fonts keep their literal family names — the JS relies on them
+   (document.fonts.load('bold 100px "Grifter"'), canvas ctx.font) */
 @font-face {
   font-family: "BookItalic";
-  src: url("./fonts/antiqua/AllrounderAntiquaTest-BookItalic.otf")
-    format("opentype");
+  src: url("/fonts/AllrounderAntiquaTest-BookItalic.otf") format("opentype");
   font-weight: normal;
   font-display: swap;
 }
 
 @font-face {
   font-family: "Book";
-  src: url("./fonts/antiqua/AllrounderAntiquaTest-Book.otf") format("opentype");
+  src: url("/fonts/AllrounderAntiquaTest-Book.otf") format("opentype");
   font-weight: normal;
   font-display: swap;
 }
 
 @font-face {
   font-family: "Grifter";
-  src: url("./fonts/grifterbold.otf") format("opentype");
+  src: url("/fonts/grifterbold.otf") format("opentype");
   font-weight: bold;
   font-display: swap;
 }
 
 @font-face {
   font-family: "MADERegular";
-  src: url("./fonts/MADERegular.otf") format("opentype");
+  src: url("/fonts/MADERegular.otf") format("opentype");
   font-weight: normal;
   font-display: swap;
 }
 
 @font-face {
   font-family: "MADEBold";
-  src: url("./fonts/MADEBold.otf") format("opentype");
+  src: url("/fonts/MADEBold.otf") format("opentype");
   font-weight: normal;
   font-display: swap;
 }
 
 @font-face {
   font-family: "MADEThin";
-  src: url("./fonts/MADEThin.otf") format("opentype");
+  src: url("/fonts/MADEThin.otf") format("opentype");
   font-weight: normal;
   font-display: swap;
+}
+
+/* Design tokens exposed to Tailwind utilities (bg-bg, text-fg, …) */
+@theme {
+  --color-bg: #050505;
+  --color-fg: #f2f1ec;
+  --color-fg-dim: rgba(242, 241, 236, 0.45);
+  --color-accent-a: #1100ff;
+  --color-accent-b: #ff00f2;
+  --font-grifter: "Grifter", sans-serif;
+  --font-made: "MADERegular", sans-serif;
+  --font-made-bold: "MADEBold", sans-serif;
+  --font-made-thin: "MADEThin", sans-serif;
 }
 
 :root {
@@ -177,10 +193,19 @@ body {
   }
 }
 
-/* Custom cursor — only shown once JS adds body.has-cursor */
+
+/* Custom cursor — hide native, show custom when JS adds body.has-cursor */
 .cursor-dot,
 .cursor-ring {
   display: none;
+}
+
+body.has-cursor {
+  cursor: none;
+}
+
+body.has-cursor * {
+  cursor: none;
 }
 
 body.has-cursor .cursor-dot {
@@ -368,21 +393,14 @@ body.has-cursor .cursor-ring.is-view .cursor-label {
 /* Hide vertical scrollbar but still allow scrolling */
 .scrollable-no-scrollbar {
   overflow-y: scroll;
-  /* vertical scroll enabled */
   overflow-x: auto;
-  /* horizontal scroll allowed if needed */
   scrollbar-width: none;
-  /* Firefox */
   -ms-overflow-style: none;
-  /* IE and Edge */
 }
 
-/* Chrome, Safari, Opera */
 .scrollable-no-scrollbar::-webkit-scrollbar {
   width: 0;
-  /* hide scrollbar */
   background: transparent;
-  /* optional, transparent */
 }
 
 img {
@@ -396,7 +414,6 @@ p {
   color: var(--color-accent);
   text-decoration: none;
   font-family: Arial, Helvetica, sans-serif;
-  /* text-transform: uppercase; */
   font-size: 12px;
 }
 
@@ -422,29 +439,8 @@ section .workSection {
   pointer-events: none;
 }
 
-footer {
-  position: fixed;
-  bottom: 0;
-  width: 100%;
-  padding: 1.5em 2em;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
 nav > div {
   flex: 1;
-}
-
-.links-1 {
-  display: flex;
-  gap: 2em;
-}
-
-.links-2 {
-  display: flex;
-  gap: 2em;
-  justify-content: flex-end;
 }
 
 .logo {
@@ -508,7 +504,7 @@ nav > div {
   font-size: 13px;
   text-transform: uppercase;
   letter-spacing: 2px;
-  cursor: pointer;
+  cursor: none;
   transition: color 0.3s ease;
   position: relative;
   z-index: 1;
@@ -526,10 +522,6 @@ nav > div {
 
 .workContainer {
   width: 100%;
-  /* height: 340vh !important; */
-  /* main content overall height */
-
-  /* height: 400vh !important; */
 }
 
 .active-slide {
@@ -548,9 +540,7 @@ nav > div {
   position: absolute;
   filter: blur(30px);
   transform: scale(1.125);
-
   will-change: transform, opacity;
-  /* backface-visibility: hidden; */
 }
 
 .slider {
@@ -577,28 +567,13 @@ nav > div {
   font-family: "MADEBold", sans-serif;
   font-size: 24px;
   line-height: 150%;
-  /* color: blanchedalmond; */
   color: white;
 }
 
-.slide-copy p#index {
+.slide-copy p.index {
   font-family: "MADERegular", sans-serif;
-
   font-size: 11px;
   margin-bottom: 0.75em;
-}
-
-/* .slide-img img {
-  width: 100vh;
-} */
-
-#slide-1 {
-  position: absolute;
-  top: 60%;
-  left: 70%;
-  transform: translateX(-50%) translateY(-50%) translateZ(-13500px);
-  opacity: 0;
-  width: 30%;
 }
 
 #slide-2 {
@@ -778,12 +753,12 @@ nav > div {
 .item-copy p:first-child {
   font-family: "MADEBold", sans-serif;
   text-transform: uppercase;
-  font-size: clamp(0.75rem, 1.2vw, 1.8rem);
+  font-size: clamp(1rem, 2vw, 2.5rem);
   margin: 0;
   transition: color 0.4s ease;
 }
 
-.item-copy #index {
+.item-copy .index {
   font-family: "MADERegular", sans-serif;
   font-size: clamp(1rem, 1.5vw, 1.5rem);
   color: rgba(255, 255, 255, 0.4);
@@ -975,11 +950,9 @@ p {
   min-height: 100vh;
   height: 100vh;
   overflow: visible;
-  /* or auto */
   background-color: #000000;
   font-family: "MADERegular", sans-serif !important;
   position: relative;
-  /* not absolute */
 }
 
 /* Gradient CSS */
@@ -992,7 +965,6 @@ p {
   border-radius: 100%;
   background-image: linear-gradient(var(--accent-a) 10%, var(--accent-b));
   filter: blur(250px);
-  /* transition: all 450ms ease-out; */
   position: absolute;
   pointer-events: none;
   left: 0;
@@ -1016,15 +988,12 @@ p {
 
 #textContainer {
   position: relative;
-  /* or static */
   width: 100%;
   height: 40vh;
-  /* use vh to size relative to viewport height */
   overflow: hidden;
   color: #ffffff !important;
   background-color: transparent !important;
   z-index: 1;
-  /* low enough to not block other stuff */
   font-family: "MADERegular", sans-serif !important;
 }
 
@@ -1038,6 +1007,12 @@ p {
   z-index: 9999;
   transition: top 0.8s ease-in-out;
   pointer-events: none;
+}
+
+/* Arriving back from a project page: start covered, then SiteChrome removes
+   this class on the next frame so the overlay sweeps up to reveal home. */
+.rsx-returning #black-transition {
+  top: 0;
 }
 
 canvas {
@@ -1097,7 +1072,6 @@ canvas {
   color: white;
   display: flex;
   gap: 100px;
-  /* space between the two sides */
   align-items: center;
   justify-content: center;
 }
@@ -1132,9 +1106,7 @@ canvas {
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  /* spacing between text and image */
   text-decoration: none;
-  /* optional: remove underline */
 }
 
 .descriptionContainer img {
@@ -1209,7 +1181,6 @@ canvas {
   }
 
   40% {
-    /* font-family: "Press Start 2P Display"; */
     font-family: "Tiny5";
   }
 
@@ -1236,15 +1207,8 @@ canvas {
   width: 100%;
   background-color: black;
   color: white;
-  /* padding: 100px 20px; */
   box-sizing: border-box;
   position: relative;
-}
-
-img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
 }
 
 .contactContainer {
@@ -1253,14 +1217,11 @@ img {
 }
 
 section.sticky {
-  /* position: fixed; */
   top: 0;
   left: 0;
   width: 100vw;
   height: 100vh;
   background: black;
-
-  /* overflow-y: hidden !important; */
 }
 
 .contactHeader {
@@ -1278,7 +1239,6 @@ section.sticky {
   flex: 0 0 48%;
   font-size: 90px;
   font-family: "MADERegular", sans-serif;
-  /* font-weight: 400; */
   text-transform: uppercase;
   color: #fff;
   height: 110px;
@@ -1293,7 +1253,6 @@ section.sticky {
   display: block;
   transition: transform 0.5s cubic-bezier(0.76, 0, 0.24, 1);
   height: 110px;
-  /* match container height */
   line-height: 110px;
   will-change: transform;
 }
@@ -1307,7 +1266,6 @@ section.sticky {
   top: 0;
   left: 0;
   width: 100%;
-  /* full width */
   color: #fff;
   transform: translateY(100%);
 }
@@ -1321,28 +1279,17 @@ section.sticky {
   transform: translateY(0%);
 }
 
-section.website-content {
-  position: absolute;
-  top: 100vh;
-  width: 100%;
-  height: 300vh;
-  background: #252525;
-  padding: 6em 2em;
-}
-
 .trackerContainer {
   height: 100vh;
   position: relative;
   width: 100%;
   display: flex;
   align-items: flex-start;
-  /* align items to the top */
   justify-content: center;
 }
 
 .tracker {
   position: relative;
-  /* enables absolute positioning inside */
   width: 100%;
   height: 100%;
   display: flex;
@@ -1356,13 +1303,11 @@ section.website-content {
 .emoji {
   position: absolute;
   top: 5rem;
-  /* or top: 0 if you want it flush to the top */
   left: 50%;
   transform: translateX(-50%);
-  /* only center horizontally */
   width: 350px;
   height: 350px;
-  background: url(./images/contact/sphere1.png) no-repeat 50% 50%;
+  background: url(/images/contact/sphere1.png) no-repeat 50% 50%;
   background-size: cover;
   border-radius: 100%;
   z-index: 0;
@@ -1410,39 +1355,6 @@ section.website-content {
   animation: wonderFace 2s infinite cubic-bezier(0.075, 0.82, 0.165, 1);
 }
 
-.section-contactHeader {
-  width: 100%;
-  display: flex;
-  justify-content: space-between;
-  margin-bottom: 2em;
-}
-
-.section-contactHeader h1 {
-  font-size: 10vw;
-  font-weight: 400;
-  color: #fff;
-  line-height: 100%;
-  text-transform: uppercase;
-}
-
-.section-contactHeader p {
-  color: #fff;
-  font-size: 13px;
-  text-transform: uppercase;
-  text-align: right;
-  width: 25%;
-}
-
-.row {
-  display: flex;
-  gap: 2em;
-  margin: 2em 0;
-}
-
-.row img {
-  height: 600px;
-}
-
 @keyframes rotateEyes {
   0% {
     transform: rotate(0deg);
@@ -1486,9 +1398,7 @@ section.website-content {
   font-size: 80px;
   margin: 0;
   text-transform: uppercase;
-  /* width: 10%; */
   font-family: "Book", sans-serif;
-  /* letter-spacing: 2px; */
 }
 
 .contact-form {
@@ -1502,7 +1412,6 @@ section.website-content {
 .form-group {
   display: flex;
   align-items: flex-start;
-  /* top align, no vertical centering */
   gap: 1rem;
   position: relative;
 }
@@ -1550,9 +1459,7 @@ section.website-content {
   outline: none;
   color: var(--fg);
   min-height: 40px;
-  /* optional, starting height */
   max-height: 150px;
-  /* optional max height */
 }
 
 .sendButton {
@@ -1592,7 +1499,7 @@ section.website-content {
     color: white;
   }
 
-  .slide-copy p#index {
+  .slide-copy p.index {
     font-family: "MADERegular", sans-serif;
     font-size: 12px;
     margin-bottom: 0.75em;
@@ -1610,7 +1517,6 @@ section.website-content {
     color: white;
     display: flex;
     gap: 80px;
-    /* space between the two sides */
     align-items: center;
     justify-content: center;
 
@@ -1650,7 +1556,6 @@ section.website-content {
     flex: 0 0 48%;
     font-size: 60px;
     font-family: "MADERegular", sans-serif;
-    /* font-weight: 400; */
     text-transform: uppercase;
     color: #fff;
     height: 80px;
@@ -1710,7 +1615,7 @@ section.website-content {
     color: white;
   }
 
-  .slide-copy p#index {
+  .slide-copy p.index {
     font-family: "MADERegular", sans-serif;
     font-size: 12px;
     margin-bottom: 0.75em;
@@ -1732,7 +1637,6 @@ section.website-content {
     color: white;
     display: flex;
     gap: 20px;
-    /* space between the two sides */
     align-items: center;
     justify-content: center;
 
@@ -1772,7 +1676,6 @@ section.website-content {
     flex: 0 0 48%;
     font-size: 40px;
     font-family: "MADERegular", sans-serif;
-    /* font-weight: 400; */
     text-transform: uppercase;
     color: #fff;
     height: 80px;
@@ -1806,14 +1709,11 @@ section.website-content {
   .contact-container {
     display: flex;
     flex-direction: column;
-    /* Stack title and form vertically */
     align-items: center;
     gap: 60px;
-    /* space between title and form */
     font-family: sans-serif;
     color: white;
     padding: clamp(50px, 8vh, 130px) 20px 0;
-    /* reduced horizontal padding for better responsiveness */
     text-align: center;
   }
 
@@ -1889,38 +1789,11 @@ section.website-content {
     color: white;
   }
 
-  .slide-copy p#index {
+  .slide-copy p.index {
     font-family: "MADERegular", sans-serif;
     font-size: 8px;
     margin-bottom: 0.75em;
   }
-
-  /* #slide-1 {
-    position: absolute;
-    top: 70%;
-    left: 70%;
-    transform: translateX(-50%) translateY(-50%) translateZ(-13500px);
-    opacity: 0;
-    width: 30%;
-  }
-
-  #slide-2 {
-    position: absolute;
-    top: 70%;
-    left: 30%;
-    transform: translateX(-50%) translateY(-50%) translateZ(-12000px);
-    opacity: 0;
-    width: 30%;
-  }
-
-  #slide-3 {
-    position: absolute;
-    top: 70%;
-    left: 70%;
-    transform: translateX(-50%) translateY(-50%) translateZ(-10500px);
-    opacity: 0;
-    width: 30%;
-  } */
 
   #slide-4 {
     position: absolute;
@@ -2000,7 +1873,6 @@ section.website-content {
   .skillsContainer {
     display: flex;
     flex-direction: column;
-    /* Stack vertically */
     align-items: center;
     justify-content: center;
     color: white;
@@ -2008,7 +1880,6 @@ section.website-content {
     max-width: 800px;
     margin: 0 auto;
     gap: 40px;
-    /* spacing between description and skills */
     text-align: center;
     padding: 60px 20px;
   }
@@ -2029,7 +1900,6 @@ section.website-content {
 
   .myskillsContainer p {
     font-size: 20px;
-    /* margin-bottom: 20px; */
   }
 
   .skills-marquee {
@@ -2044,7 +1914,6 @@ section.website-content {
   .contactHeader {
     display: flex;
     flex-wrap: wrap;
-    /* gap: 0 20px; */
     justify-content: center;
     width: 100%;
     text-align: center;
@@ -2061,7 +1930,6 @@ section.website-content {
     line-height: 1;
     gap: 0;
     overflow: visible;
-    /* important if previously hidden */
   }
 
   .contactHeader a span {
@@ -2080,7 +1948,6 @@ section.website-content {
     width: 180px;
     height: 180px;
     top: 3rem;
-    /* optional: adjust position for smaller screens */
   }
 
   .emoji-face {
@@ -2101,14 +1968,11 @@ section.website-content {
   .contact-container {
     display: flex;
     flex-direction: column;
-    /* Stack title and form vertically */
     align-items: center;
     gap: 60px;
-    /* space between title and form */
     font-family: sans-serif;
     color: white;
     padding: 0px 20px 0;
-    /* reduced horizontal padding for better responsiveness */
     text-align: center;
   }
 
@@ -2134,7 +1998,6 @@ section.website-content {
   .form-group {
     display: flex;
     align-items: flex-start;
-    /* top align, no vertical centering */
     gap: 0.5rem;
   }
 

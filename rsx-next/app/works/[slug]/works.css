@@ -1,0 +1,431 @@
+/* Project gallery page styles — editorial redesign matching the home.
+   Loaded only on /works/[slug]; fonts + tokens come from globals.css.
+   The page never scrolls (single-viewport minimap experience), so smooth
+   scrolling is intentionally absent (it also corrupts ScrollTrigger elsewhere).
+   Class/structure names are scoped to this route; the minimap scrub math in
+   ProjectGallery.tsx reads live element sizes, so dimensions here are free to
+   change as long as .item and .indicator stay consistent. */
+
+body {
+  font-family: "MADERegular", sans-serif;
+  background-color: var(--bg);
+  color: var(--fg);
+  overflow: hidden !important;
+}
+
+img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: opacity 0.25s var(--ease-out-soft);
+  user-select: none;
+}
+
+p {
+  /* globals.css centers paragraphs for the homepage; this route is left-aligned */
+  text-align: left;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  user-select: none;
+}
+
+.container {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden !important;
+  opacity: 0;
+  transition: opacity 0.8s var(--ease-out-soft);
+}
+.container.loaded {
+  opacity: 1;
+}
+
+/* ---- Backdrop ---- */
+.bg-blur {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  background-size: cover;
+  background-position: center;
+  filter: blur(60px) saturate(1.1);
+  transform: scale(1.2);
+  opacity: 0.55;
+  z-index: -2;
+}
+
+.dark-overlay {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  background:
+    radial-gradient(
+      120% 120% at 70% 30%,
+      rgba(5, 5, 5, 0.55) 0%,
+      rgba(5, 5, 5, 0.9) 70%
+    ),
+    var(--bg);
+  z-index: -1;
+}
+
+/* ---- Exit sweep (mirrors home's #black-transition) ---- */
+.work-transition {
+  position: fixed;
+  top: -100%;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: #000;
+  z-index: 9999;
+  transition: top 0.8s cubic-bezier(0.87, 0, 0.13, 1);
+  pointer-events: none;
+}
+
+/* ---- Top nav ---- */
+.project-nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  padding: var(--space-3) clamp(1.25rem, 4vw, 3rem);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  z-index: 5;
+}
+
+.project-brand {
+  font-family: "Grifter", sans-serif;
+  font-size: 1.5rem;
+  letter-spacing: 0.02em;
+  color: var(--fg);
+  text-decoration: none;
+}
+
+.project-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6em;
+  font-family: "MADERegular", sans-serif;
+  font-size: var(--text-label);
+  letter-spacing: var(--label-tracking);
+  text-transform: uppercase;
+  color: var(--fg);
+  text-decoration: none;
+  transition: opacity 0.4s var(--ease-out-soft);
+}
+.project-back .back-arrow {
+  display: inline-block;
+  transition: transform 0.5s var(--ease-rsx);
+}
+.project-back:hover .back-arrow {
+  transform: translateX(-0.4em);
+}
+.project-back:hover,
+.project-brand:hover {
+  opacity: 0.6;
+}
+
+/* ---- Eyebrow (echoes SectionLabel) ---- */
+.project-eyebrow {
+  position: fixed;
+  top: clamp(5rem, 12vh, 8rem);
+  left: clamp(1.25rem, 4vw, 3rem);
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  z-index: 4;
+}
+.project-eyebrow-rule {
+  width: clamp(2rem, 5vw, 4rem);
+  height: 1px;
+  background: var(--fg-dim);
+}
+.project-eyebrow-label {
+  font-family: "MADERegular", sans-serif;
+  font-size: var(--text-label);
+  letter-spacing: var(--label-tracking);
+  text-transform: uppercase;
+  color: var(--fg-dim);
+}
+
+/* ---- Project info block ---- */
+.project-info {
+  position: absolute;
+  top: 50%;
+  left: clamp(1.25rem, 4vw, 3rem);
+  transform: translateY(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 1.25rem;
+  max-width: min(46vw, 640px);
+  z-index: 3;
+}
+
+.project-index {
+  font-family: "MADERegular", sans-serif;
+  font-size: var(--text-label);
+  letter-spacing: var(--label-tracking);
+  color: var(--fg);
+}
+.project-index span {
+  color: var(--fg-dim);
+}
+
+.project-title {
+  font-family: "Grifter", sans-serif;
+  font-size: clamp(2.75rem, 3.5vw, 6rem);
+  line-height: 0.9;
+  letter-spacing: -0.01em;
+  font-kerning: none; /* prevent kerning snap, as on the home hero */
+  text-transform: uppercase;
+  color: var(--fg);
+  margin: 0;
+}
+
+.project-est {
+  font-family: "MADERegular", sans-serif;
+  font-size: var(--text-label);
+  letter-spacing: var(--label-tracking);
+  text-transform: uppercase;
+  color: var(--fg-dim);
+}
+
+/* ---- Glass "Visit" CTA (mirrors home's visit button) ---- */
+.visit-info {
+  margin-top: 0.5rem;
+}
+.visit-info a {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6em;
+  padding: 0.9em 1.4em;
+  color: var(--fg);
+  text-decoration: none;
+  border-radius: 999px;
+  font-family: "MADERegular", sans-serif;
+  font-size: var(--text-label);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  background: rgba(242, 241, 236, 0.06);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(242, 241, 236, 0.25);
+  transition:
+    background 0.4s var(--ease-out-soft),
+    border-color 0.4s var(--ease-out-soft);
+}
+.visit-info a .visit-arrow {
+  display: inline-block;
+  transition: transform 0.5s var(--ease-rsx);
+}
+.visit-info a:hover {
+  background: rgba(242, 241, 236, 0.14);
+  border-color: rgba(242, 241, 236, 0.5);
+}
+.visit-info a:hover .visit-arrow {
+  transform: translate(0.25em, -0.25em);
+}
+
+/* ---- Centered preview ---- */
+.img-preview {
+  position: absolute;
+  top: 50%;
+  /* Pushed right of centre so it clears the title on the left and the
+     minimap rail on the right (re-centred at <=900px below). */
+  left: 65%;
+  transform: translate(-50%, -50%);
+  width: 44%;
+  height: 72%;
+  overflow: hidden;
+}
+
+.img-preview img {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+@keyframes fadeSmooth {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, -53%);
+  }
+  100% {
+    opacity: 1;
+    transform: translate(-50%, -50%);
+  }
+}
+
+.img-preview img.animate {
+  animation: fadeSmooth 0.9s var(--ease-out-soft) forwards;
+  transform-origin: center;
+}
+
+/* ---- Minimap rail ---- */
+.minimap {
+  position: fixed;
+  top: 50%;
+  right: 90px;
+  transform: translateY(-50%);
+  width: 200px;
+}
+
+.indicator {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 132px;
+  border: 1px solid var(--fg);
+  box-shadow:
+    0 0 28px rgba(17, 0, 255, 0.25),
+    0 0 28px rgba(255, 0, 242, 0.15);
+  z-index: 2;
+  pointer-events: none;
+}
+
+.items {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  will-change: transform;
+}
+
+.item {
+  width: 100%;
+  height: 132px;
+  padding: 6px;
+  cursor: pointer;
+}
+.item img {
+  filter: grayscale(40%);
+  transition:
+    opacity 0.25s var(--ease-out-soft),
+    filter 0.4s var(--ease-out-soft);
+}
+.item:hover img {
+  filter: grayscale(0%);
+}
+
+/* ---- iPad / Tablet ---- */
+@media (max-width: 1024px) {
+  .project-info {
+    max-width: 70vw;
+    gap: 1rem;
+  }
+  .project-title {
+    font-size: clamp(2.5rem, 8vw, 4rem);
+  }
+  .img-preview {
+    left: 56%;
+    width: 50%;
+    height: 60%;
+  }
+}
+
+/* ---- Mobile: minimap goes horizontal (matches JS innerWidth < 900) ---- */
+@media (max-width: 900px) {
+  body,
+  .container {
+    touch-action: none;
+  }
+
+  .project-eyebrow {
+    display: none;
+  }
+
+  .project-info {
+    top: clamp(7rem, 18vh, 11rem);
+    left: 50%;
+    transform: none;
+    margin-left: -45vw;
+    align-items: center;
+    text-align: center;
+    max-width: 90vw;
+  }
+  .project-info p {
+    text-align: center;
+  }
+  .project-title {
+    font-size: clamp(2.25rem, 11vw, 3.25rem);
+  }
+
+  .img-preview {
+    top: 47%;
+    left: 50%;
+    width: 80%;
+    height: 44%;
+  }
+
+  .visit-info {
+    position: fixed;
+    bottom: calc(clamp(2rem, 7vh, 4rem) + 76px + 3.5rem);
+    left: 50%;
+    transform: translateX(-50%);
+    margin: 0;
+    white-space: nowrap;
+  }
+
+  .minimap {
+    position: fixed;
+    top: auto;
+    right: auto;
+    bottom: clamp(2rem, 7vh, 4rem);
+    left: 50%;
+    transform: translateX(-50%);
+    width: auto;
+    height: 76px;
+    touch-action: none;
+  }
+
+  .indicator {
+    top: 0;
+    left: 0;
+    width: 56px;
+    height: 100%;
+  }
+
+  .items {
+    flex-direction: row;
+    width: max-content;
+    height: 100%;
+    touch-action: none;
+  }
+
+  .item {
+    width: 56px;
+    height: 100%;
+    padding: 5px;
+  }
+}
+
+@media (max-width: 768px) {
+  .project-brand {
+    font-size: 1.25rem;
+  }
+  .project-back span:last-child {
+    /* keep the arrow, drop the label on small screens to avoid wrapping */
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .img-preview img.animate {
+    animation: none;
+  }
+  .project-back .back-arrow,
+  .visit-info a .visit-arrow {
+    transition: none;
+  }
+}
