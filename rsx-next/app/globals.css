@@ -1,0 +1,1999 @@
+/* Decorative families used by the .animate-font hover easter egg */
+@import url("https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400&family=Cutive+Mono&family=Playfair+Display:ital@0;1&family=Tiny5&display=swap");
+@import "tailwindcss";
+
+/* Brand fonts keep their literal family names — the JS relies on them
+   (document.fonts.load('bold 100px "Grifter"'), canvas ctx.font) */
+@font-face {
+  font-family: "BookItalic";
+  src: url("/fonts/AllrounderAntiquaTest-BookItalic.otf") format("opentype");
+  font-weight: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Book";
+  src: url("/fonts/AllrounderAntiquaTest-Book.otf") format("opentype");
+  font-weight: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Grifter";
+  src: url("/fonts/grifterbold.otf") format("opentype");
+  font-weight: bold;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "MADERegular";
+  src: url("/fonts/MADERegular.otf") format("opentype");
+  font-weight: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "MADEBold";
+  src: url("/fonts/MADEBold.otf") format("opentype");
+  font-weight: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "MADEThin";
+  src: url("/fonts/MADEThin.otf") format("opentype");
+  font-weight: normal;
+  font-display: swap;
+}
+
+/* Design tokens exposed to Tailwind utilities (bg-bg, text-fg, …) */
+@theme {
+  --color-bg: #050505;
+  --color-fg: #f2f1ec;
+  --color-fg-dim: rgba(242, 241, 236, 0.45);
+  --color-accent-a: #1100ff;
+  --color-accent-b: #ff00f2;
+  --font-grifter: "Grifter", sans-serif;
+  --font-made: "MADERegular", sans-serif;
+  --font-made-bold: "MADEBold", sans-serif;
+  --font-made-thin: "MADEThin", sans-serif;
+}
+
+:root {
+  --bg: #050505;
+  --fg: #f2f1ec;
+  --fg-dim: rgba(242, 241, 236, 0.45);
+  --accent-a: #1100ff;
+  --accent-b: #ff00f2;
+  --color-accent: var(--fg);
+
+  /* Fluid type scale */
+  --text-display: clamp(4.5rem, 19vw, 21rem);
+  --text-h2: clamp(3rem, 8vw, 7.5rem);
+  --text-h3: clamp(1.5rem, 3vw, 2.5rem);
+  --text-body: clamp(1rem, 1.1vw, 1.25rem);
+  --text-label: 0.75rem;
+  --label-tracking: 0.3em;
+
+  /* Spacing scale */
+  --space-1: 0.5rem;
+  --space-2: 1rem;
+  --space-3: 2rem;
+  --space-4: 4rem;
+  --space-5: 8rem;
+
+  /* Signature easing (mirrors CustomEase ".87,0,.13,1") */
+  --ease-rsx: cubic-bezier(0.87, 0, 0.13, 1);
+  --ease-out-soft: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+::selection {
+  background: var(--fg);
+  color: var(--bg);
+}
+
+:focus-visible {
+  outline: 2px solid var(--fg);
+  outline-offset: 3px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* NOTE: no CSS scroll-behavior: smooth here — it makes ScrollTrigger's
+   programmatic measure-scrolls animate, which corrupts trigger positions
+   whenever they refresh while the page is scrolled (e.g. the work view
+   toggle). In-page anchors scroll smoothly via ScrollToPlugin instead. */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  background-color: var(--bg) !important;
+  overflow-x: hidden !important;
+}
+
+/* Scroll Progress Tracker */
+.scroll-progress {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 2px;
+  background: linear-gradient(90deg, var(--accent-a), var(--accent-b));
+  width: 0%;
+  z-index: 9999;
+  pointer-events: none;
+}
+
+/* Film grain overlay */
+.grain {
+  position: fixed;
+  inset: -100%;
+  width: 300%;
+  height: 300%;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  opacity: 0.05;
+  mix-blend-mode: overlay;
+  pointer-events: none;
+  z-index: 9000;
+  animation: grainShift 0.8s steps(8) infinite;
+}
+
+@keyframes grainShift {
+  0% {
+    transform: translate(0, 0);
+  }
+
+  12.5% {
+    transform: translate(-2%, -3%);
+  }
+
+  25% {
+    transform: translate(1%, 2%);
+  }
+
+  37.5% {
+    transform: translate(-3%, 1%);
+  }
+
+  50% {
+    transform: translate(2%, -2%);
+  }
+
+  62.5% {
+    transform: translate(-1%, 3%);
+  }
+
+  75% {
+    transform: translate(3%, -1%);
+  }
+
+  87.5% {
+    transform: translate(-2%, 2%);
+  }
+
+  100% {
+    transform: translate(0, 0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .grain {
+    display: none;
+  }
+}
+
+/* Custom cursor — only shown once JS adds body.has-cursor */
+.cursor-dot,
+.cursor-ring {
+  display: none;
+}
+
+body.has-cursor .cursor-dot {
+  display: block;
+  position: fixed;
+  top: -4px;
+  left: -4px;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--fg);
+  z-index: 10000;
+  pointer-events: none;
+  transform: translate(-100px, -100px);
+}
+
+body.has-cursor .cursor-ring {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: fixed;
+  top: -18px;
+  left: -18px;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: 1px solid var(--fg-dim);
+  z-index: 10000;
+  pointer-events: none;
+  transform: translate(-100px, -100px);
+  transition:
+    width 0.35s var(--ease-out-soft),
+    height 0.35s var(--ease-out-soft),
+    top 0.35s var(--ease-out-soft),
+    left 0.35s var(--ease-out-soft),
+    background-color 0.35s ease,
+    border-color 0.35s ease;
+}
+
+body.has-cursor .cursor-ring .cursor-label {
+  font-family: "MADERegular", sans-serif;
+  font-size: 10px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--bg);
+  opacity: 0;
+  transition: opacity 0.25s ease;
+}
+
+body.has-cursor .cursor-ring.is-view {
+  width: 88px;
+  height: 88px;
+  top: -44px;
+  left: -44px;
+  background: var(--fg);
+  border-color: var(--fg);
+}
+
+body.has-cursor .cursor-ring.is-view .cursor-label {
+  opacity: 1;
+}
+
+/* Hero scroll hint (sits in the hero footer grid) */
+.scroll-hint {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+  pointer-events: none;
+}
+
+.scroll-hint p {
+  font-family: "MADEThin", sans-serif;
+  font-size: var(--text-label);
+  letter-spacing: var(--label-tracking);
+  text-transform: uppercase;
+  color: var(--fg-dim);
+}
+
+.scroll-hint-line {
+  width: 1px;
+  height: 48px;
+  background: var(--fg-dim);
+}
+
+/* Section labels */
+.section-label {
+  position: absolute;
+  top: var(--space-3);
+  left: var(--space-3);
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  z-index: 5;
+  pointer-events: none;
+}
+
+.section-label .rule {
+  display: block;
+  width: 48px;
+  height: 1px;
+  background: var(--fg-dim);
+  transform-origin: left center;
+}
+
+.section-label p {
+  font-family: "MADEThin", sans-serif;
+  font-size: var(--text-label);
+  letter-spacing: var(--label-tracking);
+  text-transform: uppercase;
+  color: var(--fg-dim);
+  text-align: left;
+}
+
+/* Velocity-reactive marquee */
+.marquee {
+  /* positioned so it paints above the fixed .nav2 logo */
+  position: relative;
+  overflow: hidden;
+  width: 100%;
+  padding: var(--space-4) 0;
+  background: var(--bg);
+  border-top: 1px solid rgba(242, 241, 236, 0.1);
+  border-bottom: 1px solid rgba(242, 241, 236, 0.1);
+}
+
+.marquee-track {
+  display: inline-flex;
+  white-space: nowrap;
+  will-change: transform;
+}
+
+.marquee-track span {
+  font-family: "Grifter", sans-serif;
+  font-size: clamp(2.5rem, 6vw, 6rem);
+  text-transform: uppercase;
+  color: var(--fg);
+  line-height: 1;
+  flex-shrink: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .marquee-track span {
+    font-size: clamp(1rem, 2.5vw, 2rem);
+    white-space: normal;
+  }
+}
+
+/* Inside the contact section the marquee hugs the bottom of the viewport
+   as a compact closing band */
+.contactSection .marquee {
+  position: absolute;
+  bottom: 1.5rem;
+  left: 0;
+  width: 100%;
+  padding: var(--space-2) 0;
+  border-bottom: none;
+  background: transparent;
+}
+
+.contactSection .marquee-track span {
+  font-size: clamp(1.5rem, 3vw, 3rem);
+}
+
+/* On small screens the form reaches the bottom — let the contact containers
+   grow with their content and flow the band after it */
+@media (max-width: 768px) {
+  .contactSection section.sticky,
+  .contactSection .trackerContainer {
+    height: auto;
+    min-height: 100vh;
+  }
+
+  .contactSection .tracker {
+    height: auto;
+  }
+
+  .contactSection .marquee {
+    position: static;
+    padding: 1.5rem 0;
+    margin-bottom: 1rem;
+  }
+}
+
+/* Hide vertical scrollbar but still allow scrolling */
+.scrollable-no-scrollbar {
+  overflow-y: scroll;
+  overflow-x: auto;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.scrollable-no-scrollbar::-webkit-scrollbar {
+  width: 0;
+  background: transparent;
+}
+
+img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+a,
+p {
+  color: var(--color-accent);
+  text-decoration: none;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 12px;
+}
+
+section .workSection {
+  z-index: -2;
+}
+
+.nav2 {
+  position: fixed;
+  top: 0;
+  width: 100%;
+  padding: 1.5em 2em;
+  display: flex;
+  align-items: center;
+  transition: opacity 0.3s ease;
+}
+
+/* The brand statement only makes sense over the 3D carousel:
+   hidden in list view (.is-hidden) and once scrolled past it (.is-past) */
+.nav2.is-hidden,
+.nav2.is-past {
+  opacity: 0;
+  pointer-events: none;
+}
+
+nav > div {
+  flex: 1;
+}
+
+.logo {
+  margin-top: 80px;
+  display: flex;
+  justify-content: center;
+  /* stays legible when light blurred slide backgrounds pass behind it */
+  mix-blend-mode: difference;
+}
+
+.logo p {
+  font-size: 16px;
+  font-weight: bold;
+  letter-spacing: -0.02em;
+  font-family: "MADERegular", sans-serif;
+}
+
+/* start of work page */
+
+.workSection {
+  position: relative;
+}
+
+/* View Toggle Styles */
+.work-view-toggle {
+  position: sticky;
+  top: calc(100vh - 7rem);
+  /* Track along the bottom, with breathing room below the pill */
+  margin: 0 auto;
+  display: flex;
+  justify-content: center;
+  gap: 0.4rem;
+  z-index: 20;
+  padding: 0.4rem;
+  background: rgba(5, 5, 5, 0.4);
+  backdrop-filter: blur(15px);
+  border-radius: 50px;
+  width: max-content;
+  border: 1px solid rgba(242, 241, 236, 0.1);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+  margin-bottom: 60px;
+}
+
+.work-view-toggle .toggle-thumb {
+  position: absolute;
+  top: 0.4rem;
+  bottom: 0.4rem;
+  left: 0;
+  width: 0;
+  background: var(--fg);
+  border-radius: 40px;
+  z-index: 0;
+  will-change: transform, width;
+}
+
+.work-view-toggle button {
+  background: transparent;
+  border: none;
+  color: rgba(242, 241, 236, 0.5);
+  font-family: "MADERegular", sans-serif;
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  cursor: pointer;
+  transition: color 0.3s ease;
+  position: relative;
+  z-index: 1;
+  padding: 0.6rem 1.4rem;
+  border-radius: 40px;
+}
+
+.work-view-toggle button:hover {
+  color: var(--fg);
+}
+
+.work-view-toggle button.active {
+  color: #050505;
+}
+
+.workContainer {
+  width: 100%;
+}
+
+.active-slide {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background: var(--bg);
+  opacity: 0.25;
+  z-index: -1;
+}
+
+.active-slide img {
+  position: absolute;
+  filter: blur(30px);
+  transform: scale(1.125);
+  will-change: transform, opacity;
+}
+
+.slider {
+  position: fixed;
+  top: 0;
+  width: 100vw;
+  height: 100vh;
+  transform-style: preserve-3d;
+  perspective: 750px;
+  overflow: hidden;
+}
+
+.slide {
+  position: absolute;
+  width: 400px;
+  height: 500px;
+  overflow: hidden;
+  will-change: transform, opacity;
+}
+
+.slide-copy p {
+  text-transform: uppercase;
+  text-align: center;
+  font-family: "MADEBold", sans-serif;
+  font-size: 24px;
+  line-height: 150%;
+  color: white;
+}
+
+.slide-copy p.index {
+  font-family: "MADERegular", sans-serif;
+  font-size: 11px;
+  margin-bottom: 0.75em;
+}
+
+#slide-2 {
+  position: absolute;
+  top: 60%;
+  left: 30%;
+  transform: translateX(-50%) translateY(-50%) translateZ(-12000px);
+  opacity: 0;
+  width: 30%;
+}
+
+#slide-3 {
+  position: absolute;
+  top: 60%;
+  left: 70%;
+  transform: translateX(-50%) translateY(-50%) translateZ(-10500px);
+  opacity: 0;
+  width: 30%;
+}
+
+#slide-4 {
+  position: absolute;
+  top: 60%;
+  left: 30%;
+  transform: translateX(-50%) translateY(-50%) translateZ(-9000px);
+  opacity: 0;
+  width: 30%;
+}
+
+#slide-5 {
+  position: absolute;
+  top: 60%;
+  left: 70%;
+  transform: translateX(-50%) translateY(-50%) translateZ(-7500px);
+  opacity: 0;
+  width: 30%;
+}
+
+#slide-6 {
+  position: absolute;
+  top: 60%;
+  left: 30%;
+  transform: translateX(-50%) translateY(-50%) translateZ(-6000px);
+  opacity: 0;
+  width: 30%;
+}
+
+#slide-7 {
+  position: absolute;
+  top: 60%;
+  left: 70%;
+  transform: translateX(-50%) translateY(-50%) translateZ(-5000px);
+  opacity: 0;
+  width: 30%;
+}
+
+#slide-8 {
+  position: absolute;
+  top: 60%;
+  left: 30%;
+  transform: translateX(-50%) translateY(-50%) translateZ(-3000px);
+  opacity: 0;
+  width: 30%;
+}
+
+#slide-9 {
+  position: absolute;
+  top: 60%;
+  left: 70%;
+  transform: translateX(-50%) translateY(-50%) translateZ(-1500px);
+  opacity: 0.5;
+  width: 30%;
+}
+
+#slide-10 {
+  position: absolute;
+  top: 60%;
+  left: 30%;
+  transform: translateX(-50%) translateY(-50%) translateZ(0);
+  opacity: 1;
+  width: 30%;
+}
+
+/* List View Styles */
+.workListContainer {
+  width: 100vw;
+  min-height: 100vh;
+  background: var(--bg);
+  padding: 10vh 5vw 15vh 5vw;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  counter-reset: work-item;
+}
+
+.list-item {
+  display: flex;
+  flex-direction: row-reverse;
+  justify-content: space-between;
+  align-items: center;
+  gap: 2rem;
+  opacity: 0;
+  transform: translateY(20px);
+  will-change: transform, opacity;
+  padding: 4vh 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+  transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  cursor: pointer;
+}
+
+.list-item:first-child {
+  border-top: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+.list-item:hover {
+  background: rgba(255, 255, 255, 0.03);
+  padding-left: 2vw;
+  padding-right: 2vw;
+  border-bottom-color: rgba(255, 255, 255, 0.5);
+}
+
+.item-img {
+  width: clamp(150px, 20vw, 300px);
+  aspect-ratio: 16/9;
+  overflow: hidden;
+  border-radius: 2px;
+  opacity: 0.5;
+  transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.list-item:hover .item-img {
+  width: clamp(200px, 25vw, 400px);
+  opacity: 1;
+}
+
+.item-img a {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.item-img img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+  filter: grayscale(100%);
+}
+
+.list-item:hover .item-img img {
+  transform: scale(1.05);
+  filter: grayscale(0%);
+}
+
+.item-copy {
+  display: flex;
+  flex-direction: row;
+  align-items: baseline;
+  gap: 2vw;
+  color: white;
+  border-top: none;
+  padding: 0;
+  /* keep row titles above the WebGL hover plane (z-index 15) */
+  position: relative;
+  z-index: 16;
+}
+
+.item-copy::before {
+  counter-increment: work-item;
+  content: "0" counter(work-item);
+  font-family: "MADEThin", sans-serif;
+  font-size: var(--text-label);
+  letter-spacing: var(--label-tracking);
+  color: var(--fg-dim);
+}
+
+.item-copy p:first-child {
+  font-family: "MADEBold", sans-serif;
+  text-transform: uppercase;
+  font-size: clamp(2rem, 4vw, 5rem);
+  margin: 0;
+  transition: color 0.4s ease;
+}
+
+.item-copy .index {
+  font-family: "MADERegular", sans-serif;
+  font-size: clamp(1rem, 1.5vw, 1.5rem);
+  color: rgba(255, 255, 255, 0.4);
+  margin: 0;
+}
+
+/* End of work page */
+
+/* Hero WebGL particle canvas sits behind the hero copy
+   (the global canvas rule supplies the centering transform) */
+.gl-hero {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 0;
+  pointer-events: none;
+}
+
+/* Static vignette stands in for the particle field when WebGL is gated off */
+.no-webgl .hero {
+  background: radial-gradient(ellipse at center, #0b0b15 0%, transparent 70%);
+}
+
+/* Work-list distortion plane overlay */
+.gl-list {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 15;
+  pointer-events: none;
+}
+
+/* While the WebGL plane is active, the static thumbnails step aside */
+.workListContainer.gl-hover .item-img {
+  opacity: 0 !important;
+}
+
+p {
+  text-align: center;
+  font-size: 12px;
+}
+
+.logoImage {
+  width: 40%;
+}
+
+/* ---------- Hero ---------- */
+
+.hero-background {
+  background-color: #000 !important;
+  position: relative;
+  width: 100vw;
+  height: 100svh;
+  z-index: 5;
+  overflow: hidden;
+}
+
+.hero {
+  position: relative;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: var(--space-3);
+}
+
+/* Hero copy always sits above the particle canvas */
+.hero > :not(.gl-hero) {
+  position: relative;
+  z-index: 1;
+}
+
+.hero-nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.hero-brand {
+  font-family: "Grifter", sans-serif;
+  font-size: 1.4rem;
+  letter-spacing: 0.04em;
+  color: var(--fg);
+  text-align: left;
+}
+
+.hero-meta p {
+  font-family: "MADERegular", sans-serif;
+  font-size: var(--text-label);
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--fg-dim);
+  text-align: right;
+  line-height: 2;
+}
+
+.hero-stage {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(1.25rem, 3vh, 2.25rem);
+}
+
+.hero-eyebrow {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.hero-eyebrow-label,
+.hero-word-index {
+  font-family: "MADEThin", sans-serif;
+  font-size: var(--text-label);
+  letter-spacing: var(--label-tracking);
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.hero-eyebrow-label {
+  color: var(--fg);
+}
+
+.hero-word-index {
+  color: var(--fg-dim);
+}
+
+.hero-eyebrow-rule {
+  flex: 1;
+  height: 1px;
+  background: rgba(242, 241, 236, 0.18);
+  transform-origin: left center;
+}
+
+.hero-title {
+  font-family: "Grifter", sans-serif;
+  font-size: var(--text-display);
+  line-height: 0.88;
+  text-transform: uppercase;
+  color: var(--fg);
+  letter-spacing: -0.01em;
+  margin-left: -0.04em; /* optical left alignment of the glyphs */
+  text-align: left;
+}
+
+.hero-word {
+  display: inline-block;
+}
+
+.hero-tagline {
+  font-family: "MADERegular", sans-serif;
+  font-size: clamp(0.95rem, 1.4vw, 1.35rem);
+  color: var(--fg-dim);
+  text-align: left;
+  max-width: 40ch;
+}
+
+.hero-footer {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: end;
+  gap: 1rem;
+}
+
+.hero-foot-left,
+.hero-foot-right {
+  font-family: "MADERegular", sans-serif;
+  font-size: var(--text-label);
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--fg-dim);
+}
+
+.hero-foot-left {
+  text-align: left;
+}
+
+.hero-foot-right {
+  text-align: right;
+}
+
+/* About me */
+
+.aboutSection {
+  width: 100%;
+  min-height: 100vh;
+  height: 100vh;
+  overflow: visible;
+  background-color: #000000;
+  font-family: "MADERegular", sans-serif !important;
+  position: relative;
+}
+
+/* Gradient CSS */
+.blob {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 650px;
+  height: 650px;
+  border-radius: 100%;
+  background-image: linear-gradient(var(--accent-a) 10%, var(--accent-b));
+  filter: blur(250px);
+  position: absolute;
+  pointer-events: none;
+  left: 0;
+  top: 0;
+  transform: translate(calc(-50% + 15px), -50%);
+  z-index: 0;
+}
+
+/* blur(250px) is too expensive on touch devices — pre-blurred gradient instead */
+@media (hover: none) {
+  .blob {
+    filter: none;
+    background: radial-gradient(
+      circle,
+      rgba(17, 0, 255, 0.4) 0%,
+      rgba(255, 0, 242, 0.18) 55%,
+      transparent 75%
+    );
+  }
+}
+
+#textContainer {
+  position: relative;
+  width: 100%;
+  height: 40vh;
+  overflow: hidden;
+  color: #ffffff !important;
+  background-color: transparent !important;
+  z-index: 1;
+  font-family: "MADERegular", sans-serif !important;
+}
+
+#black-transition {
+  position: fixed;
+  top: -100%;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: black;
+  z-index: 9999;
+  transition: top 0.8s ease-in-out;
+  pointer-events: none;
+}
+
+canvas {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: block;
+  width: 100%;
+  height: 100%;
+  background-color: transparent !important;
+  font-family: "MADERegular", sans-serif !important;
+}
+
+.about-title {
+  position: absolute;
+  top: 40%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  white-space: nowrap;
+  text-align: center;
+  margin: 0;
+  font-weight: normal;
+  z-index: 2;
+  pointer-events: none;
+}
+
+.change-text {
+  color: var(--fg) !important;
+  font-size: clamp(2.5rem, 5.5vw, 5.5rem);
+  line-height: 1;
+  text-transform: uppercase;
+  text-align: center;
+  font-family: "Grifter", sans-serif;
+}
+
+/* Scrubbed char-fill reveal keeps chars visible but dim until scrolled */
+.change-text .char-fill {
+  opacity: 0.15;
+}
+
+/* Static fallback when WebGL is unavailable */
+.russell-fallback {
+  font-family: "MADERegular", sans-serif;
+  font-size: clamp(3rem, 10vw, 10rem);
+  color: var(--fg);
+  text-align: center;
+  line-height: 40vh;
+  letter-spacing: 0.05em;
+}
+
+.skillsContainer {
+  position: absolute;
+  top: 70%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: white;
+  display: flex;
+  gap: 100px;
+  align-items: center;
+  justify-content: center;
+}
+
+.animate-font {
+  animation: fontChange 2s steps(1, end) infinite;
+}
+
+.skillsContainer img {
+  width: 40px;
+  height: auto;
+  margin: 5px;
+}
+
+.descriptionContainer {
+  width: 50%;
+}
+
+.descriptionContainer p {
+  font-size: 24px;
+  font-family: "MADEthin", sans-serif !important;
+  color: white;
+  text-align: left;
+  margin-bottom: 20px;
+}
+
+.descriptionContainer a {
+  font-size: 24px;
+  font-family: "MADERegular", sans-serif !important;
+  color: white;
+  text-align: left;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  text-decoration: none;
+}
+
+.descriptionContainer img {
+  width: 60%;
+  height: 50%;
+  object-fit: contain;
+}
+
+.skillsContainer:hover .descriptionContainer a {
+  animation: floatUpDown 0.6s ease-in-out infinite alternate;
+}
+
+@keyframes floatUpDown {
+  0% {
+    transform: translateY(0);
+  }
+
+  100% {
+    transform: translateY(5px);
+  }
+}
+
+.myskillsContainer p {
+  font-family: "BookItalic", sans-serif !important;
+  font-size: 24px;
+  color: white;
+  text-align: left;
+  padding-left: 10px;
+}
+
+.skills-marquee {
+  overflow: hidden;
+  max-width: 380px;
+  padding: 20px 0;
+}
+
+.skills-track {
+  display: inline-flex;
+  align-items: center;
+  white-space: nowrap;
+  will-change: transform;
+}
+
+.skills-track img {
+  width: 40px;
+  height: auto;
+  margin: 5px 14px;
+  flex-shrink: 0;
+  filter: grayscale(1) opacity(0.5);
+  transition: filter 0.3s ease;
+}
+
+.skills-track img:hover {
+  filter: grayscale(0) opacity(1);
+}
+
+@keyframes fontChange {
+  0% {
+    font-family: "Grifter";
+  }
+
+  10% {
+    font-family: "Playfair Display", serif;
+  }
+
+  20% {
+    font-family: "Cinzel Decorative";
+  }
+
+  30% {
+    font-family: "Cutive Mono";
+  }
+
+  40% {
+    font-family: "Tiny5";
+  }
+
+  50% {
+    font-family: "Grifter";
+  }
+
+  60% {
+    font-family: "Grifter";
+  }
+
+  80% {
+    font-family: "Grifter";
+  }
+
+  100% {
+    font-family: "Grifter";
+  }
+}
+
+/* Contact Page */
+
+.contactSection {
+  width: 100%;
+  background-color: black;
+  color: white;
+  box-sizing: border-box;
+  position: relative;
+}
+
+.contactContainer {
+  width: 100%;
+  height: 100%;
+}
+
+section.sticky {
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: black;
+}
+
+.contactHeader {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0 60px;
+  justify-content: center;
+  width: 100%;
+  text-align: center;
+  padding-top: 50px;
+  text-decoration: none;
+}
+
+.contactHeader a {
+  flex: 0 0 48%;
+  font-size: 90px;
+  font-family: "MADERegular", sans-serif;
+  text-transform: uppercase;
+  color: #fff;
+  height: 110px;
+  line-height: 110px;
+  position: relative;
+  overflow: hidden;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.contactHeader a span {
+  display: block;
+  transition: transform 0.5s cubic-bezier(0.76, 0, 0.24, 1);
+  height: 110px;
+  line-height: 110px;
+  will-change: transform;
+}
+
+.contactHeader a span.top {
+  transform: translateY(0%);
+}
+
+.contactHeader a span.bottom {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  color: #fff;
+  transform: translateY(100%);
+}
+
+/* Hover animation */
+.contactHeader a:hover span.top {
+  transform: translateY(-100%);
+}
+
+.contactHeader a:hover span.bottom {
+  transform: translateY(0%);
+}
+
+.trackerContainer {
+  height: 100vh;
+  position: relative;
+  width: 100%;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+}
+
+.tracker {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 2rem;
+  padding-top: 60px;
+}
+
+.emoji {
+  position: absolute;
+  top: 5rem;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 350px;
+  height: 350px;
+  background: url(/images/contact/sphere1.png) no-repeat 50% 50%;
+  background-size: cover;
+  border-radius: 100%;
+  z-index: 0;
+}
+
+.emoji-face {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 200px;
+  height: 200px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.eyes,
+.mouth-wrapper {
+  flex: 1;
+}
+
+.eyes {
+  display: flex;
+  justify-content: space-between;
+}
+
+.eyes img {
+  width: 60px;
+  height: 60px;
+  animation: rotateEyes 4s infinite linear;
+}
+
+.mouth-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+}
+
+.mouth {
+  width: 40px;
+  height: 40px;
+  border-radius: 50px;
+  background: #000;
+  animation: wonderFace 2s infinite cubic-bezier(0.075, 0.82, 0.165, 1);
+}
+
+@keyframes rotateEyes {
+  0% {
+    transform: rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes wonderFace {
+  0% {
+    height: 40px;
+  }
+
+  50% {
+    height: 80px;
+  }
+
+  100% {
+    height: 40px;
+  }
+}
+
+.contact-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 100px;
+  font-family: sans-serif;
+  color: white;
+  /* fluid top padding keeps the form clear of the bottom marquee band */
+  padding: clamp(50px, 8vh, 130px) 200px 0;
+}
+
+.contact-title {
+  flex: 1;
+}
+
+.contact-title p {
+  font-size: 80px;
+  margin: 0;
+  text-transform: uppercase;
+  font-family: "Book", sans-serif;
+}
+
+.contact-form {
+  flex: none;
+  width: 35vw;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.form-group {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  position: relative;
+}
+
+/* Animated focus underline sweeping in from the left */
+.form-group::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  height: 1px;
+  background: var(--fg);
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform 0.5s var(--ease-out-soft);
+  pointer-events: none;
+}
+
+.form-group:focus-within::after {
+  transform: scaleX(1);
+}
+
+.form-group label {
+  margin: 0;
+  white-space: nowrap;
+  width: 110px;
+  padding-top: 10px;
+  font-family: "MADEThin", sans-serif;
+  font-size: var(--text-label);
+  letter-spacing: var(--label-tracking);
+  text-transform: uppercase;
+  color: var(--fg-dim);
+  text-align: left;
+}
+
+.form-group textarea {
+  flex: 1;
+  border: none;
+  border-bottom: 1px solid rgba(242, 241, 236, 0.2);
+  padding: 0.5rem;
+  font-size: 1rem;
+  resize: vertical;
+  background: none;
+  outline: none;
+  color: var(--fg);
+  min-height: 40px;
+  max-height: 150px;
+}
+
+.sendButton {
+  background: transparent;
+  color: var(--fg);
+  border: 1px solid rgba(242, 241, 236, 0.3);
+  border-radius: 50px;
+  cursor: pointer;
+  padding: 1rem 2.2rem;
+  font-size: var(--text-label);
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  align-self: flex-end;
+  transition:
+    background-color 0.3s ease,
+    color 0.3s ease,
+    border-color 0.3s ease;
+  font-family: "MADERegular", sans-serif !important;
+  will-change: transform;
+}
+
+.sendButton:hover {
+  background: var(--fg);
+  color: var(--bg);
+  border-color: var(--fg);
+}
+
+/* Responsive */
+/* Laptop (1025px - 1440px) */
+@media (max-width: 1440px) {
+  .slide-copy p {
+    text-transform: uppercase;
+    text-align: center;
+    font-family: "MADEBold", sans-serif;
+    font-size: 20px;
+    line-height: 150%;
+    color: white;
+  }
+
+  .slide-copy p.index {
+    font-family: "MADERegular", sans-serif;
+    font-size: 12px;
+    margin-bottom: 0.75em;
+  }
+
+  .change-text {
+    font-size: 50px;
+  }
+
+  .skillsContainer {
+    position: absolute;
+    top: 70%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: white;
+    display: flex;
+    gap: 80px;
+    align-items: center;
+    justify-content: center;
+
+    width: 100%;
+    min-width: 500px;
+    max-width: 700px;
+    margin: 0 auto;
+  }
+
+  .descriptionContainer {
+    width: 90%;
+    text-align: center;
+  }
+
+  .descriptionContainer p,
+  .descriptionContainer a {
+    font-size: 20px;
+    text-align: center;
+  }
+
+  .myskillsContainer {
+    width: 90%;
+  }
+
+  .contactHeader {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0 20px;
+    justify-content: center;
+    width: 100%;
+    text-align: center;
+    padding-top: 40px;
+    text-decoration: none;
+  }
+
+  .contactHeader a {
+    flex: 0 0 48%;
+    font-size: 60px;
+    font-family: "MADERegular", sans-serif;
+    text-transform: uppercase;
+    color: #fff;
+    height: 80px;
+    line-height: 110px;
+    position: relative;
+    overflow: hidden;
+    cursor: pointer;
+    text-decoration: none;
+  }
+
+  .emoji {
+    width: 250px;
+    height: 250px;
+  }
+
+  .emoji-face {
+    width: 140px;
+    height: 140px;
+  }
+
+  .eyes img {
+    width: 40px;
+    height: 40px;
+  }
+
+  .mouth {
+    width: 30px;
+    height: 30px;
+  }
+
+  .contact-title p {
+    font-size: 45px;
+    margin: 0;
+    text-transform: uppercase;
+  }
+}
+
+/* iPad / Tablet (768px - 1024px) */
+@media (max-width: 1024px) {
+  .logoImage {
+    width: 80%;
+  }
+
+  .logo p {
+    font-size: 24px;
+    font-weight: bold;
+    letter-spacing: -0.02em;
+    font-family: "MADERegular", sans-serif;
+  }
+
+  .slide-copy p {
+    text-transform: uppercase;
+    text-align: center;
+    font-family: "MADEBold", sans-serif;
+    font-size: 20px;
+    line-height: 150%;
+    color: white;
+  }
+
+  .slide-copy p.index {
+    font-family: "MADERegular", sans-serif;
+    font-size: 12px;
+    margin-bottom: 0.75em;
+  }
+
+  .about-title {
+    top: 42%;
+  }
+
+  .change-text {
+    font-size: clamp(2rem, 5vw, 4rem);
+  }
+
+  .skillsContainer {
+    position: absolute;
+    top: 60%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: white;
+    display: flex;
+    gap: 20px;
+    align-items: center;
+    justify-content: center;
+
+    width: 100%;
+    min-width: 300px;
+    max-width: 700px;
+    margin: 0 auto;
+  }
+
+  .descriptionContainer {
+    width: 80%;
+    text-align: center;
+  }
+
+  .descriptionContainer p,
+  .descriptionContainer a {
+    font-size: 20px;
+    text-align: center;
+  }
+
+  .myskillsContainer {
+    width: 100%;
+  }
+
+  .contactHeader {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0 30px;
+    justify-content: center;
+    width: 100%;
+    text-align: center;
+    padding-top: 40px;
+    text-decoration: none;
+  }
+
+  .contactHeader a {
+    flex: 0 0 48%;
+    font-size: 40px;
+    font-family: "MADERegular", sans-serif;
+    text-transform: uppercase;
+    color: #fff;
+    height: 80px;
+    line-height: 110px;
+    position: relative;
+    overflow: hidden;
+    cursor: pointer;
+    text-decoration: none;
+  }
+
+  .emoji {
+    width: 240px;
+    height: 250px;
+  }
+
+  .emoji-face {
+    width: 140px;
+    height: 140px;
+  }
+
+  .eyes img {
+    width: 40px;
+    height: 40px;
+  }
+
+  .mouth {
+    width: 30px;
+    height: 30px;
+  }
+
+  .contact-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 60px;
+    font-family: sans-serif;
+    color: white;
+    padding: clamp(50px, 8vh, 130px) 20px 0;
+    text-align: center;
+  }
+
+  .contact-title {
+    width: 100%;
+  }
+
+  .contact-title p {
+    font-size: 50px;
+    margin: 0;
+    text-transform: uppercase;
+    font-family: "Book", sans-serif;
+  }
+
+  .contact-form {
+    width: 100%;
+    max-width: 600px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+}
+
+/* Mobile device */
+@media (max-width: 768px) {
+  .hero {
+    padding: var(--space-2);
+  }
+
+  /* Keep the widest cycling word (CONCEPT) inside the viewport */
+  .hero-title {
+    font-size: clamp(3rem, 17vw, 8rem);
+  }
+
+  .hero-meta p,
+  .hero-foot-left,
+  .hero-foot-right {
+    font-size: 0.6rem;
+    letter-spacing: 0.12em;
+  }
+
+  .hero-footer {
+    grid-template-columns: 1fr 1fr;
+    row-gap: 1.25rem;
+  }
+
+  .hero-footer .scroll-hint {
+    grid-column: 1 / -1;
+    grid-row: 1;
+  }
+
+  .scroll-hint-line {
+    height: 32px;
+  }
+
+  .logoImage {
+    width: 90%;
+  }
+
+  .logo p {
+    font-size: 14px;
+    font-weight: bold;
+    letter-spacing: -0.02em;
+    font-family: "MADERegular", sans-serif;
+  }
+
+  .slide-copy p {
+    text-transform: uppercase;
+    text-align: center;
+    font-family: "MADEBold", sans-serif;
+    font-size: 12px;
+    line-height: 150%;
+    color: white;
+  }
+
+  .slide-copy p.index {
+    font-family: "MADERegular", sans-serif;
+    font-size: 8px;
+    margin-bottom: 0.75em;
+  }
+
+  #slide-4 {
+    position: absolute;
+    top: 70%;
+    left: 30%;
+    transform: translateX(-50%) translateY(-50%) translateZ(-9000px);
+    opacity: 0;
+    width: 30%;
+  }
+
+  #slide-5 {
+    position: absolute;
+    top: 70%;
+    left: 70%;
+    transform: translateX(-50%) translateY(-50%) translateZ(-7500px);
+    opacity: 0;
+    width: 30%;
+  }
+
+  #slide-6 {
+    position: absolute;
+    top: 70%;
+    left: 30%;
+    transform: translateX(-50%) translateY(-50%) translateZ(-6000px);
+    opacity: 0;
+    width: 30%;
+  }
+
+  #slide-7 {
+    position: absolute;
+    top: 70%;
+    left: 70%;
+    transform: translateX(-50%) translateY(-50%) translateZ(-5000px);
+    opacity: 0;
+    width: 30%;
+  }
+
+  #slide-8 {
+    position: absolute;
+    top: 70%;
+    left: 30%;
+    transform: translateX(-50%) translateY(-50%) translateZ(-3000px);
+    opacity: 0;
+    width: 30%;
+  }
+
+  #slide-9 {
+    position: absolute;
+    top: 70%;
+    left: 70%;
+    transform: translateX(-50%) translateY(-50%) translateZ(-1500px);
+    opacity: 0.5;
+    width: 30%;
+  }
+
+  #slide-10 {
+    position: absolute;
+    top: 70%;
+    left: 30%;
+    transform: translateX(-50%) translateY(-50%) translateZ(0);
+    opacity: 1;
+    width: 30%;
+  }
+
+  .aboutSection {
+    overflow-x: hidden;
+  }
+
+  .about-title {
+    top: 30%;
+  }
+
+  .change-text {
+    font-size: 1.6rem;
+  }
+
+  .skillsContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    width: 100%;
+    max-width: 800px;
+    margin: 0 auto;
+    gap: 40px;
+    text-align: center;
+    padding: 60px 20px;
+  }
+
+  .descriptionContainer {
+    width: 100%;
+  }
+
+  .descriptionContainer p,
+  .descriptionContainer a {
+    font-size: 16px;
+    text-align: center;
+  }
+
+  .myskillsContainer {
+    width: 100%;
+  }
+
+  .myskillsContainer p {
+    font-size: 20px;
+  }
+
+  .skills-marquee {
+    max-width: 90vw;
+    margin: 0 auto;
+  }
+
+  .skills-track img {
+    width: 32px;
+  }
+
+  .contactHeader {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    width: 100%;
+    text-align: center;
+    padding-top: 10px;
+    text-decoration: none;
+  }
+
+  .contactHeader a {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    line-height: 1;
+    gap: 0;
+    overflow: visible;
+  }
+
+  .contactHeader a span {
+    margin: 0;
+    padding: 0;
+    line-height: 1;
+  }
+
+  .contactHeader .bottom {
+    display: none !important;
+  }
+
+  .emoji {
+    display: none;
+
+    width: 180px;
+    height: 180px;
+    top: 3rem;
+  }
+
+  .emoji-face {
+    width: 110px;
+    height: 110px;
+  }
+
+  .eyes img {
+    width: 28px;
+    height: 28px;
+  }
+
+  .mouth {
+    width: 24px;
+    height: 24px;
+  }
+
+  .contact-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 60px;
+    font-family: sans-serif;
+    color: white;
+    padding: 0px 20px 0;
+    text-align: center;
+  }
+
+  .contact-title {
+    width: 100%;
+  }
+
+  .contact-title p {
+    font-size: 24px;
+    margin: 0;
+    text-transform: uppercase;
+    font-family: "Book", sans-serif;
+  }
+
+  .contact-form {
+    width: 100%;
+    max-width: 600px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .form-group {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+
+  .form-group label {
+    width: 90px;
+    font-size: 11px;
+  }
+
+  .form-group textarea {
+    font-size: 12px;
+    min-height: 10px;
+  }
+
+  .messageTextarea {
+    height: 60px;
+  }
+}
