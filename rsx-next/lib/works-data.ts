@@ -141,6 +141,7 @@ export const WORKS: Work[] = [
       "/images/assets/kp4.png",
       "/images/assets/kp5.png",
     ],
+    visitUrl: "https://katperry.vercel.app/",
   },
   {
     slug: "downfield",

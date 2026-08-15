@@ -6,7 +6,6 @@ export const metadata: Metadata = {
   title: "RSXDesigns",
   description:
     "RSX — Russell Sean, creative developer. Forging ahead with elite web designs.",
-  icons: { icon: "/images/rsx1.png" },
 };
 
 export default function RootLayout({
