@@ -3,7 +3,7 @@ import "./globals.css";
 import SiteChrome from "@/components/SiteChrome";
 
 export const metadata: Metadata = {
-  title: "RSXDesigns",
+  title: "RSXCode",
   description:
     "RSX — Russell Sean, creative developer. Forging ahead with elite web designs.",
 };
